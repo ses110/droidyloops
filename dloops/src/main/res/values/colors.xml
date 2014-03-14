@@ -7,8 +7,10 @@
     <color name="bluedark">#2F6699</color>
     <color name="greenlight">#70C656</color>
     <color name="greendark">#53933F</color>
+    <color name="greenlime">#accb12</color>
     <color name="orangelight">#F3AE1B</color>
     <color name="orangedark">#BB6008</color>
+    <color name="redorange">#dd514c</color>
     <color name="black">#000000</color>
     <color name="greyblue">#6c7f95</color>
 </resources>
