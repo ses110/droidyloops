@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">DroidyLoops</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="create_song">Create New Song</string>
+    <string name="edit_song">Edit Saved Song</string>
+    <string name="collaborate">Collaborate</string>
+    <string name="intro_paragraph">Record your own songs! Compose with friends! You can invite friends to help you with creating your next musical hit!</string>
+
+</resources>
