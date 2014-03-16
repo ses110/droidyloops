@@ -19,5 +19,7 @@
     <string name="title_activity_looper">LooperActivity</string>
     <string name="play_button">Play</string>
     <string name="pause_button">Pause</string>
+    <string name="play_stop">Play/Stop</string>
+    <string name="set_bpm">Set BPM</string>
 
 </resources>

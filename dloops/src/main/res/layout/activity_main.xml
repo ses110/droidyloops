@@ -7,63 +7,38 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="com.example.droidyloops.dloops.MainActivity"
-    android:background="@color/greyblue">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/app_name"
-        android:id="@+id/textView"
-        android:textColor="@color/white"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="31dp"
-        android:textSize="30sp" />
+    android:background="#0099cc">
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/create_song"
         android:id="@+id/button"
-        android:layout_below="@+id/textView2"
+        android:clickable="true"
+        android:onClick="launchLooper"
+        android:layout_above="@+id/button2"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
-        android:clickable="true" />
+        android:layout_marginBottom="32dp" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/edit_song"
         android:id="@+id/button2"
-        android:layout_below="@+id/button"
-        android:layout_alignRight="@+id/button"
-        android:layout_alignEnd="@+id/button"
-        android:layout_alignLeft="@+id/button"
-        android:layout_alignStart="@+id/button"
-        android:enabled="false" />
+        android:enabled="false"
+        android:layout_above="@+id/button3"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="37dp" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/collaborate"
         android:id="@+id/button3"
-        android:layout_below="@+id/button2"
-        android:layout_alignRight="@+id/button2"
-        android:layout_alignEnd="@+id/button2"
-        android:layout_alignLeft="@+id/button2"
-        android:layout_alignStart="@+id/button2"
         android:clickable="false"
-        android:enabled="false" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/intro_paragraph"
-        android:id="@+id/textView2"
-        android:layout_marginTop="49dp"
-        android:textColor="@color/white"
-        android:layout_below="@+id/textView"
-        android:layout_centerHorizontal="true" />
+        android:enabled="false"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="21dp" />
 
 </RelativeLayout>

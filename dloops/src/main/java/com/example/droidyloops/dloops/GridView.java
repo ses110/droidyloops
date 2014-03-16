@@ -2,6 +2,10 @@ package com.example.droidyloops.dloops;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.util.AttributeSet;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -12,15 +16,23 @@ import android.view.SurfaceView;
 
 public class GridView extends SurfaceView implements SurfaceHolder.Callback
 {
+    PanelThread panelThread;
+    int height;
+    int width;
 
     public GridView(Context context) {
         super(context);
         getHolder().addCallback(this);
     }
 
-    @Override
-    public void surfaceCreated(SurfaceHolder holder) {
+    public GridView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        getHolder().addCallback(this);
+    }
 
+    public GridView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        getHolder().addCallback(this);
     }
 
     @Override
@@ -29,13 +41,46 @@ public class GridView extends SurfaceView implements SurfaceHolder.Callback
     }
 
     @Override
-    public void surfaceDestroyed(SurfaceHolder holder) {
+    public void surfaceCreated(SurfaceHolder holder) {
 
+        setWillNotDraw(false); //Allows us to use invalidate() to call onDraw()
+
+        panelThread = new PanelThread(getHolder(), this); //Start the thread that
+        panelThread.setRunning(true);                     //will make calls to
+        panelThread.start();                              //onDraw()
+    }
+
+
+    @Override
+    public void surfaceDestroyed(SurfaceHolder holder) {
+        try {
+            panelThread.setRunning(false);                //Tells thread to stop
+            panelThread.join();                           //Removes thread from mem.
+        } catch (InterruptedException e) {}
     }
 
     @Override
     public void onDraw(Canvas canvas) {
-        //do drawing stuff here.
+        if(width == 0 || height == 0)
+        {
+            width = canvas.getWidth();
+            height = canvas.getHeight();
+            Log.v("width", Integer.toString(width));
+            Log.v("height", Integer.toString(height));
+        }
+        Paint paint = new Paint();
+        paint.setStyle(Paint.Style.FILL);
+        // make the entire canvas white
+        paint.setColor(Color.WHITE);
+        canvas.drawPaint(paint);
+        // another way to do this is to use: // canvas.drawColor(Color.WHITE);
+        // draw a solid blue circle
+        paint.setColor(Color.BLUE);
+        canvas.drawCircle(20, 20, 15, paint);
+        // draw blue circle with antialiasing turned on
+        paint.setAntiAlias(true);
+        paint.setColor(Color.BLUE);
+        canvas.drawCircle(60, 20, 15, paint);
     }
 
     class PanelThread extends Thread {
