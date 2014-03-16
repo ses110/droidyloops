@@ -20,6 +20,11 @@ public class GridView extends SurfaceView implements SurfaceHolder.Callback
     int height;
     int width;
 
+    Paint gridPaint;
+    Paint hlPaint;
+
+    float[] hlPos;
+
     public GridView(Context context) {
         super(context);
         getHolder().addCallback(this);
@@ -48,6 +53,19 @@ public class GridView extends SurfaceView implements SurfaceHolder.Callback
         panelThread = new PanelThread(getHolder(), this); //Start the thread that
         panelThread.setRunning(true);                     //will make calls to
         panelThread.start();                              //onDraw()
+
+        // The paint we use to draw the grid
+        gridPaint = new Paint();
+        gridPaint.setStyle(Paint.Style.STROKE);
+        gridPaint.setStrokeWidth(2.0f);
+        gridPaint.setColor(Color.WHITE);
+
+        // Highlight paint
+        hlPaint = new Paint();
+        hlPaint.setStyle(Paint.Style.FILL);
+        hlPaint.setColor(0xffff2800);
+
+        hlPos = new float[4];
     }
 
 
@@ -68,19 +86,31 @@ public class GridView extends SurfaceView implements SurfaceHolder.Callback
             Log.v("width", Integer.toString(width));
             Log.v("height", Integer.toString(height));
         }
-        Paint paint = new Paint();
-        paint.setStyle(Paint.Style.FILL);
-        // make the entire canvas white
-        paint.setColor(Color.WHITE);
-        canvas.drawPaint(paint);
-        // another way to do this is to use: // canvas.drawColor(Color.WHITE);
-        // draw a solid blue circle
-        paint.setColor(Color.BLUE);
-        canvas.drawCircle(20, 20, 15, paint);
-        // draw blue circle with antialiasing turned on
-        paint.setAntiAlias(true);
-        paint.setColor(Color.BLUE);
-        canvas.drawCircle(60, 20, 15, paint);
+
+        float rowHeight = (float)height / 6;
+        float colWidth = (float)width / 9;
+
+        // fill in the background
+        canvas.drawColor(0xff0099cc);
+
+        gridPaint.setStyle(Paint.Style.FILL);
+        canvas.drawRect(0, rowHeight, colWidth, height - rowHeight, gridPaint);
+        gridPaint.setStyle(Paint.Style.STROKE);
+
+        canvas.drawRect(2, rowHeight, width - 1, height - rowHeight, gridPaint);
+
+        // Draw vertical lines
+        for(int i = 1; i < 9; i++)
+        {
+            canvas.drawLine(colWidth * i, rowHeight, colWidth * i, height - rowHeight, gridPaint);
+        }
+
+        // Draw horizontal lines
+        for(int i = 1; i < 5; i++)
+        {
+            canvas.drawLine(2, rowHeight * i, width - 1, rowHeight * i, gridPaint);
+        }
+
     }
 
     class PanelThread extends Thread {
