@@ -15,9 +15,11 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/app_name"
         android:id="@+id/textView"
+        android:textColor="@color/white"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:textColor="@color/white" />
+        android:layout_marginTop="31dp"
+        android:textSize="30sp" />
 
     <Button
         android:layout_width="wrap_content"
@@ -26,7 +28,8 @@
         android:id="@+id/button"
         android:layout_below="@+id/textView2"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp" />
+        android:layout_marginTop="50dp"
+        android:clickable="true" />
 
     <Button
         android:layout_width="wrap_content"
@@ -37,7 +40,8 @@
         android:layout_alignRight="@+id/button"
         android:layout_alignEnd="@+id/button"
         android:layout_alignLeft="@+id/button"
-        android:layout_alignStart="@+id/button" />
+        android:layout_alignStart="@+id/button"
+        android:enabled="false" />
 
     <Button
         android:layout_width="wrap_content"
@@ -48,7 +52,9 @@
         android:layout_alignRight="@+id/button2"
         android:layout_alignEnd="@+id/button2"
         android:layout_alignLeft="@+id/button2"
-        android:layout_alignStart="@+id/button2" />
+        android:layout_alignStart="@+id/button2"
+        android:clickable="false"
+        android:enabled="false" />
 
     <TextView
         android:layout_width="wrap_content"

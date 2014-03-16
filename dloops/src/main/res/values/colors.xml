@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <color name="white">#FFFFFF</color>
     <color name="grey">#7A7A7A</color>
     <color name="background">#0044AA</color>
@@ -13,4 +14,6 @@
     <color name="redorange">#dd514c</color>
     <color name="black">#000000</color>
     <color name="greyblue">#6c7f95</color>
+    <color name="black_overlay">#66000000</color>
+
 </resources>

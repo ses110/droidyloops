@@ -4,20 +4,20 @@
     <string name="app_name">DroidyLoops</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-
     <string name="create_song">Create New Song</string>
     <string name="edit_song">Edit Saved Song</string>
     <string name="collaborate">Collaborate</string>
     <string name="intro_paragraph">Record your own songs! Compose with friends! You can invite friends to help you with creating your next musical hit!</string>
-
     <string name="arrange_title">Arrange Song</string>
     <string name="mute_label">Mute</string>
     <string name="volume_label">Volume</string>
     <string name="copy">Copy</string>
     <string name="paste">Paste</string>
-
     <string name="loop_creator_title">Loop Creator</string>
     <string name="save_label">Save</string>
     <string name="delete_label">Delete</string>
+    <string name="title_activity_looper">LooperActivity</string>
+    <string name="play_button">Play</string>
+    <string name="pause_button">Pause</string>
 
 </resources>
