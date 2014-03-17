@@ -86,7 +86,10 @@ public class LooperActivity extends Activity {
 
     public void playSound(int row)
     {
-        spThread.previews[row - 1] = true;
+        if(!play)
+        {
+            spThread.previews[row - 1] = true;
+        }
     }
 
     class SoundPoolThread extends Thread {
