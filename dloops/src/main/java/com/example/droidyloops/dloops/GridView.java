@@ -81,7 +81,7 @@ public class GridView extends SurfaceView implements SurfaceHolder.Callback
 
         squarePaint = new Paint();
         squarePaint.setStyle(Paint.Style.FILL);
-        squarePaint.setColor(0xffffb400);
+        squarePaint.setColor(0xe0ffb400);
 
         hlPos = new float[4];
 
@@ -120,17 +120,17 @@ public class GridView extends SurfaceView implements SurfaceHolder.Callback
 
         canvas.drawRect(2, rowHeight, width - 1, height - rowHeight, gridPaint);
 
-        for(Square square : squares)
-        {
-            canvas.drawRect(square.x, square.y, square.x + colWidth, square.y + rowHeight, squarePaint);
-        }
-
         // Draw highlight
         if(play)
         {
             hlPos[1] = rowHeight;
             hlPos[3] = height - rowHeight;
             canvas.drawRect(hlPos[0], hlPos[1], hlPos[2], hlPos[3], hlPaint);
+        }
+
+        for(Square square : squares)
+        {
+            canvas.drawRect(square.x, square.y, square.x + colWidth, square.y + rowHeight, squarePaint);
         }
 
         // Draw vertical lines
