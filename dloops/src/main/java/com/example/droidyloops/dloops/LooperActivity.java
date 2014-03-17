@@ -6,6 +6,7 @@ import android.content.res.AssetFileDescriptor;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import java.io.File;
@@ -32,15 +33,19 @@ public class LooperActivity extends Activity {
         AssetFileDescriptor clap;
         int sounds[] = new int[4];
         try {
-            snare = getAssets().openFd("trap" + File.separator + "Snare.wav");
-            kick = getAssets().openFd("trap" + File.separator + "HardKick.wav");
-            hat = getAssets().openFd("trap" + File.separator + "Hat.wav");
-            clap = getAssets().openFd("trap" + File.separator + "Clap.wav");
+            snare = getAssets().openFd("Snare.ogg");
+            kick = getAssets().openFd("HardKick.ogg");
+            hat = getAssets().openFd("Hat.ogg");
+            clap = getAssets().openFd("Clap.ogg");
 
             sounds[0] = mPool.load(snare, 1);
             sounds[1] = mPool.load(kick, 1);
             sounds[2] = mPool.load(hat, 1);
             sounds[3] = mPool.load(clap, 1);
+            for(int i : sounds)
+            {
+                Log.v("sound", Integer.toString(i));
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -110,7 +115,7 @@ public class LooperActivity extends Activity {
                                 curCol = 1;
                             for (Square sq : mGridView.squares) {
                                 if (sq.col == curCol) {
-                                    mSoundPool.play(sounds[sq.row - 1], streamVolume, streamVolume, 1, 0, 1);
+                                    mSoundPool.play(sounds[sq.row], streamVolume, streamVolume, 1, 0, 1);
                                 }
                             }
                             lastBeat = System.currentTimeMillis();
