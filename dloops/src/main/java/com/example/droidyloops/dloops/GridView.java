@@ -6,8 +6,12 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 /**
  * Created by sid9102 on 3/16/14.
@@ -16,14 +20,24 @@ import android.view.SurfaceView;
 
 public class GridView extends SurfaceView implements SurfaceHolder.Callback
 {
-    PanelThread panelThread;
-    int height;
-    int width;
+    private PanelThread panelThread;
+    private int height;
+    private int width;
 
-    Paint gridPaint;
-    Paint hlPaint;
+    private boolean play;
 
-    float[] hlPos;
+    private Paint gridPaint;
+    private Paint hlPaint;
+    private Paint squarePaint;
+
+    public ArrayList<Square> squares;
+
+    private float[] hlPos;
+
+    private long lastBeat;
+
+    // The time between beats, in milliseconds
+    private int beatTime;
 
     public GridView(Context context) {
         super(context);
@@ -65,7 +79,14 @@ public class GridView extends SurfaceView implements SurfaceHolder.Callback
         hlPaint.setStyle(Paint.Style.FILL);
         hlPaint.setColor(0xffff2800);
 
+        squarePaint = new Paint();
+        squarePaint.setStyle(Paint.Style.FILL);
+        squarePaint.setColor(0xffffb400);
+
         hlPos = new float[4];
+
+        beatTime = 500;
+        squares = new ArrayList<Square>();
     }
 
 
@@ -83,21 +104,30 @@ public class GridView extends SurfaceView implements SurfaceHolder.Callback
         {
             width = canvas.getWidth();
             height = canvas.getHeight();
-            Log.v("width", Integer.toString(width));
-            Log.v("height", Integer.toString(height));
+//            Log.v("width", Integer.toString(width));
+//            Log.v("height", Integer.toString(height));
         }
 
         float rowHeight = (float)height / 6;
         float colWidth = (float)width / 9;
 
+
         // fill in the background
-        canvas.drawColor(0xff0099cc);
+        canvas.drawColor(0xfc0099cc);
 
         gridPaint.setStyle(Paint.Style.FILL);
         canvas.drawRect(0, rowHeight, colWidth, height - rowHeight, gridPaint);
         gridPaint.setStyle(Paint.Style.STROKE);
 
         canvas.drawRect(2, rowHeight, width - 1, height - rowHeight, gridPaint);
+
+        // Draw highlight
+        if(play)
+        {
+            hlPos[1] = rowHeight;
+            hlPos[3] = height - rowHeight;
+            canvas.drawRect(hlPos[0], hlPos[1], hlPos[2], hlPos[3], hlPaint);
+        }
 
         // Draw vertical lines
         for(int i = 1; i < 9; i++)
@@ -112,6 +142,48 @@ public class GridView extends SurfaceView implements SurfaceHolder.Callback
         }
 
     }
+
+    public void playStop()
+    {
+        play = !play;
+        float colWidth = (float)width / 9;
+        hlPos[0] = colWidth;
+        hlPos[2] = colWidth * 2;
+        lastBeat = System.currentTimeMillis();
+    }
+
+    public void changeBPM(int bpm)
+    {
+        beatTime = 1000 / (bpm / 60);
+    }
+
+    private void incrementHL()
+    {
+        float colWidth = (float)width / 9;
+
+        if(hlPos[2] < width)
+        {
+            hlPos[0] += colWidth;
+            hlPos[2] += colWidth;
+        }
+        else
+        {
+            hlPos[0] = colWidth;
+            hlPos[2] = colWidth * 2;
+        }
+
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event)
+    {
+        if(event.getAction() == MotionEvent.ACTION_DOWN)
+        {
+            
+        }
+        return true;
+    }
+
 
     class PanelThread extends Thread {
         private SurfaceHolder _surfaceHolder;
@@ -139,15 +211,19 @@ public class GridView extends SurfaceView implements SurfaceHolder.Callback
 
                 try {
 
-
                     c = _surfaceHolder.lockCanvas(null);
                     synchronized (_surfaceHolder) {
-
-
                         //Insert methods to modify positions of items in onDraw()
+                        if(mGridView.play)
+                        {
+                            if(System.currentTimeMillis() - mGridView.lastBeat > mGridView.beatTime)
+                            {
+                                mGridView.lastBeat = System.currentTimeMillis();
+                                mGridView.incrementHL();
+                            }
+                        }
+
                         postInvalidate();
-
-
                     }
                 } finally {
                     if (c != null) {

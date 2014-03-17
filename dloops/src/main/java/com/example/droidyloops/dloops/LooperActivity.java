@@ -6,16 +6,18 @@ import android.view.View;
 
 public class LooperActivity extends Activity {
 
+    GridView mGridView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_looper);
-        final View contentView = findViewById(R.id.loop_view);
+        mGridView = (GridView) findViewById(R.id.loop_view);
     }
 
     public void playStop(View view)
     {
-        //Start/stop playback here
+        mGridView.playStop();
     }
 }
