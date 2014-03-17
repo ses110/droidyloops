@@ -190,29 +190,27 @@ public class GridView extends SurfaceView implements SurfaceHolder.Callback
             float y = event.getY();
             if(x > colWidth && y > rowHeight && y < (height - rowHeight))
             {
-                x -= x % colWidth;
-                y -= y % rowHeight;
-                int col = (int) (x / colWidth);
-                int row = (int) (y / rowHeight);
-                Square sq = new Square(x, y, row, col);
-                boolean found = false;
-                for(Square cur : squares)
-                {
-                    if(cur.equals(sq))
-                    {
-                        found = true;
-                        squares.remove(cur);
-                        break;
+                synchronized (squares) {
+                    x -= x % colWidth;
+                    y -= y % rowHeight;
+                    int col = (int) (x / colWidth);
+                    int row = (int) (y / rowHeight);
+                    Square sq = new Square(x, y, row, col);
+                    boolean found = false;
+                    for (Square cur : squares) {
+                        if (cur.equals(sq)) {
+                            found = true;
+                            squares.remove(cur);
+                            break;
+                        }
                     }
-                }
 
-                if(!found)
-                {
-                    squares.add(sq);
-                    LooperActivity host = (LooperActivity) this.getContext();
-                    if(host != null)
-                    {
-                        host.playSound(sq.row);
+                    if (!found) {
+                        squares.add(sq);
+                        LooperActivity host = (LooperActivity) this.getContext();
+                        if (host != null) {
+                            host.playSound(sq.row);
+                        }
                     }
                 }
             }
