@@ -1,24 +1,21 @@
 package com.example.droidyloops.dloops;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.res.AssetFileDescriptor;
-import android.graphics.Canvas;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.SurfaceHolder;
 import android.view.View;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class LooperActivity extends Activity {
 
-    GridView mGridView;
-    SoundPool mPool;
-    SoundPoolThread spThread;
+    private GridView mGridView;
+    private SoundPoolThread spThread;
+    private boolean play;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -26,7 +23,7 @@ public class LooperActivity extends Activity {
 
         setContentView(R.layout.activity_looper);
         mGridView = (GridView) findViewById(R.id.loop_view);
-        mPool = new SoundPool(4, AudioManager.STREAM_MUSIC, 0);
+        SoundPool mPool = new SoundPool(4, AudioManager.STREAM_MUSIC, 0);
 
         //TODO: Make this customizable
         AssetFileDescriptor snare;
@@ -48,42 +45,78 @@ public class LooperActivity extends Activity {
             e.printStackTrace();
         }
 
-        spThread = new SoundPoolThread(mPool, mGridView, sounds);
+        spThread=new SoundPoolThread(mPool, mGridView, sounds);
+
         spThread.start();
+    }
+
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+        if(play)
+        {
+            spThread.toggleRunning();
+            mGridView.playStop();
+        }
     }
 
     public void playStop(View view)
     {
+        play = !play;
         mGridView.playStop();
         spThread.toggleRunning();
     }
 
     class SoundPoolThread extends Thread {
 
-        private final ArrayList<Square> squares;
+        private GridView mGridView;
         private SoundPool mSoundPool;
         private int[] sounds;
-        private boolean _run = false;
+        private boolean play = false;
+        private AudioManager mAudioManager;
 
         private long lastBeat;
+        private int curCol = 0;
+        private int beatTime = 500;
 
         public SoundPoolThread(SoundPool mSoundPool, GridView gridView, int[] sounds)
         {
             this.mSoundPool = mSoundPool;
-            this.squares = gridView.squares;
+            this.mGridView = gridView;
             this.sounds = sounds;
+            lastBeat = System.currentTimeMillis() - beatTime;
+            mAudioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
         }
 
         public void toggleRunning() {
-            _run = !_run;
+            play = !play;
         }
 
         @Override
         public void run() {
-            while (_run) {
-                synchronized (mSoundPool) {
+            while (true) {
+                if (play) {
+                    synchronized (mGridView.squares) {
 
+                        long curTime = System.currentTimeMillis();
+                        if (curTime - lastBeat > beatTime) {
+                            // Get the volume
+                            float streamVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+                            streamVolume = streamVolume / mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
 
+                            curCol++;
+                            if (curCol == 9)
+                                curCol = 1;
+                            for (Square sq : mGridView.squares) {
+                                if (sq.col == curCol) {
+                                    mSoundPool.play(sounds[sq.row - 1], streamVolume, streamVolume, 1, 0, 1);
+                                }
+                            }
+                            lastBeat = System.currentTimeMillis();
+                        }
+
+                    }
                 }
             }
         }

@@ -26,4 +26,9 @@ public class Square
     {
         return other.x == this.x && other.y == this.y;
     }
+
+    public String toString()
+    {
+        return "row: " + Integer.toString(row) + ", col: " + Integer.toString(col);
+    }
 }

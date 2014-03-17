@@ -191,8 +191,8 @@ public class GridView extends SurfaceView implements SurfaceHolder.Callback
             {
                 x -= x % colWidth;
                 y -= y % rowHeight;
-                int row = (int) (x / colWidth);
-                int col = (int) (y / rowHeight);
+                int col = (int) (x / colWidth);
+                int row = (int) (y / rowHeight);
                 Square sq = new Square(x, y, row, col);
                 boolean found = false;
                 for(Square cur : squares)
@@ -208,6 +208,7 @@ public class GridView extends SurfaceView implements SurfaceHolder.Callback
                 if(!found)
                 {
                     squares.add(sq);
+                    Log.v("Square", sq.toString());
                 }
             }
         }
