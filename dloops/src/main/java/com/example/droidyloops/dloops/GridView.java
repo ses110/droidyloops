@@ -37,7 +37,7 @@ public class GridView extends SurfaceView implements SurfaceHolder.Callback
     private long lastBeat;
 
     // The time between beats, in milliseconds
-    private int beatTime;
+    public int beatTime;
 
     public GridView(Context context) {
         super(context);
@@ -111,7 +111,6 @@ public class GridView extends SurfaceView implements SurfaceHolder.Callback
         float rowHeight = (float)height / 6;
         float colWidth = (float)width / 9;
 
-
         // fill in the background
         canvas.drawColor(0xfc0099cc);
 
@@ -120,6 +119,11 @@ public class GridView extends SurfaceView implements SurfaceHolder.Callback
         gridPaint.setStyle(Paint.Style.STROKE);
 
         canvas.drawRect(2, rowHeight, width - 1, height - rowHeight, gridPaint);
+
+        for(Square square : squares)
+        {
+            canvas.drawRect(square.x, square.y, square.x + colWidth, square.y + rowHeight, squarePaint);
+        }
 
         // Draw highlight
         if(play)
@@ -177,9 +181,35 @@ public class GridView extends SurfaceView implements SurfaceHolder.Callback
     @Override
     public boolean onTouchEvent(MotionEvent event)
     {
+        float rowHeight = (float)height / 6;
+        float colWidth = (float)width / 9;
         if(event.getAction() == MotionEvent.ACTION_DOWN)
         {
-            
+            float x = event.getX();
+            float y = event.getY();
+            if(x > colWidth && y > rowHeight && y < (height - rowHeight))
+            {
+                x -= x % colWidth;
+                y -= y % rowHeight;
+                int row = (int) (x / colWidth);
+                int col = (int) (y / rowHeight);
+                Square sq = new Square(x, y, row, col);
+                boolean found = false;
+                for(Square cur : squares)
+                {
+                    if(cur.equals(sq))
+                    {
+                        found = true;
+                        squares.remove(cur);
+                        break;
+                    }
+                }
+
+                if(!found)
+                {
+                    squares.add(sq);
+                }
+            }
         }
         return true;
     }

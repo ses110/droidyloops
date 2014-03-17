@@ -7,12 +7,23 @@ package com.example.droidyloops.dloops;
 
 public class Square
 {
+    // The topleft coord
+    public float x;
+    public float y;
+
     public int row;
     public int col;
 
-    public Square(int row, int column)
+    public Square(float x, float y, int row, int col)
     {
+        this.x = x;
+        this.y = y;
         this.row = row;
-        this.col = column;
+        this.col = col;
+    }
+
+    public boolean equals(Square other)
+    {
+        return other.x == this.x && other.y == this.y;
     }
 }
