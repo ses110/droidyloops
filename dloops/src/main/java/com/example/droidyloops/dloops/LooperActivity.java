@@ -144,7 +144,8 @@ public class LooperActivity extends Activity {
                                     mSoundPool.play(sounds[sq.row - 1], streamVolume, streamVolume, 1, 0, 1);
                                 }
                             }
-                            lastBeat = System.currentTimeMillis();
+                            lastBeat = curTime;
+                            mGridView.incrementHL();
                         }
 
                     }

@@ -35,8 +35,6 @@ public class GridView extends SurfaceView implements SurfaceHolder.Callback
 
     private float[] hlPos;
 
-    private long lastBeat;
-
     // The time between beats, in milliseconds
     public int beatTime;
 
@@ -152,9 +150,8 @@ public class GridView extends SurfaceView implements SurfaceHolder.Callback
     {
         play = !play;
         float colWidth = (float)width / 9;
-        hlPos[0] = colWidth;
-        hlPos[2] = colWidth * 2;
-        lastBeat = System.currentTimeMillis();
+        hlPos[0] = 0;
+        hlPos[2] = colWidth;
     }
 
     public void changeBPM(int bpm)
@@ -162,7 +159,7 @@ public class GridView extends SurfaceView implements SurfaceHolder.Callback
         beatTime = 1000 / (bpm / 60);
     }
 
-    private void incrementHL()
+    public void incrementHL()
     {
         float colWidth = (float)width / 9;
 
@@ -248,14 +245,6 @@ public class GridView extends SurfaceView implements SurfaceHolder.Callback
                     c = _surfaceHolder.lockCanvas(null);
                     synchronized (_surfaceHolder) {
                         //Insert methods to modify positions of items in onDraw()
-                        if(mGridView.play)
-                        {
-                            if(System.currentTimeMillis() - mGridView.lastBeat > mGridView.beatTime)
-                            {
-                                mGridView.lastBeat = System.currentTimeMillis();
-                                mGridView.incrementHL();
-                            }
-                        }
 
                         postInvalidate();
                     }
