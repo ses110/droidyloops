@@ -34,7 +34,7 @@ public class LooperActivity extends Activity {
         int sounds[] = new int[4];
         try {
             snare = getAssets().openFd("Snare.ogg");
-            kick = getAssets().openFd("HardKick.ogg");
+            kick = getAssets().openFd("Kick.wav");
             hat = getAssets().openFd("Hat.ogg");
             clap = getAssets().openFd("Clap.ogg");
 
@@ -64,6 +64,13 @@ public class LooperActivity extends Activity {
             spThread.toggleRunning();
             mGridView.playStop();
         }
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        super.onDestroy();
+        spThread.interrupt();
     }
 
     public void playStop(View view)
@@ -96,6 +103,8 @@ public class LooperActivity extends Activity {
 
         public void toggleRunning() {
             play = !play;
+            curCol = 0;
+            lastBeat = System.currentTimeMillis() - beatTime;
         }
 
         @Override
@@ -105,7 +114,7 @@ public class LooperActivity extends Activity {
                     synchronized (mGridView.squares) {
 
                         long curTime = System.currentTimeMillis();
-                        if (curTime - lastBeat > beatTime) {
+                        if (curTime - lastBeat >= beatTime) {
                             // Get the volume
                             float streamVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
                             streamVolume = streamVolume / mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
@@ -115,7 +124,7 @@ public class LooperActivity extends Activity {
                                 curCol = 1;
                             for (Square sq : mGridView.squares) {
                                 if (sq.col == curCol) {
-                                    mSoundPool.play(sounds[sq.row], streamVolume, streamVolume, 1, 0, 1);
+                                    mSoundPool.play(sounds[sq.row - 1], streamVolume, streamVolume, 1, 0, 1);
                                 }
                             }
                             lastBeat = System.currentTimeMillis();
