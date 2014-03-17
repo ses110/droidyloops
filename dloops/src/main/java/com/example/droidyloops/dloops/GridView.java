@@ -1,5 +1,6 @@
 package com.example.droidyloops.dloops;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -208,7 +209,11 @@ public class GridView extends SurfaceView implements SurfaceHolder.Callback
                 if(!found)
                 {
                     squares.add(sq);
-                    Log.v("Square", sq.toString());
+                    LooperActivity host = (LooperActivity) this.getContext();
+                    if(host != null)
+                    {
+                        host.playSound(sq.row);
+                    }
                 }
             }
         }

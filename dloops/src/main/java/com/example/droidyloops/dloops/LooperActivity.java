@@ -9,14 +9,16 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import java.io.File;
+
 import java.io.IOException;
 
 public class LooperActivity extends Activity {
 
     private GridView mGridView;
+    private SoundPool mPool;
     private SoundPoolThread spThread;
     private boolean play;
+    private boolean quit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -24,7 +26,7 @@ public class LooperActivity extends Activity {
 
         setContentView(R.layout.activity_looper);
         mGridView = (GridView) findViewById(R.id.loop_view);
-        SoundPool mPool = new SoundPool(4, AudioManager.STREAM_MUSIC, 0);
+        mPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
 
         //TODO: Make this customizable
         AssetFileDescriptor snare;
@@ -35,7 +37,7 @@ public class LooperActivity extends Activity {
         try {
             snare = getAssets().openFd("Snare.ogg");
             kick = getAssets().openFd("Kick.wav");
-            hat = getAssets().openFd("Hat.ogg");
+            hat = getAssets().openFd("Hat.wav");
             clap = getAssets().openFd("Clap.ogg");
 
             sounds[0] = mPool.load(snare, 1);
@@ -71,6 +73,8 @@ public class LooperActivity extends Activity {
     {
         super.onDestroy();
         spThread.interrupt();
+        mPool.release();
+        quit = true;
     }
 
     public void playStop(View view)
@@ -80,6 +84,11 @@ public class LooperActivity extends Activity {
         spThread.toggleRunning();
     }
 
+    public void playSound(int row)
+    {
+        spThread.previews[row - 1] = true;
+    }
+
     class SoundPoolThread extends Thread {
 
         private GridView mGridView;
@@ -87,6 +96,8 @@ public class LooperActivity extends Activity {
         private int[] sounds;
         private boolean play = false;
         private AudioManager mAudioManager;
+        private float maxVolume;
+        public boolean[] previews = new boolean[4];
 
         private long lastBeat;
         private int curCol = 0;
@@ -99,6 +110,7 @@ public class LooperActivity extends Activity {
             this.sounds = sounds;
             lastBeat = System.currentTimeMillis() - beatTime;
             mAudioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+            maxVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
         }
 
         public void toggleRunning() {
@@ -110,14 +122,16 @@ public class LooperActivity extends Activity {
         @Override
         public void run() {
             while (true) {
+                if(quit)
+                    break;
+                // Get the volume
+                float streamVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+                streamVolume = streamVolume / maxVolume;
                 if (play) {
                     synchronized (mGridView.squares) {
 
                         long curTime = System.currentTimeMillis();
                         if (curTime - lastBeat >= beatTime) {
-                            // Get the volume
-                            float streamVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-                            streamVolume = streamVolume / mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
 
                             curCol++;
                             if (curCol == 9)
@@ -130,6 +144,16 @@ public class LooperActivity extends Activity {
                             lastBeat = System.currentTimeMillis();
                         }
 
+                    }
+                }
+                else // preview sounds as you tap
+                {
+                    for(int i = 0; i < 4; i++)
+                    {
+                        if(previews[i]) {
+                            mSoundPool.play(i + 1, streamVolume, streamVolume, 1, 0, 1);
+                            previews[i] = false;
+                        }
                     }
                 }
             }
