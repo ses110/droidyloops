@@ -104,7 +104,7 @@ public class LooperActivity extends Activity {
 
         private long lastBeat;
         private int curCol = 0;
-        private int beatTime = 500;
+        private int beatTime = 250;
 
         public SoundPoolThread(SoundPool mSoundPool, GridView gridView, int[] sounds)
         {
