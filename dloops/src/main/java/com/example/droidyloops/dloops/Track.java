@@ -8,18 +8,22 @@ import android.media.SoundPool;
  *
  * Track
  * An abstraction that represents an instance of a sound clip, whether it'd be a drum pattern
- * or a user recording. The Channel class will contain an arraylist of indefinite amounts of
- * Tracks.
+ * or a user recording.
+ *
+ * Note that the Channel class will contain an arraylist of indefinite amounts of Tracks.
  *
  * A Track needs a start time (in (ms) milliseconds) and its play duration (also in ms).
- * It needs a container that will hold the sound stream
+ * It needs a container that will hold the sound stream or the array of sound streams if its a drum loop.
  */
 public class Track {
-    private int startTime,
-                   length;
+    private int length;
 
     private SoundPool mSound;
 
+    public Track(int duration) {
+        this.length = duration;
+    }
+    public int duration() { return length; }
 
     public int setSound(AssetFileDescriptor asset) {
         return setSound(asset, 1);

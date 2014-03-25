@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical" android:layout_width="fill_parent"
     android:layout_height="match_parent"
     android:background="@color/greyblue">
 
@@ -22,10 +22,9 @@
         android:text="@string/mute_label"
         android:id="@+id/mute_chk"
         android:checked="true"
+        android:layout_below="@+id/title"
         android:layout_alignParentLeft="true"
-        android:layout_marginLeft="0dp"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="52dp" />
+        android:layout_alignParentStart="true" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
@@ -38,7 +37,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginLeft="32dp" />
+        android:layout_marginLeft="15dp" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
@@ -48,8 +47,7 @@
         android:id="@+id/paste_btn"
         android:background="@color/orangelight"
         android:layout_alignTop="@+id/copy_btn"
-        android:layout_toRightOf="@+id/copy_btn"
-        android:layout_marginLeft="29dp" />
+        android:layout_toLeftOf="@+id/title" />
 
     <Button
         android:layout_width="150dp"
@@ -57,23 +55,28 @@
         android:text="@string/delete_label"
         android:id="@+id/delete_btn"
         android:background="@color/redorange"
-        android:layout_marginRight="32dp"
+        android:layout_marginRight="15dp"
         android:layout_alignTop="@+id/paste_btn"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
+
+    <Button
+        android:id="@+id/new_snd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/new_sound"
+        android:background="@color/new_btn"
+        android:layout_alignTop="@+id/delete_btn"
+        android:layout_toLeftOf="@+id/delete_btn"
+        android:layout_marginRight="28dp" />
+
     <FrameLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_centerVertical="true"
-    android:layout_alignParentLeft="true"
-    android:layout_alignParentStart="true"
-    android:layout_alignParentRight="true"
-    android:layout_alignParentEnd="true" >
-        <com.example.droidyloops.dloops.TrackView
-        android:id="@+id/trackgrid"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    </FrameLayout>
+        android:id="@+id/frmlayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>
