@@ -38,12 +38,13 @@ public class LooperActivity extends Activity {
             snare = getAssets().openFd("Snare.ogg");
             kick = getAssets().openFd("Kick.wav");
             hat = getAssets().openFd("Hat.wav");
-            clap = getAssets().openFd("Clap.ogg");
+            clap = getAssets().openFd("Clap.wav");
 
             sounds[0] = mPool.load(snare, 1);
             sounds[1] = mPool.load(kick, 1);
             sounds[2] = mPool.load(hat, 1);
             sounds[3] = mPool.load(clap, 1);
+            mGridView.sampleIDs = sounds;
             for(int i : sounds)
             {
                 Log.v("sound", Integer.toString(i));
@@ -92,7 +93,7 @@ public class LooperActivity extends Activity {
     {
         if(!play)
         {
-            spThread.previews[row - 1] = true;
+            spThread.previews[row] = true;
         }
     }
 
@@ -122,7 +123,7 @@ public class LooperActivity extends Activity {
 
         public void toggleRunning() {
             play = !play;
-            curCol = 0;
+            curCol = -1;
             lastBeat = System.currentTimeMillis() - beatTime;
         }
 
@@ -135,17 +136,17 @@ public class LooperActivity extends Activity {
                 float streamVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
                 streamVolume = streamVolume / maxVolume;
                 if (play) {
-                    synchronized (mGridView.squares) {
+                    synchronized (mGridView.grid) {
 
                         long curTime = System.currentTimeMillis();
                         if (curTime - lastBeat >= beatTime) {
 
                             curCol++;
-                            if (curCol == 9)
-                                curCol = 1;
-                            for (Square sq : mGridView.squares) {
-                                if (sq.col == curCol) {
-                                    mSoundPool.play(sounds[sq.row - 1], streamVolume, streamVolume, 1, 0, 1);
+                            if (curCol == 8 || curCol == -1)
+                                curCol = 0;
+                            for (int i = 0; i < 4; i++) {
+                                if (mGridView.grid[curCol][i]) {
+                                    mSoundPool.play(mGridView.sampleIDs[i], streamVolume, streamVolume, 1, 0, 1);
                                 }
                             }
                             lastBeat = curTime;

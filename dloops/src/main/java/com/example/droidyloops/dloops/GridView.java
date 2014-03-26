@@ -31,7 +31,8 @@ public class GridView extends SurfaceView implements SurfaceHolder.Callback
     private Paint hlPaint;
     private Paint squarePaint;
 
-    public ArrayList<Square> squares;
+    public boolean[][] grid = new boolean[8][4];
+    public int[] sampleIDs = new int[4];
 
     private float[] hlPos;
 
@@ -85,7 +86,6 @@ public class GridView extends SurfaceView implements SurfaceHolder.Callback
         hlPos = new float[4];
 
         beatTime = 500;
-        squares = new ArrayList<Square>();
     }
 
 
@@ -127,9 +127,14 @@ public class GridView extends SurfaceView implements SurfaceHolder.Callback
             canvas.drawRect(hlPos[0], hlPos[1], hlPos[2], hlPos[3], hlPaint);
         }
 
-        for(Square square : squares)
+        for(int i = 1; i < 9; i++)
         {
-            canvas.drawRect(square.x, square.y, square.x + colWidth, square.y + rowHeight, squarePaint);
+            for(int j = 1; j < 5; j++)
+            {
+                if(grid[i - 1][j - 1]) {
+                    canvas.drawRect(colWidth * i, rowHeight * j, colWidth * (i +1), rowHeight * (j + 1), squarePaint);
+                }
+            }
         }
 
         // Draw vertical lines
@@ -187,26 +192,19 @@ public class GridView extends SurfaceView implements SurfaceHolder.Callback
             float y = event.getY();
             if(x > colWidth && y > rowHeight && y < (height - rowHeight))
             {
-                synchronized (squares) {
+                synchronized (grid) {
                     x -= x % colWidth;
                     y -= y % rowHeight;
-                    int col = (int) (x / colWidth);
-                    int row = (int) (y / rowHeight);
-                    Square sq = new Square(x, y, row, col);
-                    boolean found = false;
-                    for (Square cur : squares) {
-                        if (cur.equals(sq)) {
-                            found = true;
-                            squares.remove(cur);
-                            break;
-                        }
-                    }
+                    int col = (int) (x / colWidth) - 1;
+                    int row = (int) (y / rowHeight) - 1;
+
+                    boolean found = grid[col][row];
+                    grid[col][row] = !found;
 
                     if (!found) {
-                        squares.add(sq);
                         LooperActivity host = (LooperActivity) this.getContext();
                         if (host != null) {
-                            host.playSound(sq.row);
+                            host.playSound(row);
                         }
                     }
                 }

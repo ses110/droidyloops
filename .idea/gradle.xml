@@ -7,8 +7,8 @@
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="modules">
           <set>
-            <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/dloops" />
+            <option value="E:\Documents\GitHub\droidyloops" />
+            <option value="E:\Documents\GitHub\droidyloops\dloops" />
           </set>
         </option>
       </GradleProjectSettings>
