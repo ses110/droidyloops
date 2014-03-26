@@ -22,9 +22,9 @@ public class Track implements Parcelable {
     private int length,
                 start;
 
-    private SoundPool mSound;
-
     private Rect mRect;
+
+    private boolean[][] grid = new boolean[8][4];
 
     private Track(Parcel in) {
 
@@ -34,6 +34,11 @@ public class Track implements Parcelable {
         this.mRect = new Rect();
 
     }
+
+    public void setGrid(boolean[][] grid)
+    {
+        this.grid = grid;
+    }
     public void setRect(int left, int top, int right, int bottom) {
         this.mRect.set(left, top, right, bottom);
     }
@@ -42,13 +47,6 @@ public class Track implements Parcelable {
     }
 
     public int getDuration() { return length; }
-
-    public int setSound(AssetFileDescriptor asset) {
-        return setSound(asset, 1);
-    }
-    public int setSound(AssetFileDescriptor asset, int priority) {
-        return mSound.load(asset, priority);
-    }
 
     @Override
     public int describeContents() {

@@ -54,15 +54,14 @@
 
 
     <Button
-        android:id="@+id/new_snd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/new_sound"
-        android:background="@color/new_btn"
-        android:layout_alignTop="@+id/delete_btn"
-        android:layout_alignRight="@+id/title"
-        android:layout_alignEnd="@+id/title"
-        android:onClick="newSound"/>
+        android:text="@string/play_stop"
+        android:id="@+id/button"
+        android:onClick="playStop"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <FrameLayout
         android:id="@+id/frmlayout"

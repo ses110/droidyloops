@@ -78,8 +78,9 @@ public class Arranger extends ActionBarActivity {
     }
 
     // Create a new sound
-    public void newSound(View view) {
+    public void newSound(int instrument) {
         Intent newTrack = new Intent(this, LooperActivity.class);
+        newTrack.putExtra("instrument", instrument);
         startActivityForResult(newTrack,1);
     }
 
@@ -87,7 +88,9 @@ public class Arranger extends ActionBarActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1) {
             if(resultCode == RESULT_OK){
-                String result=data.getStringExtra("result");
+                int instrument =data.getIntExtra("instrument", 1);
+                boolean[][] curGrid = (boolean[][]) data.getExtras().getSerializable("grid");
+                //TODO: add this thing
             }
             if (resultCode == RESULT_CANCELED) {
                 //Write your code if there's no result

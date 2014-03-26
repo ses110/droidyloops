@@ -8,6 +8,7 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.media.AudioManager;
 import android.media.SoundPool;
@@ -29,38 +30,102 @@ public class LooperActivity extends Activity {
     private boolean quit;
 
     private int beatTime;
+    private boolean save = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+
+        Intent intent = getIntent();
+        int instrument = intent.getIntExtra("instrument", 1);
 
         setContentView(R.layout.activity_looper);
         mGridView = (GridView) findViewById(R.id.loop_view);
         mPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
 
         //TODO: Make this customizable
-        AssetFileDescriptor snare;
-        AssetFileDescriptor kick;
-        AssetFileDescriptor hat;
-        AssetFileDescriptor clap;
+        AssetFileDescriptor one;
+        AssetFileDescriptor two;
+        AssetFileDescriptor three;
+        AssetFileDescriptor four;
         int sounds[] = new int[4];
-        try {
-            snare = getAssets().openFd("Snare.ogg");
-            kick = getAssets().openFd("Kick.wav");
-            hat = getAssets().openFd("Hat.wav");
-            clap = getAssets().openFd("Clap.wav");
+        switch (instrument) {
+            case 1:
+                try {
+                    one = getAssets().openFd("Snare.ogg");
+                    two = getAssets().openFd("Kick.wav");
+                    three = getAssets().openFd("Hat.wav");
+                    four = getAssets().openFd("Clap.wav");
 
-            sounds[0] = mPool.load(snare, 1);
-            sounds[1] = mPool.load(kick, 1);
-            sounds[2] = mPool.load(hat, 1);
-            sounds[3] = mPool.load(clap, 1);
-            mGridView.sampleIDs = sounds;
-            for(int i : sounds)
-            {
-                Log.v("sound", Integer.toString(i));
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+                    sounds[0] = mPool.load(one, 1);
+                    sounds[1] = mPool.load(two, 1);
+                    sounds[2] = mPool.load(three, 1);
+                    sounds[3] = mPool.load(four, 1);
+                    mGridView.sampleIDs = sounds;
+                    for (int i : sounds) {
+                        Log.v("sound", Integer.toString(i));
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case 2:
+                try {
+                    one = getAssets().openFd("Snare.ogg");
+                    two = getAssets().openFd("Kick.wav");
+                    three = getAssets().openFd("Hat.wav");
+                    four = getAssets().openFd("Clap.wav");
+
+                    sounds[0] = mPool.load(one, 1);
+                    sounds[1] = mPool.load(two, 1);
+                    sounds[2] = mPool.load(three, 1);
+                    sounds[3] = mPool.load(four, 1);
+                    mGridView.sampleIDs = sounds;
+                    for (int i : sounds) {
+                        Log.v("sound", Integer.toString(i));
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case 3:
+                try {
+                    one = getAssets().openFd("Snare.ogg");
+                    two = getAssets().openFd("Kick.wav");
+                    three = getAssets().openFd("Hat.wav");
+                    four = getAssets().openFd("Clap.wav");
+
+                    sounds[0] = mPool.load(one, 1);
+                    sounds[1] = mPool.load(two, 1);
+                    sounds[2] = mPool.load(three, 1);
+                    sounds[3] = mPool.load(four, 1);
+                    mGridView.sampleIDs = sounds;
+                    for (int i : sounds) {
+                        Log.v("sound", Integer.toString(i));
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case 4:
+                try {
+                    one = getAssets().openFd("Snare.ogg");
+                    two = getAssets().openFd("Kick.wav");
+                    three = getAssets().openFd("Hat.wav");
+                    four = getAssets().openFd("Clap.wav");
+
+                    sounds[0] = mPool.load(one, 1);
+                    sounds[1] = mPool.load(two, 1);
+                    sounds[2] = mPool.load(three, 1);
+                    sounds[3] = mPool.load(four, 1);
+                    mGridView.sampleIDs = sounds;
+                    for (int i : sounds) {
+                        Log.v("sound", Integer.toString(i));
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                break;
         }
 
         beatTime = 500;
@@ -89,7 +154,13 @@ public class LooperActivity extends Activity {
         quit = true;
     }
 
-    public void saveAndReturn(View view) {
+    public void saveAndReturn(View view)
+    {
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra("grid",mGridView.grid);
+        returnIntent.putExtra("instrument", 1);
+        setResult(RESULT_OK, returnIntent);
+        finish();
 
     }
 

@@ -109,7 +109,7 @@ public class TrackView extends SurfaceView implements SurfaceHolder.Callback {
         mChannels[3] = new Channel("Vocals");
 
         //A track for each channel. Track's constructor argument is duration in loops.
-        Track track_1 = new Track(8);
+        Track track_1 = new Track(1);
         Track track_2 = new Track(5);
         Track track_3 = new Track(1);
         Track track_4 = new Track(3);
@@ -120,6 +120,7 @@ public class TrackView extends SurfaceView implements SurfaceHolder.Callback {
         mLongestTrack_Width = 8;
 
         mChannels[0].addTrack(track_1);
+        mChannels[0].addTrack(new Track(2));
         mChannels[1].addTrack(track_2);
         mChannels[2].addTrack(track_3);
         mChannels[3].addTrack(track_4);
@@ -139,8 +140,6 @@ public class TrackView extends SurfaceView implements SurfaceHolder.Callback {
         mTracksPaint = new Paint();
         mTracksPaint.setStyle(Paint.Style.FILL);
         mTracksPaint.setColor(getResources().getColor(R.color.track_bars));
-
-
     }
 
     @Override
@@ -246,7 +245,7 @@ public class TrackView extends SurfaceView implements SurfaceHolder.Callback {
 
                 mTracksPaint.setStyle(Paint.Style.STROKE);
                 mTracksPaint.setColor(getResources().getColor(R.color.track_bars_edges));
-
+                mTracksPaint.setStrokeWidth(2);
                 canvas.drawRect(tk.getRect(), mTracksPaint);
 
                 leftMost += scaledWidth;
