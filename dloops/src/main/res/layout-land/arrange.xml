@@ -16,16 +16,6 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/mute_label"
-        android:id="@+id/mute_chk"
-        android:checked="true"
-        android:layout_below="@+id/title"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
     <Button
         style="?android:attr/buttonStyleSmall"
         android:layout_width="100dp"
@@ -37,7 +27,8 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginLeft="15dp" />
+        android:layout_marginLeft="15dp"
+        android:enabled="false"/>
 
     <Button
         style="?android:attr/buttonStyleSmall"
@@ -47,7 +38,8 @@
         android:id="@+id/paste_btn"
         android:background="@color/orangelight"
         android:layout_alignTop="@+id/copy_btn"
-        android:layout_toLeftOf="@+id/title" />
+        android:layout_toLeftOf="@+id/title"
+        android:enabled="false"/>
 
     <Button
         android:layout_width="150dp"

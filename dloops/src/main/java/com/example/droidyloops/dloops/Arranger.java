@@ -80,7 +80,6 @@ public class Arranger extends ActionBarActivity {
     // Create a new sound
     public void newSound(View view) {
         Intent newTrack = new Intent(this, LooperActivity.class);
-        //newTrack.putExtra();
         startActivityForResult(newTrack,1);
     }
 
