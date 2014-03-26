@@ -109,23 +109,20 @@ public class TrackView extends SurfaceView implements SurfaceHolder.Callback {
         mChannels[3] = new Channel("Vocals");
 
         //A track for each channel. Track's constructor argument is duration in milliseconds.
-        Track track_1 = new Track(1000);
-        Track track_2 = new Track(1500);
-        Track track_3 = new Track(600);
-        Track track_4 = new Track(1400);
+        Track track_1 = new Track(8*8);
+        Track track_2 = new Track(8*5);
+        Track track_3 = new Track(8);
+        Track track_4 = new Track(8*3);
 
         //TrackView will display track rectangles and scale according to the ratio between canvas width to the longest
         // track found in any channel.
         //So each track will be a width of : (a_track_duration / longest_track_duration) * canvas_width
-        mLongestTrack_Width = 1500 * 1.5;
+        mLongestTrack_Width = 64;
 
         mChannels[0].addTrack(track_1);
         mChannels[1].addTrack(track_2);
         mChannels[2].addTrack(track_3);
         mChannels[3].addTrack(track_4);
-
-
-
 
 
 

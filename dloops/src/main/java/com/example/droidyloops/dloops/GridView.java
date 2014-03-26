@@ -1,17 +1,14 @@
 package com.example.droidyloops.dloops;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -21,6 +18,9 @@ import java.util.ArrayList;
 
 public class GridView extends SurfaceView implements SurfaceHolder.Callback
 {
+
+    private static final String TAG = "GridView";
+
     private PanelThread panelThread;
     private int height;
     private int width;
@@ -152,11 +152,6 @@ public class GridView extends SurfaceView implements SurfaceHolder.Callback
         float colWidth = (float)width / 9;
         hlPos[0] = 0;
         hlPos[2] = colWidth;
-    }
-
-    public void changeBPM(int bpm)
-    {
-        beatTime = 1000 / (bpm / 60);
     }
 
     public void incrementHL()
