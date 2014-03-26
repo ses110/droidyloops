@@ -1,10 +1,12 @@
 package com.example.droidyloops.dloops;
 
+import android.content.Intent;
 import android.media.SoundPool;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.FrameLayout;
 
 /*
@@ -73,6 +75,25 @@ public class Arranger extends ActionBarActivity {
 //        mSpThread.interrupt();
 //        mSndPool.release();
         quit = true;
+    }
+
+    // Create a new sound
+    public void newSound(View view) {
+        Intent newTrack = new Intent(this, LooperActivity.class);
+        //newTrack.putExtra();
+        startActivityForResult(newTrack,1);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1) {
+            if(resultCode == RESULT_OK){
+                String result=data.getStringExtra("result");
+            }
+            if (resultCode == RESULT_CANCELED) {
+                //Write your code if there's no result
+            }
+        }
     }
 
     class playThread extends Thread {

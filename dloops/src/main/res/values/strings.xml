@@ -19,5 +19,9 @@
     <string name="title_activity_arranger">Arranger</string>
     <string name="new_sound">New Sound</string>
     <string name="new_loop">New drumloop</string>
+    <string name="set_bpm">Set BPM</string>
+    <string name="play_stop">► / ■</string>
+    <string name="save_return">Save+return</string>
+    <string name="back">Back</string>
 
 </resources>

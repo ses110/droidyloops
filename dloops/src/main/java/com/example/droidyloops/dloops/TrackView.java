@@ -4,9 +4,11 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -20,6 +22,8 @@ public class TrackView extends SurfaceView implements SurfaceHolder.Callback {
     private final int maxChannels = 4;
     private static final String TAG = "TrackView";
 
+    private float mStartDragX;
+    private float mStartDragY;
 
     private int width,
                 height;
@@ -33,6 +37,8 @@ public class TrackView extends SurfaceView implements SurfaceHolder.Callback {
 
 
     private Channel[] mChannels;
+
+    private ScaleGestureDetector mScaleDetector;
 
 
     public TrackView(Context context) {
@@ -49,6 +55,7 @@ public class TrackView extends SurfaceView implements SurfaceHolder.Callback {
         super(context, attrs, defStyle);
         getHolder().addCallback(this);
     }
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 
@@ -96,10 +103,10 @@ public class TrackView extends SurfaceView implements SurfaceHolder.Callback {
         //          This is dummy data for testing. [TODO: ERASE DUMMY DATA AFTER TESTING]
         mChannels = new Channel[maxChannels];
 
-        mChannels[0] = new Channel();
-        mChannels[1] = new Channel();
-        mChannels[2] = new Channel();
-        mChannels[3] = new Channel();
+        mChannels[0] = new Channel("Drums");
+        mChannels[1] = new Channel("Bass");
+        mChannels[2] = new Channel("Guitar");
+        mChannels[3] = new Channel("Vocals");
 
         //A track for each channel. Track's constructor argument is duration in milliseconds.
         Track track_1 = new Track(1000);
@@ -107,15 +114,17 @@ public class TrackView extends SurfaceView implements SurfaceHolder.Callback {
         Track track_3 = new Track(600);
         Track track_4 = new Track(1400);
 
+        //TrackView will display track rectangles and scale according to the ratio between canvas width to the longest
+        // track found in any channel.
+        //So each track will be a width of : (a_track_duration / longest_track_duration) * canvas_width
+        mLongestTrack_Width = 1500 * 1.5;
+
         mChannels[0].addTrack(track_1);
         mChannels[1].addTrack(track_2);
         mChannels[2].addTrack(track_3);
         mChannels[3].addTrack(track_4);
 
-        //TrackView will display track rectangles and scale according to the ratio between canvas width to the longest
-        // track found in any channel.
-        //So each track will be a width of : (a_track_duration / longest_track_duration) * canvas_width
-        mLongestTrack_Width = 1500 * 1.5;
+
 
 
 
@@ -134,6 +143,8 @@ public class TrackView extends SurfaceView implements SurfaceHolder.Callback {
         mTracksPaint = new Paint();
         mTracksPaint.setStyle(Paint.Style.FILL);
         mTracksPaint.setColor(getResources().getColor(R.color.track_bars));
+
+
     }
 
     @Override
@@ -156,7 +167,29 @@ public class TrackView extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if(event.getAction() == MotionEvent.ACTION_DOWN) {
-            Log.d(TAG, "Detected screen press at x: " + event.getX() + " y: " + event.getY());
+
+            float labelHeight = (float) height / (maxChannels);
+            float labelWidth = (float) width / 9;
+
+            float x = event.getX();
+            float y = event.getY();
+            mStartDragX = x;
+            mStartDragY = y;
+
+            Log.d(TAG, "Detected screen press at x: " + Float.toString(x) + " y: " + Float.toString(y));
+
+            if(x > labelWidth) {
+                for(Channel c: mChannels) {
+                    for(Track tk : c.getTracks()) {
+                        if(tk.getRect().contains((int)x,(int)y)) {
+                            Log.d(TAG, "Pressed a track on channel " + c.toString());
+                        }
+                    }
+                }
+            }
+        } else if(event.getAction() == MotionEvent.ACTION_MOVE)
+        {
+
         }
         return super.onTouchEvent(event);
     }
@@ -190,24 +223,35 @@ public class TrackView extends SurfaceView implements SurfaceHolder.Callback {
         canvas.drawLine(0,labelHeight*2, width, labelHeight*2, mLabelPaint);
         canvas.drawLine(0,labelHeight*3, width, labelHeight*3, mLabelPaint);
 
-//
-//        canvas.drawRect(2, labelHeight, width - 1, height - labelHeight, mLabelPaint);
+        Typeface tf = Typeface.create("Helvetica",Typeface.BOLD);
+        mLabelPaint.setAntiAlias(true);
+        mLabelPaint.setStyle(Paint.Style.FILL);
+        mLabelPaint.setTypeface(tf);
 
         //Update Track rectangles
+        mLabelPaint.setTextSize(getResources().getDimensionPixelSize(R.dimen.channelLabel));
         for(int i = 0; i < maxChannels; i++) {
             Channel ch = mChannels[i];
-            canvas.drawText(ch.toString(),0, i * labelHeight, mLabelPaint);
+
+            //  draw Channel's label text
+            canvas.drawText(ch.toString(), labelWidth/12, (i+1)*(labelHeight)-(labelHeight/3), mLabelPaint);
+
             int leftMost = (int)labelWidth;
+
+            //Redraw each track rectangle
             for(Track tk : ch.getTracks()) {
                 double scaledWidth = ((double) tk.getDuration() / mLongestTrack_Width) * (width);
+
                 mTracksPaint.setStyle(Paint.Style.FILL);
                 mTracksPaint.setColor(getResources().getColor(R.color.track_bars));
-                
-                canvas.drawRect(leftMost, i * labelHeight, (float)scaledWidth, (i+1)*labelHeight, mTracksPaint);
+
+                tk.setRect(leftMost, (int)(i*labelHeight), (int)scaledWidth, (int) ((i+1)*labelHeight));
+                canvas.drawRect(tk.getRect(), mTracksPaint);
                 
                 mTracksPaint.setStyle(Paint.Style.STROKE);
                 mTracksPaint.setColor(getResources().getColor(R.color.track_bars_edges));
-                canvas.drawRect(leftMost, i * labelHeight, (float)scaledWidth, (i+1)*labelHeight, mTracksPaint);
+
+                canvas.drawRect(tk.getRect(), mTracksPaint);
                 
                 leftMost += scaledWidth;
             }

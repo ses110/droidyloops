@@ -21,6 +21,9 @@
             android:label="@string/title_activity_arranger"
             android:screenOrientation="landscape" >
         </activity>
+        <activity android:name="com.example.droidyloops.dloops.LooperActivity"
+            android:label="Looper"
+            android:screenOrientation="landscape" />
     </application>
 
 </manifest>
