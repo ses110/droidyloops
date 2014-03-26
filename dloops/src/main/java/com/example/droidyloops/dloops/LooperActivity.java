@@ -1,13 +1,21 @@
 package com.example.droidyloops.dloops;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.AssetFileDescriptor;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 
 
 import java.io.IOException;
@@ -19,6 +27,8 @@ public class LooperActivity extends Activity {
     private SoundPoolThread spThread;
     private boolean play;
     private boolean quit;
+
+    private int beatTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -53,6 +63,7 @@ public class LooperActivity extends Activity {
             e.printStackTrace();
         }
 
+        beatTime = 500;
         spThread=new SoundPoolThread(mPool, mGridView, sounds);
 
         spThread.start();
@@ -82,6 +93,24 @@ public class LooperActivity extends Activity {
 
     }
 
+    public void changeBpmDialog(View view) {
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        Fragment prev = getFragmentManager().findFragmentByTag("dialog");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+
+        BpmDialogFragment changeDialog = new BpmDialogFragment();
+        changeDialog.setLooperActivity(this, beatTime);
+        changeDialog.show(ft, "Dialog");
+
+
+    }
+    public void changeBpm(float bpm) {
+        beatTime = (int)(1000 / (bpm / 60));
+    }
+
     public void playStop(View view)
     {
         play = !play;
@@ -109,7 +138,6 @@ public class LooperActivity extends Activity {
 
         private long lastBeat;
         private int curCol = 0;
-        private int beatTime = 250;
 
         public SoundPoolThread(SoundPool mSoundPool, GridView gridView, int[] sounds)
         {
@@ -167,5 +195,48 @@ public class LooperActivity extends Activity {
                 }
             }
         }
+    }
+
+    public class BpmDialogFragment extends DialogFragment {
+        LooperActivity mLooper;
+        int mBeatTime;
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+            builder.setTitle("Set BPM");
+            builder.setMessage("Input your BPM:");
+
+
+            final EditText input = new EditText(LooperActivity.this);
+            input.setText(Float.toString((1000/mBeatTime) * 60));
+            input.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED);
+            builder.setView(input);
+
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    float bpm = Float.parseFloat((input.getText().toString()));
+                    if(bpm < 30)
+                        bpm = 30;
+                    if(bpm > 300)
+                        bpm = 300;
+                    mLooper.changeBpm(bpm);
+                }
+            })
+                    .setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            getDialog().dismiss();
+                        }
+                    });
+            return builder.create();
+        }
+
+        public void setLooperActivity(LooperActivity looper, int beatTime)
+        {
+            mLooper = looper;
+            mBeatTime = beatTime;
+        }
+
+
     }
 }

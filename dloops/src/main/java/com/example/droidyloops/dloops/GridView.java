@@ -117,8 +117,6 @@ public class GridView extends SurfaceView implements SurfaceHolder.Callback
         canvas.drawRect(0, 0, colWidth, height, gridPaint);
         gridPaint.setStyle(Paint.Style.STROKE);
 
-        canvas.drawRect(2, 2, width - 1, height - 1, gridPaint);
-
         // Draw highlight
         if(play)
         {
@@ -126,6 +124,9 @@ public class GridView extends SurfaceView implements SurfaceHolder.Callback
             hlPos[3] = height - 2;
             canvas.drawRect(hlPos[0], hlPos[1], hlPos[2], hlPos[3], hlPaint);
         }
+
+        // White rectangle on the left
+        canvas.drawRect(2, 2, width - 1, height - 1, gridPaint);
 
         for(int i = 1; i < 9; i++)
         {
