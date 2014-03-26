@@ -107,31 +107,31 @@ public class GridView extends SurfaceView implements SurfaceHolder.Callback
 //            Log.v("height", Integer.toString(height));
         }
 
-        float rowHeight = (float)height / 6;
+        float rowHeight = (float)height / 4;
         float colWidth = (float)width / 9;
 
         // fill in the background
         canvas.drawColor(0xfc0099cc);
 
         gridPaint.setStyle(Paint.Style.FILL);
-        canvas.drawRect(0, rowHeight, colWidth, height - rowHeight, gridPaint);
+        canvas.drawRect(0, 0, colWidth, height, gridPaint);
         gridPaint.setStyle(Paint.Style.STROKE);
 
-        canvas.drawRect(2, rowHeight, width - 1, height - rowHeight, gridPaint);
+        canvas.drawRect(2, 2, width - 1, height - 1, gridPaint);
 
         // Draw highlight
         if(play)
         {
-            hlPos[1] = rowHeight;
-            hlPos[3] = height - rowHeight;
+            hlPos[1] = 2;
+            hlPos[3] = height - 2;
             canvas.drawRect(hlPos[0], hlPos[1], hlPos[2], hlPos[3], hlPaint);
         }
 
         for(int i = 1; i < 9; i++)
         {
-            for(int j = 1; j < 5; j++)
+            for(int j = 0; j < 4; j++)
             {
-                if(grid[i - 1][j - 1]) {
+                if(grid[i - 1][j]) {
                     canvas.drawRect(colWidth * i, rowHeight * j, colWidth * (i +1), rowHeight * (j + 1), squarePaint);
                 }
             }
@@ -140,11 +140,11 @@ public class GridView extends SurfaceView implements SurfaceHolder.Callback
         // Draw vertical lines
         for(int i = 1; i < 9; i++)
         {
-            canvas.drawLine(colWidth * i, rowHeight, colWidth * i, height - rowHeight, gridPaint);
+            canvas.drawLine(colWidth * i, 2, colWidth * i, height - 1, gridPaint);
         }
 
         // Draw horizontal lines
-        for(int i = 1; i < 5; i++)
+        for(int i = 1; i < 4; i++)
         {
             canvas.drawLine(2, rowHeight * i, width - 1, rowHeight * i, gridPaint);
         }
@@ -184,20 +184,21 @@ public class GridView extends SurfaceView implements SurfaceHolder.Callback
     @Override
     public boolean onTouchEvent(MotionEvent event)
     {
-        float rowHeight = (float)height / 6;
+        float rowHeight = (float)height / 4;
         float colWidth = (float)width / 9;
         if(event.getAction() == MotionEvent.ACTION_DOWN)
         {
             float x = event.getX();
             float y = event.getY();
-            if(x > colWidth && y > rowHeight && y < (height - rowHeight))
+            if(x > colWidth)
             {
                 synchronized (grid) {
                     x -= x % colWidth;
                     y -= y % rowHeight;
                     int col = (int) (x / colWidth) - 1;
-                    int row = (int) (y / rowHeight) - 1;
-
+                    int row = (int) (y / rowHeight);
+                    Log.v("row", Integer.toString(row));
+                    Log.v("col", Integer.toString(col));
                     boolean found = grid[col][row];
                     grid[col][row] = !found;
 
