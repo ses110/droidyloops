@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/DroidyLoops.iml" filepath="$PROJECT_DIR$/DroidyLoops.iml" />
+      <module fileurl="file://$PROJECT_DIR$/DroidyLoops.iml" filepath="$PROJECT_DIR$/DroidyLoops.iml" />
       <module fileurl="file://$PROJECT_DIR$/dloops/dloops.iml" filepath="$PROJECT_DIR$/dloops/dloops.iml" />
     </modules>
   </component>
