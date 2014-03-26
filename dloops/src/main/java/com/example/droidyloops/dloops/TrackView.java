@@ -26,7 +26,7 @@ public class TrackView extends SurfaceView implements SurfaceHolder.Callback {
     private float mStartDragY;
 
     private int width,
-                height;
+            height;
 
     private double mLongestTrack_Width;
 
@@ -108,25 +108,22 @@ public class TrackView extends SurfaceView implements SurfaceHolder.Callback {
         mChannels[2] = new Channel("Guitar");
         mChannels[3] = new Channel("Vocals");
 
-        //A track for each channel. Track's constructor argument is duration in milliseconds.
-        Track track_1 = new Track(1000);
-        Track track_2 = new Track(1500);
-        Track track_3 = new Track(600);
-        Track track_4 = new Track(1400);
+        //A track for each channel. Track's constructor argument is duration in loops.
+        Track track_1 = new Track(1);
+        Track track_2 = new Track(5);
+        Track track_3 = new Track(1);
+        Track track_4 = new Track(3);
 
         //TrackView will display track rectangles and scale according to the ratio between canvas width to the longest
         // track found in any channel.
         //So each track will be a width of : (a_track_duration / longest_track_duration) * canvas_width
-        mLongestTrack_Width = 1500 * 1.5;
+        mLongestTrack_Width = 8;
 
         mChannels[0].addTrack(track_1);
+        mChannels[0].addTrack(new Track(2));
         mChannels[1].addTrack(track_2);
         mChannels[2].addTrack(track_3);
         mChannels[3].addTrack(track_4);
-
-
-
-
 
 
         mTrackThread = new TrackThread(getHolder(), this);
@@ -143,8 +140,6 @@ public class TrackView extends SurfaceView implements SurfaceHolder.Callback {
         mTracksPaint = new Paint();
         mTracksPaint.setStyle(Paint.Style.FILL);
         mTracksPaint.setColor(getResources().getColor(R.color.track_bars));
-
-
     }
 
     @Override
@@ -245,14 +240,14 @@ public class TrackView extends SurfaceView implements SurfaceHolder.Callback {
                 mTracksPaint.setStyle(Paint.Style.FILL);
                 mTracksPaint.setColor(getResources().getColor(R.color.track_bars));
 
-                tk.setRect(leftMost, (int)(i*labelHeight), (int)scaledWidth, (int) ((i+1)*labelHeight));
+                tk.setRect(leftMost, (int)(i*labelHeight), (int)scaledWidth + leftMost, (int) ((i+1)*labelHeight));
                 canvas.drawRect(tk.getRect(), mTracksPaint);
-                
+
                 mTracksPaint.setStyle(Paint.Style.STROKE);
                 mTracksPaint.setColor(getResources().getColor(R.color.track_bars_edges));
-
+                mTracksPaint.setStrokeWidth(2);
                 canvas.drawRect(tk.getRect(), mTracksPaint);
-                
+
                 leftMost += scaledWidth;
             }
         }
