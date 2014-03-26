@@ -68,8 +68,8 @@
         android:text="@string/new_sound"
         android:background="@color/new_btn"
         android:layout_alignTop="@+id/delete_btn"
-        android:layout_toLeftOf="@+id/delete_btn"
-        android:layout_marginRight="28dp" />
+        android:layout_alignRight="@+id/title"
+        android:layout_alignEnd="@+id/title" />
 
     <FrameLayout
         android:id="@+id/frmlayout"

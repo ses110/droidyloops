@@ -9,14 +9,27 @@ import java.util.ArrayList;
  *
  */
 public class Channel {
+    private String mName;
     ArrayList<Track> mTracks;
     int mChannelLength;
+
     public Channel() {
-        this.mChannelLength = 0;
-        mTracks = new ArrayList<Track>();
+        this("New Track");
     }
+    public Channel(String name) {
+        this.mName = name;
+        this.mChannelLength = 0;
+        this.mTracks = new ArrayList<Track>();
+    }
+    public ArrayList<Track> getTracks() {
+        return mTracks;
+    }
+
     public void addTrack(Track track) {
-        mTracks.add(track);
-        this.mChannelLength += track.duration();
+        this.mTracks.add(track);
+        this.mChannelLength += track.getDuration();
+    }
+    public String toString() {
+        return mName;
     }
 }

@@ -14,7 +14,9 @@
     <color name="black">#000000</color>
     <color name="greyblue">#6c7f95</color>
     <color name="track_bg">#ad9faf</color>
+    <color name="label_bg">#ff857a87</color>
     <color name="new_btn">#00BB00</color>
     <color name="track_bars">#f5853f</color>
+    <color name="track_bars_edges">#ff974c2b</color>
     <color name="track_bar_selected">#425af2</color>
 </resources>

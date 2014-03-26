@@ -20,10 +20,17 @@ public class Track {
 
     private SoundPool mSound;
 
+    private double x_start, x_end;
+
     public Track(int duration) {
         this.length = duration;
+
     }
-    public int duration() { return length; }
+    public void setPos(double x1, double x2) {
+        this.x_start = x1;
+        this.x_end = x2;
+    }
+    public int getDuration() { return length; }
 
     public int setSound(AssetFileDescriptor asset) {
         return setSound(asset, 1);
