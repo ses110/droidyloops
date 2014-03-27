@@ -28,6 +28,8 @@ public class Arranger extends ActionBarActivity {
     private static ArrayList<Pair<Integer, boolean[][]>> trackQueue;
     private static boolean queueUpdate;
 
+    private int beatTime;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -123,6 +125,7 @@ public class Arranger extends ActionBarActivity {
             if(resultCode == RESULT_OK){
                 int instrument = data.getIntExtra("instrument", 1);
                 String grid = data.getStringExtra("grid");
+                beatTime = data.getIntExtra("beatTime", 500);
                 if(grid != null)
                 {
                     Log.v("Got Grid", grid);

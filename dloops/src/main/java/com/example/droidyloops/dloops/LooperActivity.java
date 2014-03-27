@@ -174,6 +174,7 @@ public class LooperActivity extends Activity {
         }
         returnIntent.putExtra("grid", result);
         returnIntent.putExtra("instrument", instrument);
+        returnIntent.putExtra("beatTime", beatTime);
         save = true;
         setResult(RESULT_OK, returnIntent);
         finish();
