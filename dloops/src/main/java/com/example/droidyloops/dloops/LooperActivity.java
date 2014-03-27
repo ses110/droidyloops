@@ -71,10 +71,10 @@ public class LooperActivity extends Activity {
                 break;
             case 2:
                 try {
-                    one = getAssets().openFd("Snare.ogg");
-                    two = getAssets().openFd("Kick.wav");
-                    three = getAssets().openFd("Hat.wav");
-                    four = getAssets().openFd("Clap.wav");
+                    one = getAssets().openFd("bass1.wav");
+                    two = getAssets().openFd("bass2.wav");
+                    three = getAssets().openFd("bass3.wav");
+                    four = getAssets().openFd("bass4.wav");
 
                     sounds[0] = mPool.load(one, 1);
                     sounds[1] = mPool.load(two, 1);
@@ -90,10 +90,10 @@ public class LooperActivity extends Activity {
                 break;
             case 3:
                 try {
-                    one = getAssets().openFd("Snare.ogg");
-                    two = getAssets().openFd("Kick.wav");
-                    three = getAssets().openFd("Hat.wav");
-                    four = getAssets().openFd("Clap.wav");
+                    one = getAssets().openFd("guitar1.wav");
+                    two = getAssets().openFd("guitar2.wav");
+                    three = getAssets().openFd("guitar3.wav");
+                    four = getAssets().openFd("guitar4.wav");
 
                     sounds[0] = mPool.load(one, 1);
                     sounds[1] = mPool.load(two, 1);
@@ -109,10 +109,10 @@ public class LooperActivity extends Activity {
                 break;
             case 4:
                 try {
-                    one = getAssets().openFd("Snare.ogg");
-                    two = getAssets().openFd("Kick.wav");
-                    three = getAssets().openFd("Hat.wav");
-                    four = getAssets().openFd("Clap.wav");
+                    one = getAssets().openFd("vocals_female1.wav");
+                    two = getAssets().openFd("vocals_female2.wav");
+                    three = getAssets().openFd("vocals_male1.wav");
+                    four = getAssets().openFd("vocals_male1.wav");
 
                     sounds[0] = mPool.load(one, 1);
                     sounds[1] = mPool.load(two, 1);
