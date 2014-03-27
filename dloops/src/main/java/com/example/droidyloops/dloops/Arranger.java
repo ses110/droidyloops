@@ -30,6 +30,8 @@ public class Arranger extends ActionBarActivity {
 
     private int beatTime;
 
+    private boolean play;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,9 +116,17 @@ public class Arranger extends ActionBarActivity {
 
     // Create a new sound
     public void newSound(int instrument) {
-        Intent newTrack = new Intent(this, LooperActivity.class);
-        newTrack.putExtra("instrument", instrument);
-        startActivityForResult(newTrack, 1);
+        if(!play)
+        {
+            Intent newTrack = new Intent(this, LooperActivity.class);
+            newTrack.putExtra("instrument", instrument);
+            startActivityForResult(newTrack, 1);
+        }
+    }
+
+    public void playStop(View view)
+    {
+        play = !play;
     }
 
     @Override
@@ -164,6 +174,11 @@ public class Arranger extends ActionBarActivity {
         @Override
         public void run() {
             while(true) {
+                try {
+                    this.sleep(beatTime);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 if(quit)
                     break;
 
