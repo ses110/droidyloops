@@ -62,6 +62,7 @@ public class GridView extends SurfaceView implements SurfaceHolder.Callback
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
 
+        Log.v("surface", "created");
         setWillNotDraw(false); //Allows us to use invalidate() to call onDraw()
 
         panelThread = new PanelThread(getHolder(), this); //Start the thread that

@@ -36,14 +36,12 @@ public class LooperActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-
-        Intent intent = getIntent();
-        instrument = intent.getIntExtra("instrument", 1);
-
         setContentView(R.layout.activity_looper);
+
         mGridView = (GridView) findViewById(R.id.loop_view);
         mPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
-
+        Intent intent = getIntent();
+        instrument = intent.getIntExtra("instrument", 1);
         //TODO: Make this customizable
         AssetFileDescriptor one;
         AssetFileDescriptor two;
