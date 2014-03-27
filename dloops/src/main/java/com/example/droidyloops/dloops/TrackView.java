@@ -36,7 +36,7 @@ public class TrackView extends SurfaceView implements SurfaceHolder.Callback {
     private Paint mTracksPaint;
 
 
-    private Channel[] mChannels;
+    public Channel[] mChannels;
 
     private ScaleGestureDetector mScaleDetector;
 
@@ -44,18 +44,31 @@ public class TrackView extends SurfaceView implements SurfaceHolder.Callback {
     public TrackView(Context context) {
         super(context);
         getHolder().addCallback(this);
+        this.setUp();
     }
 
     public TrackView(Context context, AttributeSet attrs) {
         super(context, attrs);
         getHolder().addCallback(this);
+        this.setUp();
     }
 
     public TrackView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         getHolder().addCallback(this);
+        this.setUp();
     }
 
+    private void setUp() {
+        if(mChannels == null) {
+            mChannels = new Channel[maxChannels];
+
+            mChannels[0] = new Channel("Drums");
+            mChannels[1] = new Channel("Bass");
+            mChannels[2] = new Channel("Guitar");
+            mChannels[3] = new Channel("Vocals");
+        }
+    }
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 
@@ -101,14 +114,7 @@ public class TrackView extends SurfaceView implements SurfaceHolder.Callback {
         setWillNotDraw(false);
 
         //          This is dummy data for testing. [TODO: ERASE DUMMY DATA AFTER TESTING]
-        if(mChannels == null) {
-            mChannels = new Channel[maxChannels];
 
-            mChannels[0] = new Channel("Drums");
-            mChannels[1] = new Channel("Bass");
-            mChannels[2] = new Channel("Guitar");
-            mChannels[3] = new Channel("Vocals");
-        }
         //A track for each channel. Track's constructor argument is duration in loops.
 //        Track track_1 = new Track(1);
 //        Track track_2 = new Track(5);
