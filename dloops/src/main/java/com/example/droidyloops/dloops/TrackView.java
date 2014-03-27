@@ -101,13 +101,14 @@ public class TrackView extends SurfaceView implements SurfaceHolder.Callback {
         setWillNotDraw(false);
 
         //          This is dummy data for testing. [TODO: ERASE DUMMY DATA AFTER TESTING]
-        mChannels = new Channel[maxChannels];
+        if(mChannels == null) {
+            mChannels = new Channel[maxChannels];
 
-        mChannels[0] = new Channel("Drums");
-        mChannels[1] = new Channel("Bass");
-        mChannels[2] = new Channel("Guitar");
-        mChannels[3] = new Channel("Vocals");
-
+            mChannels[0] = new Channel("Drums");
+            mChannels[1] = new Channel("Bass");
+            mChannels[2] = new Channel("Guitar");
+            mChannels[3] = new Channel("Vocals");
+        }
         //A track for each channel. Track's constructor argument is duration in loops.
 //        Track track_1 = new Track(1);
 //        Track track_2 = new Track(5);

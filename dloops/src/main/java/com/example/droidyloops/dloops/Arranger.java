@@ -5,10 +5,13 @@ import android.media.SoundPool;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+
+import java.util.ArrayList;
 
 /*
 * Arranger will simply serve as a container for the TrackView class, which is a class that extends
@@ -18,17 +21,24 @@ import android.widget.FrameLayout;
 
 public class Arranger extends ActionBarActivity {
 
-    private TrackView mTrackView;
+    private static TrackView mTrackView;
     private SoundPool mSndPool;
     private playThread mSpThread;
     private boolean quit;
+    private static ArrayList<Pair<Integer, boolean[][]>> trackQueue;
+    private static boolean queueUpdate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.arrange);
 
-        mTrackView = new TrackView(this);
+        if(mTrackView == null) {
+            mTrackView = new TrackView(this);
+        }
+
+        if(trackQueue == null)
+            trackQueue = new ArrayList<Pair<Integer, boolean[][]>>();
 
         // Remove the status bar, title bar and make the application fullscreen
 //        requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -45,6 +55,7 @@ public class Arranger extends ActionBarActivity {
 
 //        mSpThread = new playThread(mSndPool, mTrackView);
 //        mSpThread.start();
+
     }
 
     @Override
@@ -78,6 +89,27 @@ public class Arranger extends ActionBarActivity {
         quit = true;
     }
 
+    @Override
+    public void onResume(){
+        super.onResume();
+
+        //Update the tracks!
+        if(queueUpdate)
+        {
+            Log.v("queueUpdate time!", Integer.toString(trackQueue.size()));
+            for (Pair<Integer, boolean[][]> pair : trackQueue)
+            {
+                mTrackView.addTrack(pair.first - 1, pair.second);
+            }
+            trackQueue.clear();
+            queueUpdate = false;
+        }
+        else
+        {
+            Log.v("queueUpdate", "is false");
+        }
+    }
+
     // Create a new sound
     public void newSound(int instrument) {
         Intent newTrack = new Intent(this, LooperActivity.class);
@@ -101,13 +133,21 @@ public class Arranger extends ActionBarActivity {
                                 curGrid[i][j] = true;
                         }
                     }
-                    mTrackView.addTrack(instrument, curGrid);
+                    this.addTrack(instrument, curGrid);
                 }
             }
             if (resultCode == RESULT_CANCELED) {
                 //Write your code if there's no result
             }
         }
+    }
+
+    private void addTrack(int instrument, boolean[][] curGrid)
+    {
+        Pair<Integer, boolean[][]> temp = new Pair<Integer, boolean[][]>(instrument, curGrid);
+        trackQueue.add(temp);
+        queueUpdate = true;
+        Log.v("queueUpdate", "is true!");
     }
 
     class playThread extends Thread {
