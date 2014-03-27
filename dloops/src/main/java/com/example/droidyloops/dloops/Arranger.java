@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.media.SoundPool;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -81,16 +82,27 @@ public class Arranger extends ActionBarActivity {
     public void newSound(int instrument) {
         Intent newTrack = new Intent(this, LooperActivity.class);
         newTrack.putExtra("instrument", instrument);
-        startActivityForResult(newTrack,1);
+        startActivityForResult(newTrack, 1);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1) {
             if(resultCode == RESULT_OK){
-                int instrument =data.getIntExtra("instrument", 1);
-                boolean[][] curGrid = (boolean[][]) data.getExtras().getSerializable("grid");
-                //TODO: add this thing
+                int instrument = data.getIntExtra("instrument", 1);
+                String grid = data.getStringExtra("grid");
+                if(grid != null)
+                {
+                    Log.v("Got Grid", grid);
+                    boolean[][] curGrid = new boolean[8][4];
+                    for (int i = 0; i < 8; i++) {
+                        for (int j = 0; j < 4; j++) {
+                            if (grid.charAt(i * 4 + j) == '1')
+                                curGrid[i][j] = true;
+                        }
+                    }
+                    mTrackView.addTrack(instrument, curGrid);
+                }
             }
             if (resultCode == RESULT_CANCELED) {
                 //Write your code if there's no result

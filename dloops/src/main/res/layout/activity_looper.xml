@@ -43,7 +43,7 @@
             android:text="@string/set_bpm"
             android:id="@+id/btn_bpm"
             android:layout_centerHorizontal="true"
-            android:enabled="false" />
+            android:onClick="changeBpmDialog"/>
 
         <Button
         android:layout_width="wrap_content"

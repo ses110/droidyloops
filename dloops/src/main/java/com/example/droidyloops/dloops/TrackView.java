@@ -142,6 +142,13 @@ public class TrackView extends SurfaceView implements SurfaceHolder.Callback {
         mTracksPaint.setColor(getResources().getColor(R.color.track_bars));
     }
 
+    public void addTrack(int channel, boolean[][] grid)
+    {
+        Track curTrack = new Track(1);
+        curTrack.setGrid(grid);
+        mChannels[channel].addTrack(curTrack);
+    }
+
     @Override
     public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i2, int i3) {
         Log.d(TAG, "on surfaceChanged");
@@ -174,10 +181,13 @@ public class TrackView extends SurfaceView implements SurfaceHolder.Callback {
             Log.d(TAG, "Detected screen press at x: " + Float.toString(x) + " y: " + Float.toString(y));
 
             if(x > labelWidth) {
-                for(Channel c: mChannels) {
+                for(int i = 0; i < 4; i++) {
+                    Channel c = mChannels[i];
                     for(Track tk : c.getTracks()) {
                         if(tk.getRect().contains((int)x,(int)y)) {
                             Log.d(TAG, "Pressed a track on channel " + c.toString());
+                            Arranger mArranger = (Arranger) this.getContext();
+                            mArranger.newSound(i + 1);
                         }
                     }
                 }
@@ -251,7 +261,6 @@ public class TrackView extends SurfaceView implements SurfaceHolder.Callback {
                 leftMost += scaledWidth;
             }
         }
-
     }
 
     class TrackThread extends Thread {

@@ -31,13 +31,14 @@ public class LooperActivity extends Activity {
 
     private int beatTime;
     private boolean save = false;
+    private int instrument;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
 
         Intent intent = getIntent();
-        int instrument = intent.getIntExtra("instrument", 1);
+        instrument = intent.getIntExtra("instrument", 1);
 
         setContentView(R.layout.activity_looper);
         mGridView = (GridView) findViewById(R.id.loop_view);
@@ -152,16 +153,32 @@ public class LooperActivity extends Activity {
         spThread.interrupt();
         mPool.release();
         quit = true;
+        if(!save)
+        {
+            Intent returnIntent = new Intent();
+            setResult(RESULT_CANCELED, returnIntent);
+        }
     }
 
     public void saveAndReturn(View view)
     {
         Intent returnIntent = new Intent();
-        returnIntent.putExtra("grid",mGridView.grid);
-        returnIntent.putExtra("instrument", 1);
+        String result = "";
+        for (int i = 0; i < 8; i++)
+        {
+            for (int j = 0; j < 4; j++)
+            {
+                if(mGridView.grid[i][j])
+                    result += "1";
+                else
+                    result += "0";
+            }
+        }
+        returnIntent.putExtra("grid", result);
+        returnIntent.putExtra("instrument", instrument);
+        save = true;
         setResult(RESULT_OK, returnIntent);
         finish();
-
     }
 
     public void changeBpmDialog(View view) {
