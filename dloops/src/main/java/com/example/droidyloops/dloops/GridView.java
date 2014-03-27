@@ -92,10 +92,8 @@ public class GridView extends SurfaceView implements SurfaceHolder.Callback
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        try {
-            panelThread.setRunning(false);                //Tells thread to stop
-            panelThread.join();                           //Removes thread from mem.
-        } catch (InterruptedException e) {}
+        panelThread.setRunning(false);                //Tells thread to stop
+        panelThread.interrupt();                           //Removes thread from mem.
     }
 
     @Override

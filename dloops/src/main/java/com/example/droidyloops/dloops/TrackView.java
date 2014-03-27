@@ -109,21 +109,21 @@ public class TrackView extends SurfaceView implements SurfaceHolder.Callback {
         mChannels[3] = new Channel("Vocals");
 
         //A track for each channel. Track's constructor argument is duration in loops.
-        Track track_1 = new Track(1);
-        Track track_2 = new Track(5);
-        Track track_3 = new Track(1);
-        Track track_4 = new Track(3);
+//        Track track_1 = new Track(1);
+//        Track track_2 = new Track(5);
+//        Track track_3 = new Track(1);
+//        Track track_4 = new Track(3);
 
         //TrackView will display track rectangles and scale according to the ratio between canvas width to the longest
         // track found in any channel.
         //So each track will be a width of : (a_track_duration / longest_track_duration) * canvas_width
         mLongestTrack_Width = 8;
 
-        mChannels[0].addTrack(track_1);
-        mChannels[0].addTrack(new Track(2));
-        mChannels[1].addTrack(track_2);
-        mChannels[2].addTrack(track_3);
-        mChannels[3].addTrack(track_4);
+//        mChannels[0].addTrack(track_1);
+//        mChannels[0].addTrack(new Track(2));
+//        mChannels[1].addTrack(track_2);
+//        mChannels[2].addTrack(track_3);
+//        mChannels[3].addTrack(track_4);
 
 
         mTrackThread = new TrackThread(getHolder(), this);
@@ -147,6 +147,7 @@ public class TrackView extends SurfaceView implements SurfaceHolder.Callback {
         Track curTrack = new Track(1);
         curTrack.setGrid(grid);
         mChannels[channel].addTrack(curTrack);
+        Log.v("added to channel", Integer.toString(channel));
     }
 
     @Override
@@ -158,11 +159,9 @@ public class TrackView extends SurfaceView implements SurfaceHolder.Callback {
     public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
         boolean retry = true;
         while(retry) {
-            try {
-                mTrackThread.setRunning(false);
-                mTrackThread.join();
-                retry = false;
-            } catch (InterruptedException e) {}
+            mTrackThread.setRunning(false);
+            mTrackThread.interrupt();
+            retry = false;
         }
 
     }
@@ -180,16 +179,12 @@ public class TrackView extends SurfaceView implements SurfaceHolder.Callback {
 
             Log.d(TAG, "Detected screen press at x: " + Float.toString(x) + " y: " + Float.toString(y));
 
-            if(x > labelWidth) {
-                for(int i = 0; i < 4; i++) {
-                    Channel c = mChannels[i];
-                    for(Track tk : c.getTracks()) {
-                        if(tk.getRect().contains((int)x,(int)y)) {
-                            Log.d(TAG, "Pressed a track on channel " + c.toString());
-                            Arranger mArranger = (Arranger) this.getContext();
-                            mArranger.newSound(i + 1);
-                        }
-                    }
+            if(x > labelWidth)
+            {
+                int result = (int) (y / labelHeight);
+                Arranger mArranger = (Arranger) this.getContext();
+                if (mArranger != null) {
+                    mArranger.newSound(result + 1);
                 }
             }
         } else if(event.getAction() == MotionEvent.ACTION_MOVE)
