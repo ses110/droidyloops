@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class Channel {
     private String mName;
     ArrayList<Track> mTracks;
-    int mChannelLength;
+    public int mChannelLength;
 
     public Channel() {
         this("New Track");

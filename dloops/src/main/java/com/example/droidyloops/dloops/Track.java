@@ -1,8 +1,6 @@
 package com.example.droidyloops.dloops;
 
-import android.content.res.AssetFileDescriptor;
 import android.graphics.Rect;
-import android.media.SoundPool;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -24,7 +22,7 @@ public class Track implements Parcelable {
 
     private Rect mRect;
 
-    private boolean[][] grid = new boolean[8][4];
+    public boolean[][] grid = new boolean[8][4];
 
     private Track(Parcel in) {
 

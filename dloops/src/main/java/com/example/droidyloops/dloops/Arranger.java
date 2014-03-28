@@ -1,6 +1,9 @@
 package com.example.droidyloops.dloops;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetFileDescriptor;
+import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -11,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 /*
@@ -27,10 +31,9 @@ public class Arranger extends ActionBarActivity {
     private boolean quit;
     private static ArrayList<Pair<Integer, boolean[][]>> trackQueue;
     private static boolean queueUpdate;
+    private boolean play;
 
     private int beatTime;
-
-    private boolean play;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,11 +57,12 @@ public class Arranger extends ActionBarActivity {
 
         frmLayout.setFocusable(true);
         frmLayout.addView(mTrackView);
+        beatTime = 500;
 
-//        mSndPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
-
-//        mSpThread = new playThread(mSndPool, mTrackView);
-//        mSpThread.start();
+        mSndPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
+        mSpThread = new playThread(mSndPool, mTrackView);
+        mSpThread.setPlay(false);
+        mSpThread.start();
 
     }
 
@@ -67,6 +71,12 @@ public class Arranger extends ActionBarActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.arranger, menu);
         return true;
+    }
+
+    public void playStop(View view)
+    {
+        play = !play;
+        mSpThread.setPlay(play);
     }
 
     @Override
@@ -83,14 +93,19 @@ public class Arranger extends ActionBarActivity {
     @Override
     public void onPause() {
         super.onPause();
+        if(play) {
+            mSpThread.setPlay(false);
+            this.play = false;
+        }
 
     }
     @Override
     public void onDestroy() {
         super.onDestroy();
-//        mSpThread.interrupt();
-//        mSndPool.release();
-        quit = true;
+        this.quit = true;
+        mSpThread.interrupt();
+        mSndPool.release();
+
     }
 
     @Override
@@ -107,6 +122,7 @@ public class Arranger extends ActionBarActivity {
             }
             trackQueue.clear();
             queueUpdate = false;
+            mSpThread.maxTracks = mTrackView.maxTracks;
         }
         else
         {
@@ -116,19 +132,13 @@ public class Arranger extends ActionBarActivity {
 
     // Create a new sound
     public void newSound(int instrument) {
-        if(!play)
-        {
+        if (!play) {
             Intent newTrack = new Intent(this, LooperActivity.class);
             newTrack.putExtra("instrument", instrument);
+            newTrack.putExtra("beatTime", beatTime);
             startActivityForResult(newTrack, 1);
         }
     }
-
-    public void playStop(View view)
-    {
-        play = !play;
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1) {
@@ -166,22 +176,149 @@ public class Arranger extends ActionBarActivity {
     class playThread extends Thread {
         private TrackView mTrackView;
         private SoundPool mSp;
+        private AudioManager mAudioManager;
+        private float mMaxVolume;
+        private float mCurrentVolume;
+        private boolean mPlay;
+
+        private long lastBeat;
+
+        private int sounds[][];
+        int trackOffset;
+        int beatOffset;
+        Track[] curTracks;
+        public int maxTracks;
+
         public playThread(SoundPool sp, TrackView tv) {
             this.mSp = sp;
             this.mTrackView = tv;
+            this.mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+            this.mMaxVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+
+
+            sounds = new int[4][4];
+
+
+            //Load SoundPool files
+            AssetFileDescriptor[][] soundsFD = new AssetFileDescriptor[4][4];
+            try {
+                soundsFD[0][0] = getAssets().openFd("Snare.ogg");
+                soundsFD[0][1] = getAssets().openFd("Kick.wav");
+                soundsFD[0][2] = getAssets().openFd("Hat.wav");
+                soundsFD[0][3] = getAssets().openFd("Clap.wav");
+
+                soundsFD[1][0] = getAssets().openFd("bass1.wav");
+                soundsFD[1][1] = getAssets().openFd("bass2.wav");
+                soundsFD[1][2] = getAssets().openFd("bass3.wav");
+                soundsFD[1][3] = getAssets().openFd("bass4.wav");
+
+                soundsFD[2][0] = getAssets().openFd("guitar1.wav");
+                soundsFD[2][1] = getAssets().openFd("guitar2.wav");
+                soundsFD[2][2] = getAssets().openFd("guitar3.wav");
+                soundsFD[2][3] = getAssets().openFd("guitar4.wav");
+
+                soundsFD[3][0] = getAssets().openFd("vocals_female1.wav");
+                soundsFD[3][1] = getAssets().openFd("vocals_female2.wav");
+                soundsFD[3][2] = getAssets().openFd("vocals_male1.wav");
+                soundsFD[3][3] = getAssets().openFd("vocals_male2.wav");
+
+                for(int i = 0; i < 4; i++) {
+                    for(int j = 0; j < 4; j++) {
+                        sounds[i][j] = mSndPool.load(soundsFD[i][j], 1);
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            lastBeat = System.currentTimeMillis() - beatTime;
+        }
+
+        public void setPlay(boolean _play) {
+            this.mPlay = _play;
         }
 
         @Override
         public void run() {
             while(true) {
-                try {
-                    this.sleep(beatTime);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+
+//                this.sleep();
+                mCurrentVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+                mCurrentVolume = mCurrentVolume / mMaxVolume;
+
                 if(quit)
                     break;
 
+                if(mPlay)
+                {
+                    if(curTracks == null)
+                    {
+                        curTracks = new Track[4];
+                        for (int i = 0; i < 4; i++)
+                        {
+                            if(mTrackView.mChannels[i].mChannelLength > 0)
+                            {
+                                curTracks[i] = mTrackView.mChannels[i].getTracks().get(0);
+                                String result = "";
+                                for (int k = 0; k < 8; k++)
+                                {
+                                    for (int j = 0; j < 4; j++)
+                                    {
+                                        if(curTracks[i].grid[k][j])
+                                            result += "1";
+                                        else
+                                            result += "0";
+                                    }
+                                }
+                                Log.v("got track, grid is", result);
+                            }
+                        }
+                    }
+                    long curTime = System.currentTimeMillis();
+                    if(curTime - lastBeat > beatTime)
+                    {
+                        lastBeat = curTime;
+
+                        for(int i = 0; i < 4; i++)
+                        {
+                            if(curTracks[i] != null)
+                            {
+                                for(int j = 0; j < 4; j++)
+                                {
+                                    if(curTracks[i].grid[beatOffset][j])
+                                    {
+                                        if(i == 3)
+                                        {
+                                            float rate = 500 / beatTime;
+                                            mSp.play(sounds[i][j], mCurrentVolume, mCurrentVolume, 1, 0, rate);
+                                        }
+                                        else
+                                            mSp.play(sounds[i][j], mCurrentVolume, mCurrentVolume, 1, 0, 1);
+                                    }
+                                }
+                            }
+                        }
+
+                        beatOffset++;
+                        if(beatOffset > 7)
+                        {
+                            beatOffset = 0;
+                            trackOffset++;
+                            if(trackOffset > (maxTracks - 1))
+                                trackOffset = 0;
+                            for (int i = 0; i < 4; i++)
+                            {
+
+                                if(mTrackView.mChannels[i].mChannelLength > trackOffset)
+                                {
+                                    curTracks[i] = mTrackView.mChannels[i].getTracks().get(trackOffset);
+                                }
+                                else
+                                    curTracks[i] = null;
+                            }
+                        }
+                    }
+
+                }
             }
         }
     }

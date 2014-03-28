@@ -36,26 +36,42 @@ public class TrackView extends SurfaceView implements SurfaceHolder.Callback {
     private Paint mTracksPaint;
 
 
-    private Channel[] mChannels;
+    public Channel[] mChannels;
 
+
+    private Typeface tf;
     private ScaleGestureDetector mScaleDetector;
+    public int maxTracks;
 
 
     public TrackView(Context context) {
         super(context);
         getHolder().addCallback(this);
+        this.setUp();
     }
 
     public TrackView(Context context, AttributeSet attrs) {
         super(context, attrs);
         getHolder().addCallback(this);
+        this.setUp();
     }
 
     public TrackView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         getHolder().addCallback(this);
+        this.setUp();
     }
 
+    private void setUp() {
+        if(mChannels == null) {
+            mChannels = new Channel[maxChannels];
+
+            mChannels[0] = new Channel("Drums");
+            mChannels[1] = new Channel("Bass");
+            mChannels[2] = new Channel("Guitar");
+            mChannels[3] = new Channel("Vocals");
+        }
+    }
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 
@@ -101,14 +117,7 @@ public class TrackView extends SurfaceView implements SurfaceHolder.Callback {
         setWillNotDraw(false);
 
         //          This is dummy data for testing. [TODO: ERASE DUMMY DATA AFTER TESTING]
-        if(mChannels == null) {
-            mChannels = new Channel[maxChannels];
 
-            mChannels[0] = new Channel("Drums");
-            mChannels[1] = new Channel("Bass");
-            mChannels[2] = new Channel("Guitar");
-            mChannels[3] = new Channel("Vocals");
-        }
         //A track for each channel. Track's constructor argument is duration in loops.
 //        Track track_1 = new Track(1);
 //        Track track_2 = new Track(5);
@@ -141,6 +150,7 @@ public class TrackView extends SurfaceView implements SurfaceHolder.Callback {
         mTracksPaint = new Paint();
         mTracksPaint.setStyle(Paint.Style.FILL);
         mTracksPaint.setColor(getResources().getColor(R.color.track_bars));
+        tf = Typeface.create("Helvetica",Typeface.BOLD);
     }
 
     public void addTrack(int channel, boolean[][] grid)
@@ -149,6 +159,14 @@ public class TrackView extends SurfaceView implements SurfaceHolder.Callback {
         curTrack.setGrid(grid);
         mChannels[channel].addTrack(curTrack);
         Log.v("added to channel", Integer.toString(channel));
+        int max = 0;
+        for(int i = 0; i < 4; i++)
+        {
+            int curLength = mChannels[i].mChannelLength;
+            if(curLength > max)
+                max = curLength;
+        }
+        maxTracks = max;
     }
 
     @Override
@@ -224,7 +242,7 @@ public class TrackView extends SurfaceView implements SurfaceHolder.Callback {
         canvas.drawLine(0,labelHeight*2, width, labelHeight*2, mLabelPaint);
         canvas.drawLine(0,labelHeight*3, width, labelHeight*3, mLabelPaint);
 
-        Typeface tf = Typeface.create("Helvetica",Typeface.BOLD);
+
         mLabelPaint.setAntiAlias(true);
         mLabelPaint.setStyle(Paint.Style.FILL);
         mLabelPaint.setTypeface(tf);
