@@ -42,6 +42,7 @@ public class LooperActivity extends Activity {
         mPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
         Intent intent = getIntent();
         instrument = intent.getIntExtra("instrument", 1);
+        beatTime = intent.getIntExtra("beatTime", 500);
         //TODO: Make this customizable
         AssetFileDescriptor one;
         AssetFileDescriptor two;
@@ -126,8 +127,6 @@ public class LooperActivity extends Activity {
                 }
                 break;
         }
-
-        beatTime = 500;
         spThread=new SoundPoolThread(mPool, mGridView, sounds);
 
         spThread.start();
@@ -260,8 +259,15 @@ public class LooperActivity extends Activity {
                             if (curCol == 8 || curCol == -1)
                                 curCol = 0;
                             for (int i = 0; i < 4; i++) {
-                                if (mGridView.grid[curCol][i]) {
-                                    mSoundPool.play(mGridView.sampleIDs[i], streamVolume, streamVolume, 1, 0, 1);
+                                if (mGridView.grid[curCol][i])
+                                {
+                                    if(instrument == 4)
+                                    {
+                                        float rate = 500 / beatTime;
+                                        mSoundPool.play(mGridView.sampleIDs[i], streamVolume, streamVolume, 1, 0, rate);
+                                    }
+                                    else
+                                        mSoundPool.play(mGridView.sampleIDs[i], streamVolume, streamVolume, 1, 0, 1);
                                 }
                             }
                             lastBeat = curTime;
@@ -275,7 +281,13 @@ public class LooperActivity extends Activity {
                     for(int i = 0; i < 4; i++)
                     {
                         if(previews[i]) {
-                            mSoundPool.play(i + 1, streamVolume, streamVolume, 1, 0, 1);
+                            if(instrument == 4)
+                            {
+                                float rate = 500 / beatTime;
+                                mSoundPool.play(mGridView.sampleIDs[i], streamVolume, streamVolume, 1, 0, rate);
+                            }
+                            else
+                                mSoundPool.play(mGridView.sampleIDs[i], streamVolume, streamVolume, 1, 0, 1);
                             previews[i] = false;
                         }
                     }

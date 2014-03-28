@@ -41,6 +41,7 @@ public class TrackView extends SurfaceView implements SurfaceHolder.Callback {
 
     private Typeface tf;
     private ScaleGestureDetector mScaleDetector;
+    public int maxTracks;
 
 
     public TrackView(Context context) {
@@ -158,6 +159,14 @@ public class TrackView extends SurfaceView implements SurfaceHolder.Callback {
         curTrack.setGrid(grid);
         mChannels[channel].addTrack(curTrack);
         Log.v("added to channel", Integer.toString(channel));
+        int max = 0;
+        for(int i = 0; i < 4; i++)
+        {
+            int curLength = mChannels[i].mChannelLength;
+            if(curLength > max)
+                max = curLength;
+        }
+        maxTracks = max;
     }
 
     @Override
