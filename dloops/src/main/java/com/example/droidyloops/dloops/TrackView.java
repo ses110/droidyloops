@@ -38,6 +38,8 @@ public class TrackView extends SurfaceView implements SurfaceHolder.Callback {
 
     public Channel[] mChannels;
 
+
+    private Typeface tf;
     private ScaleGestureDetector mScaleDetector;
 
 
@@ -147,6 +149,7 @@ public class TrackView extends SurfaceView implements SurfaceHolder.Callback {
         mTracksPaint = new Paint();
         mTracksPaint.setStyle(Paint.Style.FILL);
         mTracksPaint.setColor(getResources().getColor(R.color.track_bars));
+        tf = Typeface.create("Helvetica",Typeface.BOLD);
     }
 
     public void addTrack(int channel, boolean[][] grid)
@@ -230,7 +233,7 @@ public class TrackView extends SurfaceView implements SurfaceHolder.Callback {
         canvas.drawLine(0,labelHeight*2, width, labelHeight*2, mLabelPaint);
         canvas.drawLine(0,labelHeight*3, width, labelHeight*3, mLabelPaint);
 
-        Typeface tf = Typeface.create("Helvetica",Typeface.BOLD);
+
         mLabelPaint.setAntiAlias(true);
         mLabelPaint.setStyle(Paint.Style.FILL);
         mLabelPaint.setTypeface(tf);

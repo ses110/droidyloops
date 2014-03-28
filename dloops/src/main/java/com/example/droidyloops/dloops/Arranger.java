@@ -11,7 +11,6 @@ import android.util.Log;
 import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.FrameLayout;
 
 import java.io.IOException;
@@ -31,6 +30,7 @@ public class Arranger extends ActionBarActivity {
     private boolean quit;
     private static ArrayList<Pair<Integer, boolean[][]>> trackQueue;
     private static boolean queueUpdate;
+    private boolean play;
 
     private int beatTime;
 
@@ -178,6 +178,8 @@ public class Arranger extends ActionBarActivity {
             this.mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
             this.mMaxVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
 
+            sounds = new int[4][4];
+
             //Load SoundPool files
             AssetFileDescriptor[][] soundsFD = new AssetFileDescriptor[4][4];
             try {
@@ -191,7 +193,7 @@ public class Arranger extends ActionBarActivity {
                 soundsFD[1][2] = getAssets().openFd("bass3.wav");
                 soundsFD[1][3] = getAssets().openFd("bass4.wav");
 
-                soundsFD[2][0] = getAssets().openFd("guitar1.ogg");
+                soundsFD[2][0] = getAssets().openFd("guitar1.wav");
                 soundsFD[2][1] = getAssets().openFd("guitar2.wav");
                 soundsFD[2][2] = getAssets().openFd("guitar3.wav");
                 soundsFD[2][3] = getAssets().openFd("guitar4.wav");
@@ -218,12 +220,11 @@ public class Arranger extends ActionBarActivity {
         @Override
         public void run() {
             while(true) {
-<<<<<<< Updated upstream
-=======
+
 //                this.sleep();
                 mCurrentVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
                 mCurrentVolume = mCurrentVolume / mMaxVolume;
->>>>>>> Stashed changes
+
                 if(quit)
                     break;
 
