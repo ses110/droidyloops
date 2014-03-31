@@ -66,6 +66,4 @@
             android:onClick="saveAndReturn"/>
     </RelativeLayout>
 
-
-
 </RelativeLayout>

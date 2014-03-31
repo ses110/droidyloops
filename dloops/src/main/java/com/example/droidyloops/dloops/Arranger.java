@@ -1,13 +1,14 @@
 package com.example.droidyloops.dloops;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.media.SoundPool;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.FrameLayout;
+import android.view.Window;
+import android.view.WindowManager;
 
 /*
 * Arranger will simply serve as a container for the TrackView class, which is a class that extends
@@ -15,7 +16,7 @@ import android.widget.FrameLayout;
 * Arranger also creates a Thread subclass to handle playing the sounds and updating
 * */
 
-public class Arranger extends ActionBarActivity {
+public class Arranger extends Activity {
 
     private TrackView mTrackView;
     private SoundPool mSndPool;
@@ -25,20 +26,13 @@ public class Arranger extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Remove the status bar, title bar and make the application fullscreen
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         setContentView(R.layout.arrange);
 
         mTrackView = new TrackView(this);
-
-        // Remove the status bar, title bar and make the application fullscreen
-//        requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-
-        FrameLayout frmLayout = (FrameLayout)findViewById(R.id.frmlayout);
-
-        frmLayout.setFocusable(true);
-        frmLayout.addView(mTrackView);
 
 //        mSndPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
 
@@ -99,9 +93,15 @@ public class Arranger extends ActionBarActivity {
     class playThread extends Thread {
         private TrackView mTrackView;
         private SoundPool mSp;
+        private boolean mRun;
+
         public playThread(SoundPool sp, TrackView tv) {
             this.mSp = sp;
             this.mTrackView = tv;
+        }
+
+        public void setRunning(boolean _run) {
+            this.mRun = _run;
         }
 
         @Override

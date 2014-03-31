@@ -16,16 +16,6 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/mute_label"
-        android:id="@+id/mute_chk"
-        android:checked="true"
-        android:layout_below="@+id/title"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
     <Button
         style="?android:attr/buttonStyleSmall"
         android:layout_width="100dp"
@@ -70,7 +60,8 @@
         android:layout_alignTop="@+id/delete_btn"
         android:layout_alignRight="@+id/title"
         android:layout_alignEnd="@+id/title"
-        android:onClick="newSound"/>
+        android:onClick="newSound"
+        android:textSize="15dp" />
 
     <FrameLayout
         android:id="@+id/frmlayout"
@@ -78,6 +69,12 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true">
+
+        <com.example.droidyloops.dloops.TrackView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </FrameLayout>
 
 </RelativeLayout>

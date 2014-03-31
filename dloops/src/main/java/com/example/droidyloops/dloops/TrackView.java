@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -22,8 +23,7 @@ public class TrackView extends SurfaceView implements SurfaceHolder.Callback {
     private final int maxChannels = 4;
     private static final String TAG = "TrackView";
 
-    private float mStartDragX;
-    private float mStartDragY;
+    private Path mDragPath;
 
     private int width,
                 height;
@@ -34,6 +34,7 @@ public class TrackView extends SurfaceView implements SurfaceHolder.Callback {
 
     private Paint mLabelPaint;
     private Paint mTracksPaint;
+    private Typeface mTypeFace;
 
 
     private Channel[] mChannels;
@@ -44,16 +45,49 @@ public class TrackView extends SurfaceView implements SurfaceHolder.Callback {
     public TrackView(Context context) {
         super(context);
         getHolder().addCallback(this);
+        this.instantiate();
     }
 
     public TrackView(Context context, AttributeSet attrs) {
         super(context, attrs);
         getHolder().addCallback(this);
+        this.instantiate();
     }
 
     public TrackView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         getHolder().addCallback(this);
+        this.instantiate();
+    }
+    private final void instantiate() {
+
+        mTrackThread = new TrackThread(getHolder(), this);
+
+        // This is dummy data for testing. [TODO: ERASE DUMMY DATA AFTER TESTING]
+        mChannels = new Channel[maxChannels];
+
+        mChannels[0] = new Channel("Drums");
+        mChannels[1] = new Channel("Bass");
+        mChannels[2] = new Channel("Guitar");
+        mChannels[3] = new Channel("Vocals");
+
+        //A track for each channel. Track's constructor argument is duration in milliseconds.
+        Track track_1 = new Track(1000);
+        Track track_2 = new Track(1500);
+        Track track_3 = new Track(600);
+        Track track_4 = new Track(1400);
+
+        //TrackView will display track rectangles and scale according to the ratio between canvas width to the longest
+        // track found in any channel.
+        //So each track will be a width of : (a_track_duration / longest_track_duration) * canvas_width
+        mLongestTrack_Width = 1500 * 1.5;
+
+        mChannels[0].addTrack(track_1);
+        mChannels[1].addTrack(track_2);
+        mChannels[2].addTrack(track_3);
+        mChannels[3].addTrack(track_4);
+
+        setFocusable(true);
     }
 
     @Override
@@ -100,41 +134,14 @@ public class TrackView extends SurfaceView implements SurfaceHolder.Callback {
     public void surfaceCreated(SurfaceHolder holder) {
         setWillNotDraw(false);
 
-        //          This is dummy data for testing. [TODO: ERASE DUMMY DATA AFTER TESTING]
-        mChannels = new Channel[maxChannels];
-
-        mChannels[0] = new Channel("Drums");
-        mChannels[1] = new Channel("Bass");
-        mChannels[2] = new Channel("Guitar");
-        mChannels[3] = new Channel("Vocals");
-
-        //A track for each channel. Track's constructor argument is duration in milliseconds.
-        Track track_1 = new Track(1000);
-        Track track_2 = new Track(1500);
-        Track track_3 = new Track(600);
-        Track track_4 = new Track(1400);
-
-        //TrackView will display track rectangles and scale according to the ratio between canvas width to the longest
-        // track found in any channel.
-        //So each track will be a width of : (a_track_duration / longest_track_duration) * canvas_width
-        mLongestTrack_Width = 1500 * 1.5;
-
-        mChannels[0].addTrack(track_1);
-        mChannels[1].addTrack(track_2);
-        mChannels[2].addTrack(track_3);
-        mChannels[3].addTrack(track_4);
-
-
-
-
-
-
-        mTrackThread = new TrackThread(getHolder(), this);
+        if(mTrackThread == null || mTrackThread.getState() == Thread.State.TERMINATED) {
+            mTrackThread = new TrackThread(getHolder(), this);
+        }
         mTrackThread.setRunning(true);
         mTrackThread.start();
 
+        Log.d(TAG, "on surfaceCreated");
 
-        Log.d(TAG, "TrackView: surfaceCreated: getWidth = " + Integer.toString(getWidth()));
         mLabelPaint = new Paint();
         mLabelPaint.setStyle(Paint.Style.STROKE);
         mLabelPaint.setStrokeWidth(2.0f);
@@ -144,7 +151,7 @@ public class TrackView extends SurfaceView implements SurfaceHolder.Callback {
         mTracksPaint.setStyle(Paint.Style.FILL);
         mTracksPaint.setColor(getResources().getColor(R.color.track_bars));
 
-
+        mTypeFace = Typeface.create("Helvetica",Typeface.BOLD);
     }
 
     @Override
@@ -155,41 +162,49 @@ public class TrackView extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
         boolean retry = true;
+        mTrackThread.setRunning(false);
         while(retry) {
             try {
-                mTrackThread.setRunning(false);
                 mTrackThread.join();
                 retry = false;
-            } catch (InterruptedException e) {}
-        }
 
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            break;
+        }
+        mTrackThread = null;
     }
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if(event.getAction() == MotionEvent.ACTION_DOWN) {
+        float x = event.getX();
+        float y = event.getY();
 
-            float labelHeight = (float) height / (maxChannels);
-            float labelWidth = (float) width / 9;
+        switch(event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                float labelHeight = (float) height / (maxChannels);
+                float labelWidth = (float) width / 9;
 
-            float x = event.getX();
-            float y = event.getY();
-            mStartDragX = x;
-            mStartDragY = y;
+                Log.d(TAG, "Detected screen press at x: " + Float.toString(x) + " y: " + Float.toString(y));
 
-            Log.d(TAG, "Detected screen press at x: " + Float.toString(x) + " y: " + Float.toString(y));
-
-            if(x > labelWidth) {
-                for(Channel c: mChannels) {
-                    for(Track tk : c.getTracks()) {
-                        if(tk.getRect().contains((int)x,(int)y)) {
-                            Log.d(TAG, "Pressed a track on channel " + c.toString());
+                if(x > labelWidth) {
+                    for(Channel c: mChannels) {
+                        for(Track tk : c.getTracks()) {
+                            if(tk.getRect().contains((int)x,(int)y)) {
+                                Log.d(TAG, "Pressed a track on channel " + c.toString());
+                            }
                         }
                     }
                 }
-            }
-        } else if(event.getAction() == MotionEvent.ACTION_MOVE)
-        {
 
+                break;
+            case MotionEvent.ACTION_MOVE:
+
+                break;
+            case MotionEvent.ACTION_UP:
+
+                break;
         }
         return super.onTouchEvent(event);
     }
@@ -223,15 +238,16 @@ public class TrackView extends SurfaceView implements SurfaceHolder.Callback {
         canvas.drawLine(0,labelHeight*2, width, labelHeight*2, mLabelPaint);
         canvas.drawLine(0,labelHeight*3, width, labelHeight*3, mLabelPaint);
 
-        Typeface tf = Typeface.create("Helvetica",Typeface.BOLD);
+        mTypeFace = Typeface.create("Helvetica",Typeface.BOLD);
         mLabelPaint.setAntiAlias(true);
         mLabelPaint.setStyle(Paint.Style.FILL);
-        mLabelPaint.setTypeface(tf);
+        mLabelPaint.setTypeface(mTypeFace);
 
         //Update Track rectangles
         mLabelPaint.setTextSize(getResources().getDimensionPixelSize(R.dimen.channelLabel));
+        Channel ch = new Channel();
         for(int i = 0; i < maxChannels; i++) {
-            Channel ch = mChannels[i];
+            ch = mChannels[i];
 
             //  draw Channel's label text
             canvas.drawText(ch.toString(), labelWidth/12, (i+1)*(labelHeight)-(labelHeight/3), mLabelPaint);
@@ -245,7 +261,7 @@ public class TrackView extends SurfaceView implements SurfaceHolder.Callback {
                 mTracksPaint.setStyle(Paint.Style.FILL);
                 mTracksPaint.setColor(getResources().getColor(R.color.track_bars));
 
-                tk.setRect(leftMost, (int)(i*labelHeight), (int)scaledWidth, (int) ((i+1)*labelHeight));
+                tk.setRect(leftMost, (int)(i*labelHeight), (int)scaledWidth+leftMost, (int) ((i+1)*labelHeight));
                 canvas.drawRect(tk.getRect(), mTracksPaint);
                 
                 mTracksPaint.setStyle(Paint.Style.STROKE);
@@ -260,8 +276,8 @@ public class TrackView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     class TrackThread extends Thread {
-        private static final String TAG = "TrackThread";
 
+        private static final String TAG = "TrackThread";
 
         private SurfaceHolder mSurfaceHolder;
         private TrackView mTrackView;
