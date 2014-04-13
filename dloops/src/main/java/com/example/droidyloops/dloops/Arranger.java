@@ -30,9 +30,14 @@ public class Arranger extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        setContentView(R.layout.arrange);
 
-        mTrackView = new TrackView(this);
+        //setContentView(R.layout.arrange);
+        setContentView(new TableMainLayout(this));
+//        GridView mTrackGrid = (GridView) findViewById(R.id.TrackGrid);
+//        mTrackGrid.getNumColumns();
+
+
+//        mTrackView = new TrackView(this);
 
 //        mSndPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
 
@@ -73,9 +78,9 @@ public class Arranger extends Activity {
 
     // Create a new sound
     public void newSound(View view) {
-        Intent newTrack = new Intent(this, LooperActivity.class);
-        //newTrack.putExtra();
-        startActivityForResult(newTrack,1);
+//        Intent newTrack = new Intent(this, LooperActivity.class);
+//        //newTrack.putExtra();
+//        startActivityForResult(newTrack,1);
     }
 
     @Override
