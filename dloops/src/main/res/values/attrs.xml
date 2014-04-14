@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <declare-styleable name="TrackView">
-        <attr name="channel" format="integer" />
-        <attr name="length" format="integer" />
-        <attr name="border" format="integer" />
-    </declare-styleable>
-</resources>
