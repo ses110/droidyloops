@@ -26,6 +26,7 @@ public class Arranger extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         // Remove the status bar, title bar and make the application fullscreen
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -33,16 +34,6 @@ public class Arranger extends Activity {
 
         setContentView(R.layout.arrange);
 //        setContentView(new TableMainLayout(this));
-//        GridView mTrackGrid = (GridView) findViewById(R.id.TrackGrid);
-//        mTrackGrid.getNumColumns();
-
-
-//        mTrackView = new TrackView(this);
-
-//        mSndPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
-
-//        mSpThread = new playThread(mSndPool, mTrackView);
-//        mSpThread.start();
     }
 
     @Override

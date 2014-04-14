@@ -64,25 +64,13 @@
             android:layout_height="match_parent"
             android:layout_weight="85"
             android:background="@color/background_tracks">
-            <TableLayout
+            <GridView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@color/background_tracks">
 
-                <TableRow
-                    android:layout_width="fill_parent"
-                    android:layout_weight="1">
-                    <com.example.droidyloops.dloops.TrackView
-                        app:channel="1"
-                        app:length="5"
-                        app:border="3"/>
 
-                </TableRow>
-                <TableRow android:layout_weight="1"></TableRow>
-                <TableRow android:layout_weight="1"></TableRow>
-                <TableRow android:layout_weight="1"></TableRow>
-
-            </TableLayout>
+            </GridView>
         </HorizontalScrollView>
     </LinearLayout>
     

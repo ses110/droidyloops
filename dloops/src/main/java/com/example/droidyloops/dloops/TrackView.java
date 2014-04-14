@@ -19,7 +19,7 @@ public class TrackView extends View {
     private Paint mPaintFill,
                   mPaintStroke;
 
-    private int mBorder = 2;
+    private int mBorder;
 
     /* Constants */
     private static final String TAG = "TrackView";

@@ -6,11 +6,10 @@
     android:background="@color/background_dark">
 
     <com.example.droidyloops.dloops.TrackView
-        android:layout_width="289dp"
-        android:layout_height="@dimen/trackheight"
+        android:layout_height="142dp"
+        android:layout_width="277dp"
+        app:border="3"
         app:channel="1"
         app:length="4"
-        app:border="3"
         android:layout_gravity="center" />
-
 </FrameLayout>
