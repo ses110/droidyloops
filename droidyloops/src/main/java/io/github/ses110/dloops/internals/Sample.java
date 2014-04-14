@@ -1,9 +1,6 @@
 package io.github.ses110.dloops.internals;
 
-import android.content.res.AssetFileDescriptor;
-
-import java.io.File;
-import java.io.Serializable;
+import org.json.JSONObject;
 
 /**
  * Created by sid9102 on 4/14/2014.
@@ -11,9 +8,22 @@ import java.io.Serializable;
 public class Sample
 {
     private String name;
-    private AssetFileDescriptor mAFD;
-    private String fileName;
-    public int spID;
+    private String path;
+    private int spID;
+
+    public Sample(String name, String path)
+    {
+        this.name = name;
+        this.path = path;
+    }
+
+    public int getSpID() {
+        return spID;
+    }
+
+    public void setSpID(int spID) {
+        this.spID = spID;
+    }
 
     public String getName() {
         return name;
@@ -23,19 +33,17 @@ public class Sample
         this.name = name;
     }
 
-    public AssetFileDescriptor getmAFD() {
-        return mAFD;
+    public String getPath() {
+        return path;
     }
 
-    public void setmAFD(AssetFileDescriptor mAFD) {
-        this.mAFD = mAFD;
+    public void setPath(String path) {
+        this.path = path;
     }
 
-    public String getFileName() {
-        return fileName;
-    }
-
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
+    // TODO: implement saving and loading
+    public JSONObject saveSample()
+    {
+        return null;
     }
 }
