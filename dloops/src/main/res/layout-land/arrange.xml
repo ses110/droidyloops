@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="fill_parent"
-    android:layout_height="match_parent"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:weightSum="100"
     android:background="@color/background_dark">
 
     <TextView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="10"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/arrange_title"
         android:id="@+id/title"
@@ -15,173 +19,121 @@
         android:textColor="@color/white"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:textSize="28dp" />
-
+        android:textSize="22dp" />
 
     <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="350dp"
-        android:layout_below="@+id/title"
-        android:layout_marginTop="30dp"
-        android:weightSum="1">
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="70"
+        android:orientation="horizontal"
+        android:weightSum="100">
 
         <LinearLayout
             android:id="@+id/TrackLabels"
-            android:orientation="vertical"
-            android:layout_width="fill_parent"
+            android:layout_width="0dp"
+            android:layout_weight="15"
             android:layout_height="match_parent"
             android:background="@color/background_track_labels"
-            android:layout_weight="0.85">
+            android:orientation="vertical">
+
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="Label1"
-                android:id="@+id/textView"
                 android:layout_weight="1"/>
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Label2"
-                android:id="@+id/textView2"
+                android:text="Label1"
                 android:layout_weight="1"/>
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Label3"
-                android:id="@+id/textView3"
+                android:text="Label1"
                 android:layout_weight="1"/>
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Label4"
-                android:id="@+id/textView4"
+                android:text="Label1"
                 android:layout_weight="1"/>
+
         </LinearLayout>
 
-        <TableLayout
-            android:id="@+id/TrackGrid"
-            android:layout_width="fill_parent"
+        <HorizontalScrollView
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:stretchColumns="1"
-            android:layout_weight="0.15"
+            android:layout_weight="85"
             android:background="@color/background_tracks">
+            <TableLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@color/background_tracks">
 
-            <TableRow
-                android:layout_weight="1">
-                <TextView
-                    android:text="T1"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"/>
-                <TextView
-                    android:text="T2"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"/>
-                <TextView
-                    android:text="T3"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"/>
-                <TextView
-                    android:text="T4"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"/>
-                <TextView
-                    android:text="T5"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"/>
-                <TextView
-                    android:text="T6"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"/>
-                <TextView
-                    android:text="T7"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"/>
-                <TextView
-                    android:text="T8"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"/>
-            </TableRow>
-            <TableRow
-                android:layout_weight="1">
-                <TextView
-                    android:text="TEST"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"/>
-            </TableRow>
-            <TableRow
-                android:layout_weight="1">
+                <TableRow
+                    android:layout_width="fill_parent"
+                    android:layout_weight="1">
+                    <com.example.droidyloops.dloops.TrackView
+                        app:channel="1"
+                        app:length="5"
+                        app:border="3"/>
 
-                <TextView
-                    android:text="TEST"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"/>
-            </TableRow>
-            <TableRow
-                android:layout_weight="1">
-                <TextView
-                    android:text="TEST"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"/>
-            </TableRow>
-        </TableLayout>
+                </TableRow>
+                <TableRow android:layout_weight="1"></TableRow>
+                <TableRow android:layout_weight="1"></TableRow>
+                <TableRow android:layout_weight="1"></TableRow>
 
+            </TableLayout>
+        </HorizontalScrollView>
     </LinearLayout>
+    
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="20">
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="@string/copy"
+            android:id="@+id/copy_btn"
+            android:background="@color/bluelight"
+            android:textSize="15dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="@string/paste"
+            android:id="@+id/paste_btn"
+            android:background="@color/orangelight"
+            android:textSize="15dp"
+            android:layout_marginLeft="10dp"
+            android:layout_alignTop="@+id/copy_btn"
+            android:layout_toRightOf="@+id/copy_btn" />
+
+        <Button
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="@string/delete_label"
+            android:id="@+id/delete_btn"
+            android:background="@color/redorange"
+            android:textSize="15dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
 
 
-
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:text="@string/copy"
-        android:id="@+id/copy_btn"
-        android:layout_marginBottom="15dp"
-        android:background="@color/bluelight"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginLeft="15dp" />
-
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:text="@string/paste"
-        android:id="@+id/paste_btn"
-        android:background="@color/orangelight"
-        android:layout_alignTop="@+id/copy_btn"
-        android:layout_toRightOf="@+id/copy_btn"
-        android:layout_marginLeft="15dp" />
-
-    <Button
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:text="@string/delete_label"
-        android:id="@+id/delete_btn"
-        android:background="@color/redorange"
-        android:layout_marginRight="15dp"
-        android:layout_alignTop="@+id/paste_btn"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="15dp" />
-
-
-    <Button
-        android:id="@+id/new_snd"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:text="@string/new_sound"
-        android:background="@color/new_btn"
-        android:onClick="newSound"
-        android:textSize="15dp"
-        android:layout_alignTop="@+id/paste_btn"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="15dp" />
-
-
-
-</RelativeLayout>
+        <Button
+            android:id="@+id/new_snd"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="@string/new_sound"
+            android:background="@color/new_btn"
+            android:onClick="newSound"
+            android:textSize="15dp"
+            android:layout_alignTop="@+id/paste_btn"
+            android:layout_centerHorizontal="true" />
+    </RelativeLayout>
+</LinearLayout>

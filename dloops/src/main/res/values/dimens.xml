@@ -6,4 +6,6 @@
     <dimen name="main_title">37dp</dimen>
     <dimen name="channelLabel">30sp</dimen>
 
+    <dimen name="trackheight">80dp</dimen>
+
     </resources>

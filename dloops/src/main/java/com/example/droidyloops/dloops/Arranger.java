@@ -31,8 +31,8 @@ public class Arranger extends Activity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
 
-        //setContentView(R.layout.arrange);
-        setContentView(new TableMainLayout(this));
+        setContentView(R.layout.arrange);
+//        setContentView(new TableMainLayout(this));
 //        GridView mTrackGrid = (GridView) findViewById(R.id.TrackGrid);
 //        mTrackGrid.getNumColumns();
 

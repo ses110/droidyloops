@@ -18,9 +18,17 @@
     <color name="background_tracks">#3A4D59</color>
 
     <color name="track_blue">#428A99</color>
+    <color name="track_blue_border">#336E7A</color>
+
     <color name="track_green">#419473</color>
+    <color name="track_green_border">#3E7166</color>
+
     <color name="track_orange">#997642</color>
+    <color name="track_orange_border">#7A5E35</color>
+
     <color name="track_red">#994257</color>
+    <color name="track_red_border">#6A2F3E</color>
+
 
     <color name="background">#0044AA</color>
     <color name="bluelight">#449DEF</color>

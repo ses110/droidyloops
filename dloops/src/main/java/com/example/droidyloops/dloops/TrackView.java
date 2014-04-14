@@ -1,11 +1,10 @@
 package com.example.droidyloops.dloops;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -16,6 +15,11 @@ import android.view.View;
  * TODO: document your custom view class.
  */
 public class TrackView extends View {
+    private Rect mRect, mRectBorder;
+    private Paint mPaintFill,
+                  mPaintStroke;
+
+    private int mBorder = 2;
 
     /* Constants */
     private static final String TAG = "TrackView";
@@ -23,85 +27,103 @@ public class TrackView extends View {
     private int width,
                 height;
 
-    private Rect drawingRect_;
-
-    private Paint mLabelPaint;
-    private Paint mTracksPaint;
-    private Typeface mTypeFace;
-
-
-
-    public TrackView(Context context) {
-        super(context);
-
-        this.instantiate();
-    }
+    private int mLength,
+                mChannel;
 
     public TrackView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        this.instantiate();
-    }
 
-    public TrackView(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-        this.instantiate();
-    }
-    private final void instantiate() {
+        TypedArray a = context.getTheme().obtainStyledAttributes(attrs,R.styleable.TrackView, 0, 0);
 
-        //A track for each channel. Track's constructor argument is duration in milliseconds.
-//        Track track_1 = new Track(1000);
-//        Track track_2 = new Track(1500);
-//        Track track_3 = new Track(600);
-//        Track track_4 = new Track(1400);
-
-        //TrackView will display track rectangles and scale according to the ratio between canvas width to the longest
-        // track found in any channel.
-        //So each track will be a width of : (a_track_duration / longest_track_duration) * canvas_width
-//        mLongestTrack_Width = 1500 * 1.5;
-
-
-        setFocusable(true);
-    }
-
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-
-        int desiredWidth = 400;
-        int desiredHeight = 325;
-
-        int widthMode = MeasureSpec.getMode(widthMeasureSpec);
-        int widthSize = MeasureSpec.getSize(widthMeasureSpec);
-        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
-        int heightSize = MeasureSpec.getSize(heightMeasureSpec);
-
-        int width;
-        int height;
-
-        //Measure Width
-        if (widthMode == MeasureSpec.EXACTLY) {
-            //Must be this size
-            width = widthSize;
-        } else if (widthMode == MeasureSpec.AT_MOST) {
-            //Can't be bigger than...
-            width = Math.min(desiredWidth, widthSize);
-        } else {
-            //Be whatever you want
-            width = desiredWidth;
+        try {
+            mLength = a.getInteger(R.styleable.TrackView_length, 1);
+            mChannel = a.getInteger(R.styleable.TrackView_channel, 1);
+            mBorder = a.getInteger(R.styleable.TrackView_border, 3);
+        } finally {
+            a.recycle();
         }
 
-        //Measure Height
-        if (heightMode == MeasureSpec.EXACTLY) {
-            //Must be this size
-            height = heightSize;
-        } else if (heightMode == MeasureSpec.AT_MOST) {
-            //Can't be bigger than...
-            height = Math.min(desiredHeight, heightSize);
-        } else {
-            //Be whatever you want
-            height = desiredHeight;
-        }
-        setMeasuredDimension(width, height);
+        init();
     }
+    private final void init() {
+        mRect = new Rect(10,10,mLength*100,100);
+
+        mRectBorder = new Rect(10+mBorder,10+mBorder, (mLength*100-mBorder),100-mBorder);
+
+        mPaintFill = new Paint();
+        mPaintStroke = new Paint();
+        mPaintStroke.setAntiAlias(true);
+        switch(mChannel) {
+            case 1:
+                mPaintFill.setColor(getResources().getColor(R.color.track_blue));
+                mPaintStroke.setColor(getResources().getColor(R.color.track_blue_border));
+                break;
+            case 2:
+                mPaintFill.setColor(getResources().getColor(R.color.track_green));
+                mPaintStroke.setColor(getResources().getColor(R.color.track_green_border));
+                break;
+            case 3:
+                mPaintFill.setColor(getResources().getColor(R.color.track_orange));
+                mPaintStroke.setColor(getResources().getColor(R.color.track_orange_border));
+                break;
+            case 4:
+                mPaintFill.setColor(getResources().getColor(R.color.track_red));
+                mPaintStroke.setColor(getResources().getColor(R.color.track_red_border));
+                break;
+        }
+
+    }
+
+    public void setLength(int newLength) {
+        mLength = newLength;
+        invalidate();
+        requestLayout();
+    }
+    public void setChannel(int newChannel) {
+        mChannel = newChannel;
+        invalidate();
+        requestLayout();
+    }
+
+//    @Override
+//    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+//
+//        int desiredWidth = 100;
+//        int desiredHeight = 100;
+//
+//        int widthMode = MeasureSpec.getMode(widthMeasureSpec);
+//        int widthSize = MeasureSpec.getSize(widthMeasureSpec);
+//        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
+//        int heightSize = MeasureSpec.getSize(heightMeasureSpec);
+//
+//        int width;
+//        int height;
+//
+//        //Measure Width
+//        if (widthMode == MeasureSpec.EXACTLY) {
+//            //Must be this size
+//            width = widthSize;
+//        } else if (widthMode == MeasureSpec.AT_MOST) {
+//            //Can't be bigger than...
+//            width = Math.min(desiredWidth, widthSize);
+//        } else {
+//            //Be whatever you want
+//            width = desiredWidth;
+//        }
+//
+//        //Measure Height
+//        if (heightMode == MeasureSpec.EXACTLY) {
+//            //Must be this size
+//            height = heightSize;
+//        } else if (heightMode == MeasureSpec.AT_MOST) {
+//            //Can't be bigger than...
+//            height = Math.min(desiredHeight, heightSize);
+//        } else {
+//            //Be whatever you want
+//            height = desiredHeight;
+//        }
+//        setMeasuredDimension(width, height);
+//    }
 
 
     @Override
@@ -136,34 +158,11 @@ public class TrackView extends View {
             Log.d(TAG, "canvas.getWidth:" + Integer.toString(width));
             Log.d(TAG, "canvas.getHeight:" + Integer.toString(height));
         }
+        //getDrawingRect(mRectBorder);
+        //mRectBorder.set(mRect.left+border,mRect.top+border, mRect.right-border, mRect.bottom-border);
 
-        float labelHeight = (float) height;
-        float labelWidth = (float) width / 9;
-
-        //Set background color of background where track rectangles will be placed.
-        canvas.drawColor(getResources().getColor(R.color.track_bg));
-
-        //Set background color of channel labels
-        mLabelPaint.setColor(getResources().getColor(R.color.label_bg));
-        mLabelPaint.setStyle(Paint.Style.FILL);
-        canvas.drawRect(0, 0, labelWidth, height, mLabelPaint);
-
-        //Draw dividing lines between channels
-        mLabelPaint.setStyle(Paint.Style.STROKE);
-        mLabelPaint.setColor(Color.BLACK);
-
-        // X, Y, X2, Y2
-        canvas.drawLine(0,labelHeight, width, labelHeight, mLabelPaint);
-        canvas.drawLine(0,labelHeight*2, width, labelHeight*2, mLabelPaint);
-        canvas.drawLine(0,labelHeight*3, width, labelHeight*3, mLabelPaint);
-
-        mTypeFace = Typeface.create("Helvetica",Typeface.BOLD);
-        mLabelPaint.setAntiAlias(true);
-        mLabelPaint.setStyle(Paint.Style.FILL);
-        mLabelPaint.setTypeface(mTypeFace);
-
-        //Update Track rectangles
-        mLabelPaint.setTextSize(getResources().getDimensionPixelSize(R.dimen.channelLabel));
+        canvas.drawRect(mRect, mPaintStroke);
+        canvas.drawRect(mRectBorder, mPaintFill);
 
     }
 

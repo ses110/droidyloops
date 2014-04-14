@@ -2,10 +2,15 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/background_dark">
 
     <com.example.droidyloops.dloops.TrackView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_width="289dp"
+        android:layout_height="@dimen/trackheight"
+        app:channel="1"
+        app:length="4"
+        app:border="3"
+        android:layout_gravity="center" />
 
 </FrameLayout>
