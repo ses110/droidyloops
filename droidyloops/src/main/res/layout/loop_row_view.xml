@@ -5,7 +5,7 @@
 
 
     <EditText
-        android:layout_width="40 dp"
+        android:layout_width="40dp"
         android:layout_height="fill_parent"
         android:id="@+id/editText"
         android:layout_weight="0.11"
