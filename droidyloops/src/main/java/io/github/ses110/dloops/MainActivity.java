@@ -21,6 +21,7 @@ public class MainActivity extends Activity implements LooperFragment.OnFragmentI
 
     private int rowCount;
     private static LooperFragment looper;
+    private Loop curLoop;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,7 +38,11 @@ public class MainActivity extends Activity implements LooperFragment.OnFragmentI
     {
         ViewGroup listView = (ViewGroup) looper.getView().findViewById(R.id.loopRowList);
         LoopRowView child = new LoopRowView(view.getContext());
-        child.setDetails(rowCount, new Loop());
+        if(curLoop == null)
+        {
+            curLoop = new Loop();
+        }
+        child.setDetails(rowCount, curLoop);
         listView.addView(child);
         rowCount++;
     }
