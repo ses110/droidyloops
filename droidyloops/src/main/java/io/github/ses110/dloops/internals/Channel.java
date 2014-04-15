@@ -11,7 +11,6 @@ public class Channel
     public ArrayList<Integer> startPoints;
     public int length;
     public String name;
-    private final int maxBeats = 8;
 
     public Channel(String name)
     {
@@ -24,7 +23,7 @@ public class Channel
     public void addLoop(int x, Loop loop)
     {
         if(x > length - 10)
-            length += maxBeats;
+            length += Loop.maxBeats;
         loops.add(loop);
         startPoints.add(x);
     }
@@ -34,7 +33,7 @@ public class Channel
         int size = startPoints.size();
         for (int i = 0; i < size; i++) {
             int cur = startPoints.get(i);
-            if(cur < x && cur > (x - maxBeats))
+            if(cur < x && cur > (x - Loop.maxBeats))
                 return loops.get(i).curSamples(x - cur);
             else if(cur > x)
                 break;

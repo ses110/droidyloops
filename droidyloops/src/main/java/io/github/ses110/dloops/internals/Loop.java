@@ -12,7 +12,7 @@ public class Loop
     private ArrayList<Sample> samples;
     private String name;
     public ArrayList<boolean[]> cells;
-    private final int maxBeats = 8;
+    public final static int maxBeats = 8;
     // TODO: Add variable length
 
     public Loop()
