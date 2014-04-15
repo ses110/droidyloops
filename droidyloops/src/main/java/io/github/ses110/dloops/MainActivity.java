@@ -36,6 +36,7 @@ public class MainActivity extends Activity implements LooperFragment.OnFragmentI
 
     public void addLoopRow(View view)
     {
+        //TODO: make this hook up to curLoop, and initialise with name and sample
         ViewGroup listView = (ViewGroup) looper.getView().findViewById(R.id.loopRowList);
         LoopRowView child = new LoopRowView(view.getContext());
         if(curLoop == null)
