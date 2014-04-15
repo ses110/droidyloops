@@ -17,20 +17,23 @@ import io.github.ses110.dloops.looper.LoopRowView;
 import io.github.ses110.dloops.looper.LooperFragment;
 
 
-public class MainActivity extends Activity implements LooperFragment.OnFragmentInteractionListener{
+public class MainActivity extends Activity implements LooperFragment.OnFragmentInteractionListener, MainMenuFragment.OnFragmentInteractionListener{
 
     private int rowCount;
     private static LooperFragment looper;
+    private static MainMenuFragment menuFragment;
     private Loop curLoop;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        looper = new LooperFragment();
-        fragmentTransaction.add(android.R.id.content, looper);
+        menuFragment = new MainMenuFragment();
+        fragmentTransaction.add(android.R.id.content, menuFragment);
         fragmentTransaction.commit();
+
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
     }
 
@@ -73,5 +76,17 @@ public class MainActivity extends Activity implements LooperFragment.OnFragmentI
     public void onFragmentInteraction(Uri uri)
     {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+    }
+
+    public void startClick(View view)
+    {
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        // TODO: initialise looper with pre-existing data if any
+        looper = LooperFragment.newInstance("pl", "pl");
+        fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
+        fragmentTransaction.remove(menuFragment);
+        fragmentTransaction.replace(android.R.id.content, looper, "PLACEHOLDER");
+        fragmentTransaction.commit();
     }
 }
