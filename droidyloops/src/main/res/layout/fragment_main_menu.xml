@@ -24,6 +24,8 @@
         android:id="@+id/button"
         android:layout_marginBottom="92dp"
         android:layout_gravity="center_horizontal"
-        android:onClick="startClick"/>
+        android:onClick="startClick"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp" />
 
 </LinearLayout>

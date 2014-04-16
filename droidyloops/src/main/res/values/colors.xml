@@ -4,4 +4,5 @@
     <color name="cell_on">#ffa319</color>
     <color name="white">#ffffff</color>
     <color name="bg">#58CEF5</color>
+    <color name="buttonDefault">#0867A3</color>
 </resources>
