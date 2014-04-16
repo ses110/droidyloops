@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="LoopRowView">
+        <attr name="loopRowViewName" format="string" />
+        <attr name="loopRowViewDimension" format="dimension" />
+        <attr name="loopRowViewColor" format="color" />
+        <attr name="loopRowViewDrawable" format="color|reference" />
+    </declare-styleable>
+</resources>

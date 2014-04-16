@@ -1,0 +1,8 @@
+<resources>
+    <declare-styleable name="ChannelView">
+        <attr name="channelViewString" format="string" />
+        <attr name="channelViewDimension" format="dimension" />
+        <attr name="channelViewColor" format="color" />
+        <attr name="channelViewDrawable" format="color|reference" />
+    </declare-styleable>
+</resources>

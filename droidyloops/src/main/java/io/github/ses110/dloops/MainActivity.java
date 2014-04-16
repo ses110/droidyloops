@@ -6,6 +6,7 @@ import android.app.FragmentTransaction;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import io.github.ses110.dloops.internals.Loop;
+import io.github.ses110.dloops.internals.Sample;
 import io.github.ses110.dloops.looper.LoopRowView;
 import io.github.ses110.dloops.looper.LooperFragment;
 
@@ -23,11 +25,20 @@ public class MainActivity extends Activity implements LooperFragment.OnFragmentI
     private static LooperFragment looper;
     private static MainMenuFragment menuFragment;
     private Loop curLoop;
+
+    // Tells the activity what fragment to display
+    private enum AppState
+    {
+        MENU, ARRANGER, LOOPER, PICKER
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // TODO: fix this, store state
+        Log.v("MainActivity", "In onCreate");
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         menuFragment = new MainMenuFragment();
@@ -35,6 +46,12 @@ public class MainActivity extends Activity implements LooperFragment.OnFragmentI
         fragmentTransaction.commit();
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.v("MainActivity", "In onResume");
     }
 
     public void addLoopRow(View view)
@@ -46,6 +63,8 @@ public class MainActivity extends Activity implements LooperFragment.OnFragmentI
         {
             curLoop = new Loop();
         }
+        // TODO: fix blank sample
+        curLoop.addSample(new Sample("der", "der"));
         child.setDetails(rowCount, curLoop);
         listView.addView(child, 0);
         rowCount++;
