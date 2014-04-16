@@ -6,6 +6,7 @@ import android.app.FragmentTransaction;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,6 +25,7 @@ public class MainActivity extends Activity implements LooperFragment.OnFragmentI
     private int rowCount;
     private static LooperFragment looper;
     private static MainMenuFragment menuFragment;
+    private FragmentManager fragmentManager;
     private Loop curLoop;
 
     // Tells the activity what fragment to display
@@ -31,19 +33,19 @@ public class MainActivity extends Activity implements LooperFragment.OnFragmentI
     {
         MENU, ARRANGER, LOOPER, PICKER
     }
+    private AppState appState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        // TODO: fix this, store state
-        Log.v("MainActivity", "In onCreate");
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        menuFragment = new MainMenuFragment();
-        fragmentTransaction.add(android.R.id.content, menuFragment);
-        fragmentTransaction.commit();
+        if(fragmentManager == null) {
+            fragmentManager = getFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            menuFragment = new MainMenuFragment();
+            fragmentTransaction.add(R.id.mainContainer, menuFragment);
+            fragmentTransaction.commit();
+        }
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
     }
@@ -99,13 +101,12 @@ public class MainActivity extends Activity implements LooperFragment.OnFragmentI
 
     public void startClick(View view)
     {
-        FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         // TODO: initialise looper with pre-existing data if any
         looper = LooperFragment.newInstance("pl", "pl");
-        fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
-        fragmentTransaction.remove(menuFragment);
-        fragmentTransaction.replace(android.R.id.content, looper, "PLACEHOLDER");
+        fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
+        fragmentTransaction.replace(R.id.mainContainer, looper, "PLACEHOLDER");
+        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
 }
