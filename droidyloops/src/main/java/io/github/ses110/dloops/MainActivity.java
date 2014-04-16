@@ -47,7 +47,7 @@ public class MainActivity extends Activity implements LooperFragment.OnFragmentI
             curLoop = new Loop();
         }
         child.setDetails(rowCount, curLoop);
-        listView.addView(child);
+        listView.addView(child, 0);
         rowCount++;
     }
 
