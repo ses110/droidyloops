@@ -1,4 +1,4 @@
-package io.github.ses110.dloops.internals;
+package io.github.ses110.dloops.models;
 
 import java.util.ArrayList;
 

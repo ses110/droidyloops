@@ -3,14 +3,13 @@ package io.github.ses110.dloops.looper;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import io.github.ses110.dloops.R;
-import io.github.ses110.dloops.internals.Loop;
+import io.github.ses110.dloops.models.Loop;
 
 /**
  * Created by sid9102 on 4/14/2014.

@@ -11,12 +11,15 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+
 import io.github.ses110.dloops.R;
 
-import io.github.ses110.dloops.internals.Loop;
-import io.github.ses110.dloops.internals.Sample;
-import io.github.ses110.dloops.internals.Song;
-import io.github.ses110.dloops.picker.dummy.DummyContent;
+import io.github.ses110.dloops.models.Loop;
+import io.github.ses110.dloops.models.Sample;
+import io.github.ses110.dloops.models.Song;
+import io.github.ses110.dloops.utils.FileHandler.FileType;
 
 /**
  * A fragment representing a list of Items.
@@ -33,15 +36,13 @@ public class FileFragment extends Fragment implements AbsListView.OnItemClickLis
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_FILETYPE = "fileType";
 
-    // This tells the picker whether to look at samples, loops, or songs.
-    public enum FileType
-    {
-        SAMPLES, LOOPS, SONGS
-    }
-
     private FileType fileType;
 
     private PickerFragmentListener mListener;
+
+    private ArrayList<Loop> loops;
+    private ArrayList<Song> songs;
+    private ArrayList<Sample> samples;
 
     /**
      * The fragment's ListView/GridView.
@@ -76,11 +77,26 @@ public class FileFragment extends Fragment implements AbsListView.OnItemClickLis
 
         if (getArguments() != null) {
             fileType = (FileType) getArguments().getSerializable("fileType");
-        }
 
-        // TODO: Change Adapter to display your content
-        mAdapter = new ArrayAdapter<DummyContent.DummyItem>(getActivity(),
-                android.R.layout.simple_list_item_1, android.R.id.text1, DummyContent.ITEMS);
+            switch (fileType)
+            {
+                case SAMPLES:
+                    samples = Sample.loadSamples(null);
+                    mAdapter = new ArrayAdapter<Sample>(getActivity(),
+                            android.R.layout.simple_list_item_1, android.R.id.text1, samples);
+                    break;
+                case LOOPS:
+                    loops = Loop.loadLoops();
+                    mAdapter = new ArrayAdapter<Loop>(getActivity(),
+                            android.R.layout.simple_list_item_1, android.R.id.text1, loops);
+                    break;
+                case SONGS:
+                    songs = Song.loadSongs();
+                    mAdapter = new ArrayAdapter<Song>(getActivity(),
+                            android.R.layout.simple_list_item_1, android.R.id.text1, songs);
+                    break;
+            }
+        }
     }
 
     @Override
@@ -105,7 +121,7 @@ public class FileFragment extends Fragment implements AbsListView.OnItemClickLis
             mListener = (PickerFragmentListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                + " must implement ArrangerFragmentListener");
+                    + " must implement ArrangerFragmentListener");
         }
     }
 
@@ -121,7 +137,18 @@ public class FileFragment extends Fragment implements AbsListView.OnItemClickLis
         if (null != mListener) {
             // Notify the active callbacks interface (the activity, if the
             // fragment is attached to one) that an item has been selected.
-            mListener.onPickerSampleSelection(DummyContent.ITEMS.get(position).id);
+            switch (fileType)
+            {
+                case SAMPLES:
+                    mListener.onPickerSelection(samples.get(position));
+                    break;
+                case LOOPS:
+                    mListener.onPickerSelection(loops.get(position));
+                    break;
+                case SONGS:
+                    mListener.onPickerSelection(songs.get(position));
+                    break;
+            }
         }
     }
 
@@ -139,22 +166,22 @@ public class FileFragment extends Fragment implements AbsListView.OnItemClickLis
     }
 
     /**
-    * This interface must be implemented by activities that contain this
-    * fragment to allow an interaction in this fragment to be communicated
-    * to the activity and potentially other fragments contained in that
-    * activity.
-    * <p>
-    * See the Android Training lesson <a href=
-    * "http://developer.android.com/training/basics/fragments/communicating.html"
-    * >Communicating with Other Fragments</a> for more information.
-    */
+     * This interface must be implemented by activities that contain this
+     * fragment to allow an interaction in this fragment to be communicated
+     * to the activity and potentially other fragments contained in that
+     * activity.
+     * <p>
+     * See the Android Training lesson <a href=
+     * "http://developer.android.com/training/basics/fragments/communicating.html"
+     * >Communicating with Other Fragments</a> for more information.
+     */
     public interface PickerFragmentListener {
         // TODO: Update argument type and name
-        public void onPickerSampleSelection(Sample sample);
+        public void onPickerSelection(Sample sample);
 
-        public void onPickerLoopSelection(Loop loop);
+        public void onPickerSelection(Loop loop);
 
-        public void onPickerSongSelection(Song song);
+        public void onPickerSelection(Song song);
     }
 
 }

@@ -2,14 +2,13 @@ package io.github.ses110.dloops.looper;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import io.github.ses110.dloops.R;
-import io.github.ses110.dloops.internals.Loop;
+import io.github.ses110.dloops.models.Loop;
 
 
 /**

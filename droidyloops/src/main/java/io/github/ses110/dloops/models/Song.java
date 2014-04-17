@@ -1,4 +1,4 @@
-package io.github.ses110.dloops.internals;
+package io.github.ses110.dloops.models;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,6 +13,7 @@ public class Song
     private ArrayList<Channel> channels;
     // TODO: For individual volumes on channels
     private ArrayList<Integer> volumes;
+    private String name;
 
     public Song()
     {
@@ -31,5 +32,17 @@ public class Song
             result[i] = channels.get(i);
         }
         return result;
+    }
+
+    public String toString()
+    {
+        return name;
+    }
+
+    public static ArrayList<Song> loadSongs()
+    {
+        ArrayList<Song> songs = new ArrayList<Song>();
+        // TODO: Load songs
+        return songs;
     }
 }

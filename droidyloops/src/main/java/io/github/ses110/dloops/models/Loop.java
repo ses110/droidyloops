@@ -1,4 +1,4 @@
-package io.github.ses110.dloops.internals;
+package io.github.ses110.dloops.models;
 
 import android.util.Log;
 
@@ -73,5 +73,18 @@ public class Loop
     {
         return null;
     }
+
+    public String toString()
+    {
+        return name;
+    }
+
+    public static ArrayList<Loop> loadLoops()
+    {
+        ArrayList<Loop> loops = new ArrayList<Loop>();
+        // TODO: Load loops
+        return loops;
+    }
+
 
 }

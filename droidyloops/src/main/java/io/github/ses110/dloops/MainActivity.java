@@ -13,6 +13,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+
+import org.json.JSONException;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -20,12 +23,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import io.github.ses110.dloops.internals.Loop;
-import io.github.ses110.dloops.internals.Sample;
-import io.github.ses110.dloops.internals.Song;
+import io.github.ses110.dloops.models.Loop;
+import io.github.ses110.dloops.models.Sample;
+import io.github.ses110.dloops.models.Song;
 import io.github.ses110.dloops.looper.LoopRowView;
 import io.github.ses110.dloops.looper.LooperFragment;
 import io.github.ses110.dloops.picker.FileFragment;
+import io.github.ses110.dloops.utils.FileHandler;
 
 
 public class MainActivity extends Activity implements LooperFragment.LooperFragmentListener,
@@ -74,6 +78,20 @@ public class MainActivity extends Activity implements LooperFragment.LooperFragm
         }
         appState = AppState.MENU;
 
+        // Set up backbutton handling of state
+        fragmentManager.addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+            @Override
+            public void onBackStackChanged() {
+                // TODO: handle all cases
+                switch(appState)
+                {
+                    case LOOPER:
+                        appState = AppState.MENU;
+                }
+                if(getFragmentManager().getBackStackEntryCount() == 0) finish();
+            }
+        });
+
         // Do first time setup
         dataDir = getFilesDir();
         File setupFile = new File(dataDir, "setup.txt");
@@ -81,13 +99,16 @@ public class MainActivity extends Activity implements LooperFragment.LooperFragm
         {
             Log.v("SETUP", "First time run detected, copying files");
             try {
-                firstTimeSetup();
+                FileHandler fh = new FileHandler(this);
+                fh.firstTimeSetup(getAssets());
                 FileOutputStream fos = openFileOutput("setup.txt", Context.MODE_PRIVATE);
                 fos.write("setup complete".getBytes());
                 fos.close();
             } catch (IOException e) {
                 Log.e("SETUP", "FAILED");
                 Log.e("SETUP", e.toString());
+            } catch (JSONException e) {
+                Log.e("SETUP", "JSONException!");
             }
             Log.v("SETUP", "Setup complete.");
         }
@@ -98,31 +119,6 @@ public class MainActivity extends Activity implements LooperFragment.LooperFragm
                 Log.e("SETUP", "Default sample not found");
         }
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-    }
-
-    // First time setup
-    private void firstTimeSetup() throws IOException
-    {
-        AssetManager am = getAssets();
-        String[] files = am.list("samples");
-        InputStream in;
-        OutputStream out;
-
-        File sampleDir = new File(getFilesDir(), "samples");
-        sampleDir.mkdirs();
-
-        for (String fileName : files)
-        {
-            in = am.open("samples/" + fileName);
-            out = new FileOutputStream(new File(sampleDir, fileName));
-            byte[] buf = new byte[1024];
-            int len;
-            while ((len = in.read(buf)) > 0) {
-                out.write(buf, 0, len);
-            }
-            in.close();
-            out.close();
-        }
     }
 
     @Override
@@ -190,17 +186,17 @@ public class MainActivity extends Activity implements LooperFragment.LooperFragm
      */
 
     @Override
-    public void onPickerSampleSelection(Sample sample) {
+    public void onPickerSelection(Sample sample) {
 
     }
 
     @Override
-    public void onPickerLoopSelection(Loop loop) {
+    public void onPickerSelection(Loop loop) {
 
     }
 
     @Override
-    public void onPickerSongSelection(Song song) {
+    public void onPickerSelection(Song song) {
 
     }
 
@@ -214,16 +210,18 @@ public class MainActivity extends Activity implements LooperFragment.LooperFragm
      */
 
 
-    public void startClick(View view)
-    {
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        // TODO: initialise looper with pre-existing data if any
-        looper = LooperFragment.newInstance("pl", "pl");
-        fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
-        fragmentTransaction.replace(R.id.mainContainer, looper, "PLACEHOLDER");
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
-        appState = AppState.LOOPER;
+    public void startClick(View view) {
+        if (appState != AppState.LOOPER)
+        {
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            // TODO: initialise looper with pre-existing data if any
+            looper = LooperFragment.newInstance("pl", "pl");
+            fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
+            fragmentTransaction.replace(R.id.mainContainer, looper, "PLACEHOLDER");
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
+            appState = AppState.LOOPER;
+        }
     }
 
     public void loadClick(View view)
