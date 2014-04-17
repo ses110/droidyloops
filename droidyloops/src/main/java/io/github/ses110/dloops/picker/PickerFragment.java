@@ -1,8 +1,9 @@
 package io.github.ses110.dloops.picker;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.simple.parser.ParseException;
+
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 import io.github.ses110.dloops.R;
@@ -19,6 +24,7 @@ import io.github.ses110.dloops.R;
 import io.github.ses110.dloops.models.Loop;
 import io.github.ses110.dloops.models.Sample;
 import io.github.ses110.dloops.models.Song;
+import io.github.ses110.dloops.utils.FileHandler;
 import io.github.ses110.dloops.utils.FileHandler.FileType;
 
 /**
@@ -30,7 +36,7 @@ import io.github.ses110.dloops.utils.FileHandler.FileType;
  * Activities containing this fragment MUST implement the {Callbacks}
  * interface.
  */
-public class FileFragment extends Fragment implements AbsListView.OnItemClickListener {
+public class PickerFragment extends Fragment implements AbsListView.OnItemClickListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -55,9 +61,8 @@ public class FileFragment extends Fragment implements AbsListView.OnItemClickLis
      */
     private ListAdapter mAdapter;
 
-    // TODO: Rename and change types of parameters
-    public static FileFragment newInstance(FileType fileType) {
-        FileFragment fragment = new FileFragment();
+    public static PickerFragment newInstance(FileType fileType) {
+        PickerFragment fragment = new PickerFragment();
         Bundle args = new Bundle();
         args.putSerializable("fileType", fileType);
         fragment.setArguments(args);
@@ -68,7 +73,7 @@ public class FileFragment extends Fragment implements AbsListView.OnItemClickLis
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public FileFragment() {
+    public PickerFragment() {
     }
 
     @Override
@@ -78,23 +83,39 @@ public class FileFragment extends Fragment implements AbsListView.OnItemClickLis
         if (getArguments() != null) {
             fileType = (FileType) getArguments().getSerializable("fileType");
 
-            switch (fileType)
+            try {
+                switch (fileType) {
+                    case SAMPLES:
+                        samples = new Sample("", "").loadList(new FileHandler(getActivity()));
+                        Log.v("Got list", Integer.toString(samples.size()));
+                        mAdapter = new ArrayAdapter<Sample>(getActivity(),
+                                android.R.layout.simple_list_item_1, android.R.id.text1, samples);
+                        break;
+                    case LOOPS:
+                        // TODO:
+                        loops = new ArrayList<Loop>();
+                        mAdapter = new ArrayAdapter<Loop>(getActivity(),
+                                android.R.layout.simple_list_item_1, android.R.id.text1, loops);
+                        break;
+                    case SONGS:
+                        //TODO:
+                        songs = new ArrayList<Song>();
+                        mAdapter = new ArrayAdapter<Song>(getActivity(),
+                                android.R.layout.simple_list_item_1, android.R.id.text1, songs);
+                        break;
+                }
+            }
+            catch (JSONException e)
             {
-                case SAMPLES:
-                    samples = Sample.loadSamples(null);
-                    mAdapter = new ArrayAdapter<Sample>(getActivity(),
-                            android.R.layout.simple_list_item_1, android.R.id.text1, samples);
-                    break;
-                case LOOPS:
-                    loops = Loop.loadLoops();
-                    mAdapter = new ArrayAdapter<Loop>(getActivity(),
-                            android.R.layout.simple_list_item_1, android.R.id.text1, loops);
-                    break;
-                case SONGS:
-                    songs = Song.loadSongs();
-                    mAdapter = new ArrayAdapter<Song>(getActivity(),
-                            android.R.layout.simple_list_item_1, android.R.id.text1, songs);
-                    break;
+                Log.e("LOAD LIST", "JSONException!");
+            }
+            catch (FileNotFoundException e)
+            {
+                Log.e("LOAD LIST", "File not Found!");
+            }
+            catch (ParseException e)
+            {
+                Log.e("LOAD LIST", "Malformed file!");
             }
         }
     }

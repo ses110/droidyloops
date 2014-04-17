@@ -1,40 +1,37 @@
 package io.github.ses110.dloops;
 
 import android.app.Activity;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
-import android.content.res.AssetManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import org.json.JSONException;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 
 import io.github.ses110.dloops.models.Loop;
 import io.github.ses110.dloops.models.Sample;
 import io.github.ses110.dloops.models.Song;
 import io.github.ses110.dloops.looper.LoopRowView;
 import io.github.ses110.dloops.looper.LooperFragment;
-import io.github.ses110.dloops.picker.FileFragment;
+import io.github.ses110.dloops.picker.PickerFragment;
 import io.github.ses110.dloops.utils.FileHandler;
 
 
-public class MainActivity extends Activity implements LooperFragment.LooperFragmentListener,
+public class MainActivity extends FragmentActivity implements LooperFragment.LooperFragmentListener,
         MainMenuFragment.OnFragmentInteractionListener,
-        FileFragment.PickerFragmentListener
+        PickerFragment.PickerFragmentListener
 {
     /**
      * LOOPER VARIABLES
@@ -42,6 +39,7 @@ public class MainActivity extends Activity implements LooperFragment.LooperFragm
     // TODO: move these to LooperFragment
     private int rowCount;
     private static LooperFragment looper;
+    private static PickerFragment picker;
     private Loop curLoop;
 
     /**
@@ -69,10 +67,10 @@ public class MainActivity extends Activity implements LooperFragment.LooperFragm
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         if(fragmentManager == null) {
-            fragmentManager = getFragmentManager();
+            fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             menuFragment = new MainMenuFragment();
-            fragmentTransaction.add(R.id.mainContainer, menuFragment);
+            fragmentTransaction.add(menuFragment, null);
             fragmentTransaction.commit();
         }
         appState = AppState.MENU;
@@ -86,6 +84,10 @@ public class MainActivity extends Activity implements LooperFragment.LooperFragm
                 {
                     case LOOPER:
                         appState = AppState.MENU;
+                        break;
+                    case PICKER:
+                        appState = AppState.MENU;
+                        break;
                 }
             }
         });
@@ -185,6 +187,7 @@ public class MainActivity extends Activity implements LooperFragment.LooperFragm
 
     @Override
     public void onPickerSelection(Sample sample) {
+        Log.v("PICKER", "Selected Sample" + sample.toString());
 
     }
 
@@ -213,12 +216,13 @@ public class MainActivity extends Activity implements LooperFragment.LooperFragm
         {
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             // TODO: initialise looper with pre-existing data if any
-            looper = LooperFragment.newInstance("pl", "pl");
+            picker = PickerFragment.newInstance(FileHandler.FileType.SAMPLES);
+            //looper = LooperFragment.newInstance("pl", "pl");
             fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
-            fragmentTransaction.replace(R.id.mainContainer, looper, "PLACEHOLDER");
+            fragmentTransaction.replace(R.id.mainContainer, picker, "PLACEHOLDER");
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
-            appState = AppState.LOOPER;
+            appState = AppState.PICKER;
         }
     }
 

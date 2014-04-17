@@ -3,10 +3,15 @@ package io.github.ses110.dloops.models;
 import android.util.Log;
 
 import org.json.JSONException;
-import org.json.JSONObject;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import io.github.ses110.dloops.utils.FileHandler;
+import io.github.ses110.dloops.utils.Saveable;
 
 /**
  * Created by sid9102 on 4/14/2014.
@@ -80,12 +85,11 @@ public class Loop implements Saveable
         return name;
     }
 
-    public static ArrayList<Loop> loadLoops()
+    // TODO: do this
+    @Override
+    public ArrayList<? extends Saveable> loadList(FileHandler fileHandler) throws JSONException, FileNotFoundException, ParseException
     {
-        ArrayList<Loop> loops = new ArrayList<Loop>();
-        // TODO: Load loops
-        return loops;
+        return null;
     }
-
 
 }

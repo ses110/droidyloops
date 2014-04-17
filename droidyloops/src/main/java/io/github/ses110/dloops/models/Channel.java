@@ -1,9 +1,14 @@
 package io.github.ses110.dloops.models;
 
 import org.json.JSONException;
-import org.json.JSONObject;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
+
+import io.github.ses110.dloops.utils.FileHandler;
+import io.github.ses110.dloops.utils.Saveable;
 
 /**
  * Created by sid9102 on 4/14/2014.
@@ -47,6 +52,12 @@ public class Channel implements Saveable
     // TODO: set up Channel.toJSON
     @Override
     public JSONObject toJSON() throws JSONException {
+        return null;
+    }
+
+    // TODO: do this
+    @Override
+    public ArrayList<? extends Saveable> loadList(FileHandler fileHandler) throws JSONException, FileNotFoundException, ParseException {
         return null;
     }
 }

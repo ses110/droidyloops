@@ -1,13 +1,15 @@
 package io.github.ses110.dloops.models;
 
-import android.media.SoundPool;
-
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.simple.parser.JSONParser;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
+
+import io.github.ses110.dloops.utils.FileHandler;
+import io.github.ses110.dloops.utils.Saveable;
 
 /**
  * Created by sid9102 on 4/14/2014.
@@ -27,8 +29,8 @@ public class Sample implements Saveable
 
     public Sample(JSONObject object) throws JSONException
     {
-        this.name = object.getString("name");
-        this.path = object.getString("path");
+        this.name = (String) object.get("name");
+        this.path = (String) object.get("path");
         spID = -1;
     }
 
@@ -65,10 +67,14 @@ public class Sample implements Saveable
         return name;
     }
 
-    public static ArrayList<Sample> loadSamples(SoundPool soundPool)
+    @Override
+    public ArrayList<Sample> loadList(FileHandler fileHandler) throws JSONException, FileNotFoundException, ParseException
     {
-        ArrayList<Sample> samples = new ArrayList<Sample>();
-        JSONParser parser = new JSONParser();
-        return samples;
+        JSONArray array = fileHandler.readJSON(FileHandler.FileType.SAMPLES);
+        ArrayList<Sample> result = new ArrayList<Sample>();
+        for (Object anArray : array) {
+            result.add(new Sample((JSONObject) anArray));
+        }
+        return result;
     }
 }

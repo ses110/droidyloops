@@ -4,15 +4,20 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.util.Log;
 
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONArray;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Scanner;
 
 import io.github.ses110.dloops.models.Sample;
 
@@ -22,7 +27,6 @@ import io.github.ses110.dloops.models.Sample;
  */
 public class FileHandler
 {
-
     private Context context;
     // This tells the picker whether to look at samples, loops, or songs.
     public enum FileType
@@ -62,7 +66,7 @@ public class FileHandler
 
             Sample sample = new Sample(fileName.split("\\.")[0], fileName);
             JSONObject object = sample.toJSON();
-            sampleList.put(object);
+            sampleList.add(object);
         }
 
         writeJSON(sampleList, FileType.SAMPLES);
@@ -95,5 +99,29 @@ public class FileHandler
         out.write(array.toString().getBytes());
         Log.v("Writing " + fileType.toString(), "Got the JSON" + array.toString());
         out.close();
+    }
+
+    public JSONArray readJSON(FileType fileType) throws FileNotFoundException, ParseException {
+        File dir = null;
+        File file;
+        FileInputStream in;
+
+        switch (fileType)
+        {
+            case SAMPLES:
+                dir = context.getDir("samples", Context.MODE_PRIVATE);
+                break;
+            case LOOPS:
+                dir = context.getDir("loops", Context.MODE_PRIVATE);
+                break;
+            case SONGS:
+                dir = context.getDir("songs", Context.MODE_PRIVATE);
+                break;
+        }
+
+        file = new File(dir, "dir.json");
+        in = new FileInputStream(file);
+        JSONParser parser = new JSONParser();
+        return (JSONArray) parser.parse(new Scanner(in).next());
     }
 }
