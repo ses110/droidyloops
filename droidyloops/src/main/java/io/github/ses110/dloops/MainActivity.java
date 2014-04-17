@@ -36,7 +36,6 @@ public class MainActivity extends Activity implements LooperFragment.LooperFragm
         MainMenuFragment.OnFragmentInteractionListener,
         FileFragment.PickerFragmentListener
 {
-
     /**
      * LOOPER VARIABLES
      */
@@ -88,7 +87,6 @@ public class MainActivity extends Activity implements LooperFragment.LooperFragm
                     case LOOPER:
                         appState = AppState.MENU;
                 }
-                if(getFragmentManager().getBackStackEntryCount() == 0) finish();
             }
         });
 

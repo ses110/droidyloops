@@ -2,8 +2,10 @@ package io.github.ses110.dloops.models;
 
 import android.media.SoundPool;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 import java.util.ArrayList;
 
@@ -66,7 +68,7 @@ public class Sample implements Saveable
     public static ArrayList<Sample> loadSamples(SoundPool soundPool)
     {
         ArrayList<Sample> samples = new ArrayList<Sample>();
-        // TODO: Load samples
+        JSONParser parser = new JSONParser();
         return samples;
     }
 }

@@ -65,19 +65,18 @@ public class FileHandler
             sampleList.put(object);
         }
 
-        out = new FileOutputStream(new File(sampleDir, "dir.json"));
-        out.write(sampleList.toString().getBytes());
-        Log.v("SETUP", "Got the JSON" + sampleList.toString());
-        out.close();
+        writeJSON(sampleList, FileType.SAMPLES);
 
         // Setup the other folders
         new File(context.getFilesDir(), "loops").mkdirs();
         new File(context.getFilesDir(), "songs").mkdirs();
     }
 
-    public void writeJSON(JSONObject object, FileType fileType)
-    {
-        File dir;
+    public void writeJSON(JSONArray array, FileType fileType) throws IOException {
+        File dir = null;
+        File file;
+        FileOutputStream out;
+
         switch (fileType)
         {
             case SAMPLES:
@@ -90,5 +89,11 @@ public class FileHandler
                 dir = context.getDir("songs", Context.MODE_PRIVATE);
                 break;
         }
+
+        file = new File(dir, "dir.json");
+        out = new FileOutputStream(file);
+        out.write(array.toString().getBytes());
+        Log.v("Writing " + fileType.toString(), "Got the JSON" + array.toString());
+        out.close();
     }
 }
