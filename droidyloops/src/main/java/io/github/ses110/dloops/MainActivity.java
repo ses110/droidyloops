@@ -8,36 +8,50 @@ import android.content.pm.ActivityInfo;
 import android.content.res.AssetManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Arrays;
 
 import io.github.ses110.dloops.internals.Loop;
 import io.github.ses110.dloops.internals.Sample;
+import io.github.ses110.dloops.internals.Song;
 import io.github.ses110.dloops.looper.LoopRowView;
 import io.github.ses110.dloops.looper.LooperFragment;
+import io.github.ses110.dloops.picker.FileFragment;
 
 
-public class MainActivity extends Activity implements LooperFragment.OnFragmentInteractionListener, MainMenuFragment.OnFragmentInteractionListener{
+public class MainActivity extends Activity implements LooperFragment.LooperFragmentListener,
+        MainMenuFragment.OnFragmentInteractionListener,
+        FileFragment.PickerFragmentListener
+{
 
+    /**
+     * LOOPER VARIABLES
+     */
+    // TODO: move these to LooperFragment
     private int rowCount;
     private static LooperFragment looper;
+    private Loop curLoop;
+
+    /**
+     * ARRANGER VARIABLES
+     */
+    // TODO: add arranger variables
+
+    /**
+     * ACTIVITY VARIABLES
+     */
+
     private static MainMenuFragment menuFragment;
     private FragmentManager fragmentManager;
-    private Loop curLoop;
 
     // Tells the activity what fragment to display
     private enum AppState
@@ -81,7 +95,7 @@ public class MainActivity extends Activity implements LooperFragment.OnFragmentI
         {
             Log.v("SETUP", "Setup file found");
             if(!new File(new File(dataDir, "samples"), "vocals_male2.wav").exists())
-                Log.e("SETUP", "sample not found");
+                Log.e("SETUP", "Default sample not found");
         }
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
     }
@@ -117,21 +131,10 @@ public class MainActivity extends Activity implements LooperFragment.OnFragmentI
         Log.v("MainActivity", "In onResume");
     }
 
-    public void addLoopRow(View view)
-    {
-        //TODO: make this hook up to curLoop, and initialise with name and sample
-        ViewGroup listView = (ViewGroup) looper.getView().findViewById(R.id.loopRowList);
-        LoopRowView child = new LoopRowView(view.getContext());
-        if(curLoop == null)
-        {
-            curLoop = new Loop();
-        }
-        // TODO: fix blank sample
-        curLoop.addSample(new Sample("der", "der"));
-        child.setDetails(rowCount, curLoop);
-        listView.addView(child, 0);
-        rowCount++;
-    }
+
+    /**
+     *  ACTIVITY FUNCTIONS
+     */
 
 
     @Override
@@ -154,11 +157,62 @@ public class MainActivity extends Activity implements LooperFragment.OnFragmentI
         return super.onOptionsItemSelected(item);
     }
 
+
+    /**
+     *  LOOPER FUNCTIONS
+     */
+
+
     @Override
-    public void onFragmentInteraction(Uri uri)
+    public void getLoop(Loop loop)
     {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
     }
+
+    public void addLoopRow(View view)
+    {
+        //TODO: make this hook up to curLoop, and initialise with name and sample
+        ViewGroup listView = (ViewGroup) looper.getView().findViewById(R.id.loopRowList);
+        LoopRowView child = new LoopRowView(view.getContext());
+        if(curLoop == null)
+        {
+            curLoop = new Loop();
+        }
+        // TODO: fix blank sample
+        curLoop.addSample(new Sample("der", "der"));
+        child.setDetails(rowCount, curLoop);
+        listView.addView(child, 0);
+        rowCount++;
+    }
+
+    /**
+     *  PICKER FUNCTIONS
+     */
+
+    @Override
+    public void onPickerSampleSelection(Sample sample) {
+
+    }
+
+    @Override
+    public void onPickerLoopSelection(Loop loop) {
+
+    }
+
+    @Override
+    public void onPickerSongSelection(Song song) {
+
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
+
+    /**
+     *  MAIN MENU FUNCTIONS
+     */
+
 
     public void startClick(View view)
     {
@@ -170,5 +224,10 @@ public class MainActivity extends Activity implements LooperFragment.OnFragmentI
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
         appState = AppState.LOOPER;
+    }
+
+    public void loadClick(View view)
+    {
+
     }
 }

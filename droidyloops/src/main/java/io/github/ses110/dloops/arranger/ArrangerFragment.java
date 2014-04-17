@@ -13,7 +13,7 @@ import io.github.ses110.dloops.R;
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link ArrangerFragment.OnFragmentInteractionListener} interface
+ * {@link io.github.ses110.dloops.arranger.ArrangerFragment.ArrangerFragmentListener} interface
  * to handle interaction events.
  * Use the {@link ArrangerFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -29,7 +29,7 @@ public class ArrangerFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private OnFragmentInteractionListener mListener;
+    private ArrangerFragmentListener mListener;
 
     /**
      * Use this factory method to create a new instance of
@@ -79,10 +79,10 @@ public class ArrangerFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mListener = (OnFragmentInteractionListener) activity;
+            mListener = (ArrangerFragmentListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement ArrangerFragmentListener");
         }
     }
 
@@ -102,7 +102,7 @@ public class ArrangerFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
+    public interface ArrangerFragmentListener {
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
     }

@@ -7,15 +7,15 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
 import io.github.ses110.dloops.R;
+import io.github.ses110.dloops.internals.Loop;
 
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link LooperFragment.OnFragmentInteractionListener} interface
+ * {@link io.github.ses110.dloops.looper.LooperFragment.LooperFragmentListener} interface
  * to handle interaction events.
  * Use the {@link LooperFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -32,7 +32,7 @@ public class LooperFragment extends Fragment {
     private String mParam2;
 
     //TODO: make this thing restore everything on resume
-    private OnFragmentInteractionListener mListener;
+    private LooperFragmentListener mListener;
 
     /**
      * Use this factory method to create a new instance of
@@ -72,9 +72,9 @@ public class LooperFragment extends Fragment {
     }
 
     // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
+    public void onButtonPressed(Loop loop) {
         if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+            mListener.getLoop(loop);
         }
     }
 
@@ -82,10 +82,10 @@ public class LooperFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mListener = (OnFragmentInteractionListener) activity;
+            mListener = (LooperFragmentListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement ArrangerFragmentListener");
         }
     }
 
@@ -105,9 +105,9 @@ public class LooperFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
+    public interface LooperFragmentListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
+        public void getLoop(Loop loop);
     }
 
 }

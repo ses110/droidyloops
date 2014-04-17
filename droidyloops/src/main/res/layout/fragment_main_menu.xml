@@ -21,11 +21,23 @@
         android:layout_width="127dp"
         android:layout_height="wrap_content"
         android:text="Start"
-        android:id="@+id/button"
-        android:layout_marginBottom="92dp"
+        android:id="@+id/startButton"
         android:layout_gravity="center_horizontal"
         android:onClick="startClick"
         android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:layout_marginBottom="10dp" />
+
+    <Button
+        android:layout_width="127dp"
+        android:layout_height="wrap_content"
+        android:text="Load"
+        android:id="@+id/loadButton"
+        android:layout_gravity="center_horizontal"
+        android:onClick="loadClick"
+        android:paddingTop="5dp"
         android:paddingBottom="5dp" />
+
+
 
 </LinearLayout>
