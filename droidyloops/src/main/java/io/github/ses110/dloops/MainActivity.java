@@ -3,9 +3,12 @@ package io.github.ses110.dloops;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.pm.ActivityInfo;
+import android.content.res.AssetManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.Menu;
@@ -13,6 +16,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Arrays;
 
 import io.github.ses110.dloops.internals.Loop;
 import io.github.ses110.dloops.internals.Sample;
@@ -34,6 +45,7 @@ public class MainActivity extends Activity implements LooperFragment.OnFragmentI
         MENU, ARRANGER, LOOPER, PICKER
     }
     private AppState appState;
+    File dataDir;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +58,57 @@ public class MainActivity extends Activity implements LooperFragment.OnFragmentI
             fragmentTransaction.add(R.id.mainContainer, menuFragment);
             fragmentTransaction.commit();
         }
+        appState = AppState.MENU;
 
+        // Do first time setup
+        dataDir = getFilesDir();
+        File setupFile = new File(dataDir, "setup.txt");
+        if(!setupFile.exists())
+        {
+            Log.v("SETUP", "First time run detected, copying files");
+            try {
+                firstTimeSetup();
+                FileOutputStream fos = openFileOutput("setup.txt", Context.MODE_PRIVATE);
+                fos.write("setup complete".getBytes());
+                fos.close();
+            } catch (IOException e) {
+                Log.e("SETUP", "FAILED");
+                Log.e("SETUP", e.toString());
+            }
+            Log.v("SETUP", "Setup complete.");
+        }
+        else
+        {
+            Log.v("SETUP", "Setup file found");
+            if(!new File(new File(dataDir, "samples"), "vocals_male2.wav").exists())
+                Log.e("SETUP", "sample not found");
+        }
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+    }
+
+    // First time setup
+    private void firstTimeSetup() throws IOException
+    {
+        AssetManager am = getAssets();
+        String[] files = am.list("samples");
+        InputStream in;
+        OutputStream out;
+
+        File sampleDir = new File(getFilesDir(), "samples");
+        sampleDir.mkdirs();
+
+        for (String fileName : files)
+        {
+            in = am.open("samples/" + fileName);
+            out = new FileOutputStream(new File(sampleDir, fileName));
+            byte[] buf = new byte[1024];
+            int len;
+            while ((len = in.read(buf)) > 0) {
+                out.write(buf, 0, len);
+            }
+            in.close();
+            out.close();
+        }
     }
 
     @Override
@@ -75,7 +136,7 @@ public class MainActivity extends Activity implements LooperFragment.OnFragmentI
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        
+
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
@@ -108,5 +169,6 @@ public class MainActivity extends Activity implements LooperFragment.OnFragmentI
         fragmentTransaction.replace(R.id.mainContainer, looper, "PLACEHOLDER");
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
+        appState = AppState.LOOPER;
     }
 }
