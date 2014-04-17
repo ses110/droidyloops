@@ -9,9 +9,14 @@
         android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/listText1"/>
 
     <TextView
         android:id="@android:id/empty"
+        android:text="@string/noSamples"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center" />

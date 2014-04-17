@@ -89,7 +89,7 @@ public class PickerFragment extends Fragment implements AbsListView.OnItemClickL
                         samples = new Sample("", "").loadList(new FileHandler(getActivity()));
                         Log.v("Got list", Integer.toString(samples.size()));
                         mAdapter = new ArrayAdapter<Sample>(getActivity(),
-                                android.R.layout.simple_list_item_1, android.R.id.text1, samples);
+                                android.R.layout.simple_list_item_1, R.id.listText1, samples);
                         break;
                     case LOOPS:
                         // TODO:

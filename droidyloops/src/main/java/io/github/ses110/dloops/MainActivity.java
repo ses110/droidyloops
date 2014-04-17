@@ -70,7 +70,7 @@ public class MainActivity extends FragmentActivity implements LooperFragment.Loo
             fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             menuFragment = new MainMenuFragment();
-            fragmentTransaction.add(menuFragment, null);
+            fragmentTransaction.add(R.id.mainContainer, menuFragment);
             fragmentTransaction.commit();
         }
         appState = AppState.MENU;
