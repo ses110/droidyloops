@@ -1,11 +1,14 @@
 package io.github.ses110.dloops.models;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 /**
  * Created by sid9102 on 4/14/2014.
  */
-public class Channel
+public class Channel implements Saveable
 {
     public ArrayList<Loop> loops;
     public ArrayList<Integer> startPoints;
@@ -38,6 +41,12 @@ public class Channel
             else if(cur > x)
                 break;
         }
+        return null;
+    }
+
+    // TODO: set up Channel.toJSON
+    @Override
+    public JSONObject toJSON() throws JSONException {
         return null;
     }
 }

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 /**
  * Created by sid9102 on 4/14/2014.
  */
-public class Sample
+public class Sample implements Saveable
 {
     private String name;
     private String path;
@@ -21,6 +21,13 @@ public class Sample
         this.name = name;
         this.path = path;
         spID = -1; // Indicates that the sample has not been loaded yet.
+    }
+
+    public Sample(JSONObject object) throws JSONException
+    {
+        this.name = object.getString("name");
+        this.path = object.getString("path");
+        spID = -1;
     }
 
     public int getSpID() {

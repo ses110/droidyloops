@@ -2,6 +2,7 @@ package io.github.ses110.dloops.models;
 
 import android.util.Log;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -10,7 +11,7 @@ import java.util.Arrays;
 /**
  * Created by sid9102 on 4/14/2014.
  */
-public class Loop
+public class Loop implements Saveable
 {
     private ArrayList<Sample> samples;
     private String name;
@@ -68,9 +69,9 @@ public class Loop
         return result;
     }
 
-    // TODO: implement saving
-    public JSONObject saveLoop(String name)
-    {
+    // TODO: Loop.toJSON
+    @Override
+    public JSONObject toJSON() throws JSONException {
         return null;
     }
 

@@ -1,5 +1,8 @@
 package io.github.ses110.dloops.models;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -8,7 +11,7 @@ import java.util.Collections;
  *
  * For holding song information
  */
-public class Song
+public class Song implements Saveable
 {
     private ArrayList<Channel> channels;
     // TODO: For individual volumes on channels
@@ -32,6 +35,11 @@ public class Song
             result[i] = channels.get(i);
         }
         return result;
+    }
+
+    @Override
+    public JSONObject toJSON() throws JSONException {
+        return null;
     }
 
     public String toString()

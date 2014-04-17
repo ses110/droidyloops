@@ -2,17 +2,14 @@ package io.github.ses110.dloops.utils;
 
 import android.content.Context;
 import android.content.res.AssetManager;
-import android.util.JsonWriter;
 import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.simple.parser.JSONParser;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
