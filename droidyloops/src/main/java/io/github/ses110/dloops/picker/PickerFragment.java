@@ -12,6 +12,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import org.json.JSONException;
@@ -65,7 +66,6 @@ public class PickerFragment extends ListFragment implements AbsListView.OnItemCl
 
     public static PickerFragment newInstance(FileType fileType) {
         PickerFragment fragment = new PickerFragment();
-        Log.d(TAG,"newInstance");
         Bundle args = new Bundle();
         args.putSerializable("fileType", fileType);
         fragment.setArguments(args);
@@ -82,7 +82,6 @@ public class PickerFragment extends ListFragment implements AbsListView.OnItemCl
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG,"onCreate");
         if (getArguments() != null) {
             fileType = (FileType) getArguments().getSerializable("fileType");
 
@@ -93,7 +92,6 @@ public class PickerFragment extends ListFragment implements AbsListView.OnItemCl
                         Log.v("Got list", Integer.toString(samples.size()));
                         mAdapter = new ArrayAdapter<Sample>(getActivity(),
                                 android.R.layout.simple_list_item_1, android.R.id.text1, samples);
-                        setListAdapter(mAdapter);
                         break;
                     case LOOPS:
                         // TODO:
@@ -128,7 +126,6 @@ public class PickerFragment extends ListFragment implements AbsListView.OnItemCl
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_file, container, false);
-        Log.d(TAG,"onCreateView");
         // Set the adapter
         mListView = (AbsListView) view.findViewById(android.R.id.list);
         ((AdapterView<ListAdapter>) mListView).setAdapter(mAdapter);
@@ -142,7 +139,6 @@ public class PickerFragment extends ListFragment implements AbsListView.OnItemCl
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        Log.d(TAG,"onAttach");
         try {
             mListener = (PickerFragmentListener) activity;
         } catch (ClassCastException e) {
@@ -160,7 +156,28 @@ public class PickerFragment extends ListFragment implements AbsListView.OnItemCl
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Log.d(TAG,"onItemClick");
+        Log.d(TAG, "onItemClick");
+        if (null != mListener) {
+            // Notify the active callbacks interface (the activity, if the
+            // fragment is attached to one) that an item has been selected.
+            switch (fileType)
+            {
+                case SAMPLES:
+                    mListener.onPickerSelection(samples.get(position));
+                    break;
+                case LOOPS:
+                    mListener.onPickerSelection(loops.get(position));
+                    break;
+                case SONGS:
+                    mListener.onPickerSelection(songs.get(position));
+                    break;
+            }
+        }
+    }
+
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);
         if (null != mListener) {
             // Notify the active callbacks interface (the activity, if the
             // fragment is attached to one) that an item has been selected.

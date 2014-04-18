@@ -187,7 +187,7 @@ public class MainActivity extends FragmentActivity implements LooperFragment.Loo
 
     @Override
     public void onPickerSelection(Sample sample) {
-        Log.v("PICKER", "Selected Sample" + sample.toString());
+        Log.v("PICKER", "Selected Sample: " + sample.toString());
 
     }
 
