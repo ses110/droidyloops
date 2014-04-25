@@ -100,6 +100,17 @@ public class FileHandler
         return (JSONObject) parser.parse(new Scanner(in).next());
     }
 
+    public JSONArray readJSONDir(FileType fileType) throws FileNotFoundException, ParseException {
+        File dir = getDir(fileType);
+        File file;
+        FileInputStream in;
+
+        file = new File(dir, "dir.json");
+        in = new FileInputStream(file);
+        JSONParser parser = new JSONParser();
+        return (JSONArray) parser.parse(new Scanner(in).next());
+    }
+
     public static JSONArray saveList(ArrayList<? extends Saveable> list) throws JSONException
     {
         JSONArray result = new JSONArray();
