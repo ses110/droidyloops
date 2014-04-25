@@ -70,31 +70,17 @@ public class FileHandler
             sampleList.add(object);
         }
 
-        writeJSON(sampleList, FileType.SAMPLES);
+        writeJSONDir(sampleList, FileType.SAMPLES);
 
         // Setup the other folders
         new File(context.getFilesDir(), "loops").mkdirs();
         new File(context.getFilesDir(), "songs").mkdirs();
     }
 
-    public void writeJSON(JSONArray array, FileType fileType) throws IOException {
-        File dir = null;
+    public void writeJSONDir(JSONArray array, FileType fileType) throws IOException {
+        File dir = getDir(fileType);
         File file;
         FileOutputStream out;
-
-        switch (fileType)
-        {
-            case SAMPLES:
-                dir = new File(context.getFilesDir(), "samples");
-                break;
-            case LOOPS:
-                dir = context.getDir("loops", Context.MODE_PRIVATE);
-                break;
-            case SONGS:
-                dir = context.getDir("songs", Context.MODE_PRIVATE);
-                break;
-        }
-        dir.mkdirs();
 
         file = new File(dir, "dir.json");
         out = new FileOutputStream(file);
@@ -103,28 +89,15 @@ public class FileHandler
         out.close();
     }
 
-    public JSONArray readJSON(FileType fileType) throws FileNotFoundException, ParseException {
-        File dir = null;
+    public JSONObject readJSON(FileType fileType) throws FileNotFoundException, ParseException {
+        File dir = getDir(fileType);
         File file;
         FileInputStream in;
-
-        switch (fileType)
-        {
-            case SAMPLES:
-                dir = context.getDir("samples", Context.MODE_PRIVATE);
-                break;
-            case LOOPS:
-                dir = context.getDir("loops", Context.MODE_PRIVATE);
-                break;
-            case SONGS:
-                dir = context.getDir("songs", Context.MODE_PRIVATE);
-                break;
-        }
 
         file = new File(dir, "dir.json");
         in = new FileInputStream(file);
         JSONParser parser = new JSONParser();
-        return (JSONArray) parser.parse(new Scanner(in).next());
+        return (JSONObject) parser.parse(new Scanner(in).next());
     }
 
     public static JSONArray saveList(ArrayList<? extends Saveable> list) throws JSONException
@@ -136,5 +109,36 @@ public class FileHandler
             result.add(s.toJSON());
         }
         return result;
+    }
+
+    public void writeJSON(JSONObject object, FileType fileType) throws IOException
+    {
+        File dir = getDir(fileType);
+        File file;
+        FileOutputStream out;
+        file = new File(dir, (object.get("name")) + ".json");
+        out = new FileOutputStream(file);
+        out.write(object.toString().getBytes());
+        out.close();
+    }
+
+    public File getDir(FileType fileType)
+    {
+        File dir = null;
+        switch (fileType)
+        {
+            case SAMPLES:
+                dir = new File(context.getFilesDir(), "samples");
+                break;
+            case LOOPS:
+                dir = new File(context.getFilesDir(), "loops");
+                break;
+            case SONGS:
+                dir = new File(context.getFilesDir(), "songs");
+                break;
+        }
+
+        dir.mkdirs();
+        return dir;
     }
 }
