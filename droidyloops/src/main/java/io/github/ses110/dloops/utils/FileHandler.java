@@ -17,6 +17,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import io.github.ses110.dloops.models.Sample;
@@ -124,5 +125,16 @@ public class FileHandler
         in = new FileInputStream(file);
         JSONParser parser = new JSONParser();
         return (JSONArray) parser.parse(new Scanner(in).next());
+    }
+
+    public static JSONArray saveList(ArrayList<? extends Saveable> list) throws JSONException
+    {
+        JSONArray result = new JSONArray();
+
+        for (Saveable s : list)
+        {
+            result.add(s.toJSON());
+        }
+        return result;
     }
 }
