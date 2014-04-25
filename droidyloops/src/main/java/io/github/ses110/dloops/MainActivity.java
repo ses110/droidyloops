@@ -1,6 +1,5 @@
 package io.github.ses110.dloops;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
@@ -12,19 +11,18 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 
 import org.json.JSONException;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import io.github.ses110.dloops.looper.LooperFragment;
 import io.github.ses110.dloops.models.Loop;
 import io.github.ses110.dloops.models.Sample;
 import io.github.ses110.dloops.models.Song;
-import io.github.ses110.dloops.looper.LoopRowView;
-import io.github.ses110.dloops.looper.LooperFragment;
 import io.github.ses110.dloops.picker.PickerFragment;
 import io.github.ses110.dloops.utils.FileHandler;
 
@@ -120,6 +118,23 @@ public class MainActivity extends FragmentActivity implements LooperFragment.Loo
                 Log.e("SETUP", "Default sample not found");
         }
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+
+        Loop testLoop = new Loop();
+
+        File dir = new File(this.getFilesDir(), "loops");
+        File file = new File(dir, "testloop.json");
+        try {
+            FileOutputStream out = new FileOutputStream(file);
+            out.write(testLoop.toJSON().toString().getBytes());
+            out.close();
+        } catch(FileNotFoundException e) {
+            Log.e("MainActivity", "FIle not found exception.");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

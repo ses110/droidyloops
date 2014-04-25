@@ -2,6 +2,7 @@ package io.github.ses110.dloops.models;
 
 import android.util.Log;
 
+import org.json.simple.JSONArray;
 import org.json.JSONException;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
@@ -24,15 +25,46 @@ public class Loop implements Saveable
     public final static int maxBeats = 8;
     // TODO: Add variable length
 
-    public Loop()
-    {
+    public Loop() {
         samples = new ArrayList<Sample>();
         cells = new ArrayList<boolean[]>();
+
+        this.addSample(new Sample("bass one", "bass1.wav"));
+        this.addSample(new Sample("snares", "drum_Snare.wav"));
+        try {
+            this.toJSON();
+        } catch(JSONException e) {
+            Log.e("LoopError", "Loop: JSON exception");
+        }
+
     }
 
     // TODO: implement loading
-    public Loop(JSONObject savedLoop)
+    public Loop(JSONObject savedLoop) throws JSONException
     {
+        this.name = (String) savedLoop.get("name");
+        JSONArray getSamples = (JSONArray) savedLoop.get("samples");
+
+        for (int i = 0; i < getSamples.size(); i++) {
+            JSONObject current = (JSONObject) getSamples.get(i);
+            samples.add(new Sample(current));
+        }
+
+        JSONArray getCells = (JSONArray) savedLoop.get("cells");
+        for (int i = 0; i < getCells.size(); i++) {
+            JSONArray current = (JSONArray) getCells.get(i);
+            boolean[] curRow = new boolean[current.size()];
+            for (int j = 0; j < current.size(); j++) {
+                curRow[j] = (Boolean) current.get(j);
+            }
+            this.cells.add(curRow);
+        }
+
+        Log.v("Loop loadJSON->name", this.name);
+        for(Sample s: this.samples)
+            Log.v("Loop loadJSON->samples", s.toString());
+        for(boolean[] b: this.cells)
+            Log.v("Loop loadJSON->cells", Arrays.toString(b));
 
     }
 
@@ -77,7 +109,23 @@ public class Loop implements Saveable
     // TODO: Loop.toJSON
     @Override
     public JSONObject toJSON() throws JSONException {
-        return null;
+        JSONObject result = new JSONObject();
+//        JSONArray list =
+        result.put("name", this.name);
+        result.put("samples", FileHandler.saveList(samples));
+
+        JSONArray jsonCellRows = new JSONArray();
+        for(boolean[] arr: cells) {
+            JSONArray cellRow = new JSONArray();
+            for(boolean b: arr) {
+                cellRow.add(b);
+            }
+            jsonCellRows.add(cellRow);
+        }
+        result.put("cells", jsonCellRows);
+        Log.v("Loop", result.toString());
+
+        return result;
     }
 
     public String toString()
