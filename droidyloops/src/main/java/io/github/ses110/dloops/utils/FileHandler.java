@@ -89,12 +89,12 @@ public class FileHandler
         out.close();
     }
 
-    public JSONObject readJSON(FileType fileType) throws FileNotFoundException, ParseException {
+    public JSONObject readJSON(FileType fileType, String name) throws FileNotFoundException, ParseException {
         File dir = getDir(fileType);
         File file;
         FileInputStream in;
 
-        file = new File(dir, "dir.json");
+        file = new File(dir, name + ".json");
         in = new FileInputStream(file);
         JSONParser parser = new JSONParser();
         return (JSONObject) parser.parse(new Scanner(in).next());
