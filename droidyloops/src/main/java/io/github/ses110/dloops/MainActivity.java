@@ -80,6 +80,7 @@ public class MainActivity extends FragmentActivity implements LooperFragment.Loo
             @Override
             public void onBackStackChanged() {
                 // TODO: handle all cases
+                // TODO: Fix the bug, backstack also changes when you add a new fragment
                 switch(appState)
                 {
                     case LOOPER:

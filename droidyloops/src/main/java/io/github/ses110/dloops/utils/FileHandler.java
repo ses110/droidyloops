@@ -84,7 +84,7 @@ public class FileHandler
         switch (fileType)
         {
             case SAMPLES:
-                dir = context.getDir("samples", Context.MODE_PRIVATE);
+                dir = new File(context.getFilesDir(), "samples");
                 break;
             case LOOPS:
                 dir = context.getDir("loops", Context.MODE_PRIVATE);
@@ -93,6 +93,7 @@ public class FileHandler
                 dir = context.getDir("songs", Context.MODE_PRIVATE);
                 break;
         }
+        dir.mkdirs();
 
         file = new File(dir, "dir.json");
         out = new FileOutputStream(file);
