@@ -167,18 +167,25 @@ public class MainActivity extends FragmentActivity implements LooperFragment.Loo
 
     public void addLoopRow(View view)
     {
-        //TODO: make this hook up to curLoop, and initialise with name and sample
-        ViewGroup listView = (ViewGroup) looper.getView().findViewById(R.id.loopRowList);
-        LoopRowView child = new LoopRowView(view.getContext());
-        if(curLoop == null)
-        {
-            curLoop = new Loop();
-        }
-        // TODO: fix blank sample
-        curLoop.addSample(new Sample("der", "der"));
-        child.setDetails(rowCount, curLoop);
-        listView.addView(child, 0);
-        rowCount++;
+        picker = PickerFragment.newInstance(FileHandler.FileType.SAMPLES);
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
+        fragmentTransaction.replace(R.id.mainContainer, picker, "PLACEHOLDER");
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+        appState = AppState.PICKER;
+        // TODO: make this eventually go back to looper
+//        ViewGroup listView = (ViewGroup) looper.getView().findViewById(R.id.loopRowList);
+//        LoopRowView child = new LoopRowView(view.getContext());
+//        if(curLoop == null)
+//        {
+//            curLoop = new Loop();
+//        }
+//        // TODO: fix blank sample
+//        curLoop.addSample(new Sample("der", "der"));
+//        child.setDetails(rowCount, curLoop);
+//        listView.addView(child, 0);
+//        rowCount++;
     }
 
     /**
@@ -216,13 +223,12 @@ public class MainActivity extends FragmentActivity implements LooperFragment.Loo
         {
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             // TODO: initialise looper with pre-existing data if any
-            picker = PickerFragment.newInstance(FileHandler.FileType.SAMPLES);
-            //looper = LooperFragment.newInstance("pl", "pl");
+            looper = LooperFragment.newInstance("pl", "pl");
             fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
-            fragmentTransaction.replace(R.id.mainContainer, picker, "PLACEHOLDER");
+            fragmentTransaction.replace(R.id.mainContainer, looper, "PLACEHOLDER");
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
-            appState = AppState.PICKER;
+            appState = AppState.LOOPER;
         }
     }
 

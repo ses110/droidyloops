@@ -130,6 +130,18 @@ public class PickerFragment extends ListFragment implements AbsListView.OnItemCl
         mListView = (AbsListView) view.findViewById(android.R.id.list);
         ((AdapterView<ListAdapter>) mListView).setAdapter(mAdapter);
 
+        switch(fileType)
+        {
+            case SAMPLES:
+                ((TextView) view.findViewById(R.id.listText1)).setText("Select a sample");
+                break;
+            case LOOPS:
+                ((TextView) view.findViewById(R.id.listText1)).setText("Select a loop");
+                break;
+            case SONGS:
+                ((TextView) view.findViewById(R.id.listText1)).setText("Select a song");
+                break;
+        }
         // Set OnItemClickListener so we can be notified on item clicks
         mListView.setOnItemClickListener(this);
 
