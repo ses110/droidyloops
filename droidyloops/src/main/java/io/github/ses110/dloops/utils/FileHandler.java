@@ -97,7 +97,9 @@ public class FileHandler
         file = new File(dir, name + ".json");
         in = new FileInputStream(file);
         JSONParser parser = new JSONParser();
-        return (JSONObject) parser.parse(new Scanner(in).next());
+        String read = new Scanner(in).next();
+        read = read.substring(0, read.length() - 1);
+        return (JSONObject) parser.parse(read);
     }
 
     public JSONArray readJSONDir(FileType fileType) throws FileNotFoundException, ParseException {
