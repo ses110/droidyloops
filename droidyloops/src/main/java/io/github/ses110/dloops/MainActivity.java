@@ -81,7 +81,7 @@ public class MainActivity extends FragmentActivity implements LooperFragment.Loo
          * Set up ProgressDialog
          * */
         mProgDialog = new ProgressDialog(this);
-        mProgDialog.setTitle("Loading");
+
 
         mFH = new FileHandler(this);
 
@@ -222,9 +222,8 @@ public class MainActivity extends FragmentActivity implements LooperFragment.Loo
     @Override
     public void onPickerSelection(Sample sample) {
         if(sample.getSpID() == -1) {
-            mProgDialog.setMessage("Loading sample...");
             mProgDialog.show();
-
+            mProgDialog.setContentView(R.layout.dialog_load);
             int id = mFH.loadSample(sample, mSndPool);
             if(mSpBuffer.isFull()) {
                 Sample temp = mSpBuffer.remove(0);
