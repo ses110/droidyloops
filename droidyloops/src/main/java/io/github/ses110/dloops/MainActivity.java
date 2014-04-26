@@ -1,5 +1,6 @@
 package io.github.ses110.dloops;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.media.AudioManager;
@@ -46,6 +47,8 @@ public class MainActivity extends FragmentActivity implements LooperFragment.Loo
     private AudioManager mAudioManager;
     private SoundPool mSndPool;
 
+    private ProgressDialog mProgDialog;
+    FileHandler mFH;
     /**
      * ARRANGER VARIABLES
      */
@@ -62,9 +65,23 @@ public class MainActivity extends FragmentActivity implements LooperFragment.Loo
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if(mSndPool == null) {
+
+        /************
+         *
+         *  Set up soundPool stuff
+         * *************/
+        if(mSndPool == null || mAudioManager == null) {
             mSndPool = new SoundPool(32, AudioManager.STREAM_MUSIC, 0);
+            mAudioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
         }
+
+        /**
+         * Set up ProgressDialog
+         * */
+        mProgDialog = new ProgressDialog(this);
+        mProgDialog.setTitle("Loading");
+
+        mFH = new FileHandler(this);
 
         if(fm == null) {
             fm = getSupportFragmentManager();
@@ -123,6 +140,11 @@ public class MainActivity extends FragmentActivity implements LooperFragment.Loo
      *  ACTIVITY FUNCTIONS
      */
 
+    private float getVolume() {
+        float maxVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        float streamVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        return streamVolume/maxVolume;
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -183,12 +205,26 @@ public class MainActivity extends FragmentActivity implements LooperFragment.Loo
     /**
      *  PICKER FUNCTIONS
      */
+    public void closeDialog(int spID) {
+        mProgDialog.dismiss();
+        playSound(spID);
+    }
+
+    private void playSound(int spID) {
+        mSndPool.play(spID, getVolume(), getVolume(), 1,0,1);
+    }
 
     @Override
     public void onPickerSelection(Sample sample) {
-//        ProgressDialog progress = new ProgressDialog();
-        Log.v("PICKER", "Selected Sample: " + sample.toString());
+        if(sample.getSpID() == -1) {
+            mProgDialog.setMessage("Loading sample...");
+            mProgDialog.show();
 
+            mFH.loadSample(sample, mSndPool);
+        } else {
+            playSound(sample.getSpID());
+        }
+        Log.v("PICKER", "Selected Sample: " + sample.toString());
     }
 
     @Override

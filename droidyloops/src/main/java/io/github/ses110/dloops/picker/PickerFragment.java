@@ -21,6 +21,7 @@ import org.json.simple.parser.ParseException;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
+import io.github.ses110.dloops.MainActivity;
 import io.github.ses110.dloops.R;
 import io.github.ses110.dloops.models.Loop;
 import io.github.ses110.dloops.models.Sample;
@@ -37,7 +38,7 @@ import io.github.ses110.dloops.utils.FileHandler.FileType;
  * Activities containing this fragment MUST implement the {Callbacks}
  * interface.
  */
-public class PickerFragment extends ListFragment implements AbsListView.OnItemClickListener {
+public class PickerFragment extends ListFragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -126,7 +127,8 @@ public class PickerFragment extends ListFragment implements AbsListView.OnItemCl
             mSP.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
                 @Override
                 public void onLoadComplete(SoundPool soundPool, int i, int i2) {
-                    mSoundsLoaded = true;
+                    Log.v("PickerFragment", "Sound loaded.");
+                    ((MainActivity)getActivity()).closeDialog(i);
                 }
             });
 
@@ -153,8 +155,6 @@ public class PickerFragment extends ListFragment implements AbsListView.OnItemCl
                 ((TextView) view.findViewById(R.id.listText1)).setText("Select a song");
                 break;
         }
-        // Set OnItemClickListener so we can be notified on item clicks
-        mListView.setOnItemClickListener(this);
 
         return view;
     }
@@ -177,27 +177,6 @@ public class PickerFragment extends ListFragment implements AbsListView.OnItemCl
     }
     public void attachSoundPool(SoundPool _sp) {
         this.mSP = _sp;
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Log.d(TAG, "onItemClick");
-        if (null != mListener) {
-            // Notify the active callbacks interface (the activity, if the
-            // fragment is attached to one) that an item has been selected.
-            switch (fileType)
-            {
-                case SAMPLES:
-                    mListener.onPickerSelection(samples.get(position));
-                    break;
-                case LOOPS:
-                    mListener.onPickerSelection(loops.get(position));
-                    break;
-                case SONGS:
-                    mListener.onPickerSelection(songs.get(position));
-                    break;
-            }
-        }
     }
 
     @Override
