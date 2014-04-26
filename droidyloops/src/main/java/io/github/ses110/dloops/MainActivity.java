@@ -198,6 +198,8 @@ public class MainActivity extends FragmentActivity implements LooperFragment.Loo
     }
     public void addLoopRow(Sample s) {
         fm.popBackStack();
+        fm.executePendingTransactions();
+        looper = (LooperFragment) fm.findFragmentById(R.id.mainContainer);
         ViewGroup listView = (ViewGroup) looper.getView().findViewById(R.id.loopRowList);
         LoopRowView child = new LoopRowView(this);
         if(curLoop == null)
