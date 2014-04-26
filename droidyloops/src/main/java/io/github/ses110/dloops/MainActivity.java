@@ -27,6 +27,7 @@ import io.github.ses110.dloops.models.Loop;
 import io.github.ses110.dloops.models.Sample;
 import io.github.ses110.dloops.models.Song;
 import io.github.ses110.dloops.picker.PickerFragment;
+import io.github.ses110.dloops.utils.CircularArrayList;
 import io.github.ses110.dloops.utils.FileHandler;
 
 
@@ -44,6 +45,7 @@ public class MainActivity extends FragmentActivity implements LooperFragment.Loo
     private static ArrangerFragment arranger;
     private Loop curLoop;
 
+    private CircularArrayList<Sample> mSpBuffer;
     private AudioManager mAudioManager;
     private SoundPool mSndPool;
 
@@ -82,6 +84,8 @@ public class MainActivity extends FragmentActivity implements LooperFragment.Loo
         mProgDialog.setTitle("Loading");
 
         mFH = new FileHandler(this);
+
+        mSpBuffer = new CircularArrayList<Sample>(10);
 
         if(fm == null) {
             fm = getSupportFragmentManager();
@@ -212,6 +216,7 @@ public class MainActivity extends FragmentActivity implements LooperFragment.Loo
 
     private void playSound(int spID) {
         mSndPool.play(spID, getVolume(), getVolume(), 1,0,1);
+        Log.v("Playsound", "Playing SOUND id: " + Integer.toString(spID));
     }
 
     @Override
@@ -220,7 +225,13 @@ public class MainActivity extends FragmentActivity implements LooperFragment.Loo
             mProgDialog.setMessage("Loading sample...");
             mProgDialog.show();
 
-            mFH.loadSample(sample, mSndPool);
+            int id = mFH.loadSample(sample, mSndPool);
+            if(mSpBuffer.isFull()) {
+                Sample temp = mSpBuffer.remove(0);
+                mSndPool.unload(temp.getSpID());
+                temp.setSpID(-1);
+            }
+            mSpBuffer.add(sample);
         } else {
             playSound(sample.getSpID());
         }

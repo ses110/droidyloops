@@ -157,6 +157,8 @@ public class FileHandler
     public int loadSample(Sample sample, SoundPool sp) {
         File curSample = new File(this.getDir(FileType.SAMPLES), sample.getPath());
         int id = sp.load(curSample.getAbsolutePath(), 0);
+        sample.setSpID(id);
+        Log.v("FileHandler", "FileHandler is loading sample: " + sample.getSpID());
         return id;
     }
 }
