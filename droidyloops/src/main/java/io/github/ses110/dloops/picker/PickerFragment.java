@@ -1,8 +1,8 @@
 package io.github.ses110.dloops.picker;
 
 import android.app.Activity;
+import android.media.SoundPool;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,7 +22,6 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 import io.github.ses110.dloops.R;
-
 import io.github.ses110.dloops.models.Loop;
 import io.github.ses110.dloops.models.Sample;
 import io.github.ses110.dloops.models.Song;
@@ -48,6 +47,10 @@ public class PickerFragment extends ListFragment implements AbsListView.OnItemCl
     private FileType fileType;
 
     private PickerFragmentListener mListener;
+
+    private SoundPool mSP;
+    private boolean mSoundsLoaded;
+    private int[] mSounds;
 
     private ArrayList<Loop> loops;
     private ArrayList<Song> songs;
@@ -89,6 +92,11 @@ public class PickerFragment extends ListFragment implements AbsListView.OnItemCl
                 switch (fileType) {
                     case SAMPLES:
                         samples = new Sample("", "").loadList(new FileHandler(getActivity()));
+
+                        for (int i = 0; i < samples.size(); i++) {
+                            mSounds[i] = samples.get(i).getSpID();
+                        }
+
                         Log.v("Got list", Integer.toString(samples.size()));
                         mAdapter = new ArrayAdapter<Sample>(getActivity(),
                                 android.R.layout.simple_list_item_1, android.R.id.text1, samples);
@@ -119,6 +127,14 @@ public class PickerFragment extends ListFragment implements AbsListView.OnItemCl
             {
                 Log.e("LOAD LIST", "Malformed file!");
             }
+
+            mSP.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
+                @Override
+                public void onLoadComplete(SoundPool soundPool, int i, int i2) {
+                    mSoundsLoaded = true;
+                }
+            });
+
         }
     }
 
@@ -153,6 +169,7 @@ public class PickerFragment extends ListFragment implements AbsListView.OnItemCl
         super.onAttach(activity);
         try {
             mListener = (PickerFragmentListener) activity;
+            mSpListener = (SoundPool.OnLoadCompleteListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement ArrangerFragmentListener");

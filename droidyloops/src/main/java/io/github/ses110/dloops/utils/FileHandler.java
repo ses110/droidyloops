@@ -2,11 +2,12 @@ package io.github.ses110.dloops.utils;
 
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.media.SoundPool;
 import android.util.Log;
 
 import org.json.JSONException;
-import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
@@ -152,5 +153,10 @@ public class FileHandler
 
         dir.mkdirs();
         return dir;
+    }
+    public int loadSample(Sample sample, SoundPool sp) {
+        File curSample = new File(this.getDir(FileType.SAMPLES), sample.getPath());
+        int id = sp.load(curSample.getAbsolutePath(), 0);
+        return id;
     }
 }

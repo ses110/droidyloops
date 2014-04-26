@@ -2,6 +2,8 @@ package io.github.ses110.dloops;
 
 import android.content.Context;
 import android.content.pm.ActivityInfo;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -20,6 +22,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import io.github.ses110.dloops.arranger.ArrangerFragment;
 import io.github.ses110.dloops.looper.LooperFragment;
 import io.github.ses110.dloops.models.Loop;
 import io.github.ses110.dloops.models.Sample;
@@ -39,7 +42,11 @@ public class MainActivity extends FragmentActivity implements LooperFragment.Loo
     private int rowCount;
     private static LooperFragment looper;
     private static PickerFragment picker;
+    private static ArrangerFragment arranger;
     private Loop curLoop;
+
+    private AudioManager mAudioManager;
+    private SoundPool mSndPool;
 
     /**
      * ARRANGER VARIABLES
@@ -65,6 +72,8 @@ public class MainActivity extends FragmentActivity implements LooperFragment.Loo
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
         if(fragmentManager == null) {
             fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -121,6 +130,7 @@ public class MainActivity extends FragmentActivity implements LooperFragment.Loo
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
 
+        //  Testing JSON SAVING/LOADING
         try {
             FileHandler fh = new FileHandler(this);
             Loop testLoop = new Loop();
@@ -233,6 +243,7 @@ public class MainActivity extends FragmentActivity implements LooperFragment.Loo
 
     }
 
+
     /**
      *  MAIN MENU FUNCTIONS
      */
@@ -255,5 +266,18 @@ public class MainActivity extends FragmentActivity implements LooperFragment.Loo
     public void loadClick(View view)
     {
 
+    }
+    public void arrangeClick(View view) {
+        if (appState != AppState.ARRANGER)
+        {
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            // TODO: initialise arranger with pre-existing data if any
+            looper = LooperFragment.newInstance("pl", "pl");
+            fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
+            fragmentTransaction.replace(R.id.mainContainer, arranger, "PLACEHOLDER");
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
+            appState = AppState.ARRANGER;
+        }
     }
 }
