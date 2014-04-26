@@ -13,8 +13,6 @@ import android.view.MenuItem;
 import android.view.View;
 
 import org.json.JSONException;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.ParseException;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -48,23 +46,37 @@ public class MainActivity extends FragmentActivity implements LooperFragment.Loo
 
     /**
      * ACTIVITY VARIABLES
+     *
      */
 
-    private static MainMenuFragment menuFragment;
-    private FragmentManager fragmentManager;
+    // Fragment tags for each fragment
+    private final String MAIN = "MAIN";
+    private final String LOOPER = "LOOPER";
+    private final String PICKER = "PICKER";
+    private final String ARRANGER = "ARRANGER";
+
+    private FragmentManager fm;
     File dataDir;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if(fragmentManager == null) {
-            fragmentManager = getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            menuFragment = new MainMenuFragment();
-            fragmentTransaction.add(R.id.mainContainer, menuFragment);
+        if(fm == null) {
+            fm = getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fm.beginTransaction();
+            MainMenuFragment menuFragment = MainMenuFragment.newInstance("", "");
+            fragmentTransaction.add(R.id.mainContainer, menuFragment, MAIN);
             fragmentTransaction.commit();
         }
+
+        fm.addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+            @Override
+            public void onBackStackChanged() {
+                Log.v("BACKSTACK", "Changed");
+
+            }
+        });
 
         // Do first time setup
         dataDir = getFilesDir();
@@ -93,25 +105,6 @@ public class MainActivity extends FragmentActivity implements LooperFragment.Loo
                 Log.e("SETUP", "Default sample not found");
         }
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-
-
-        try {
-            FileHandler fh = new FileHandler(this);
-            Loop testLoop = new Loop();
-            testLoop.setName("TESTLOOPPP");
-            fh.writeJSON(testLoop.toJSON(), FileHandler.FileType.LOOPS);
-
-            JSONObject testObject = fh.readJSON(FileHandler.FileType.LOOPS, "TESTLOOPPP");
-            Log.v("TestObject", testObject.toJSONString());
-
-            testLoop = new Loop(testObject);
-        } catch(IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
 
     }
 
@@ -156,17 +149,18 @@ public class MainActivity extends FragmentActivity implements LooperFragment.Loo
     @Override
     public void getLoop(Loop loop)
     {
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
     }
 
     public void addLoopRow(View view)
     {
         picker = PickerFragment.newInstance(FileHandler.FileType.SAMPLES);
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
-        fragmentTransaction.replace(R.id.mainContainer, picker, "PLACEHOLDER");
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
+        ft.remove(fm.findFragmentByTag(LOOPER));
+        ft.add(fm.findFragmentByTag(LOOPER).getId(), picker, PICKER);
+        ft.addToBackStack(null);
+        ft.commit();
         // TODO: make this eventually go back to looper
 //        ViewGroup listView = (ViewGroup) looper.getView().findViewById(R.id.loopRowList);
 //        LoopRowView child = new LoopRowView(view.getContext());
@@ -212,11 +206,12 @@ public class MainActivity extends FragmentActivity implements LooperFragment.Loo
 
 
     public void startClick(View view) {
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        FragmentTransaction fragmentTransaction = fm.beginTransaction();
         // TODO: initialise looper with pre-existing data if any
         looper = LooperFragment.newInstance("pl", "pl");
         fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
-        fragmentTransaction.replace(R.id.mainContainer, looper, "PLACEHOLDER");
+        fragmentTransaction.remove(fm.findFragmentByTag(MAIN));
+        fragmentTransaction.add(fm.findFragmentByTag(MAIN).getId(), looper, LOOPER);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
