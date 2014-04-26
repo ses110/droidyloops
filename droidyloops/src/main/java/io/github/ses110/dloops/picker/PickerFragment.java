@@ -169,7 +169,6 @@ public class PickerFragment extends ListFragment implements AbsListView.OnItemCl
         super.onAttach(activity);
         try {
             mListener = (PickerFragmentListener) activity;
-            mSpListener = (SoundPool.OnLoadCompleteListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement ArrangerFragmentListener");
