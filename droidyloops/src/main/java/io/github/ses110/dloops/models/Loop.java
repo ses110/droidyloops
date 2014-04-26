@@ -28,18 +28,8 @@ public class Loop implements Saveable
     public Loop() {
         samples = new ArrayList<Sample>();
         cells = new ArrayList<boolean[]>();
-
-        this.addSample(new Sample("bass one", "bass1.wav"));
-        this.addSample(new Sample("snares", "drum_Snare.wav"));
-        try {
-            this.toJSON();
-        } catch(JSONException e) {
-            Log.e("LoopError", "Loop: JSON exception");
-        }
-
     }
 
-    // TODO: implement loading
     public Loop(JSONObject savedLoop) throws JSONException
     {
         samples = new ArrayList<Sample>();
@@ -110,7 +100,6 @@ public class Loop implements Saveable
         return result;
     }
 
-    // TODO: Loop.toJSON
     @Override
     public JSONObject toJSON() throws JSONException {
         JSONObject result = new JSONObject();
