@@ -1,6 +1,7 @@
 package io.github.ses110.dloops.models;
 
 import org.json.JSONException;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
@@ -28,6 +29,17 @@ public class Song implements Saveable
         channels = new ArrayList<Channel>();
     }
 
+    public Song(JSONObject object) throws JSONException {
+        this.name = (String) object.get("name");
+
+        JSONArray getChannels = (JSONArray) object.get("loops");
+
+        for (int i = 0; i < getChannels.size(); i++) {
+            JSONObject current = (JSONObject) getChannels.get(i);
+            channels.add(new Channel(current));
+        }
+    }
+
     public void setChannels(Channel[] channels)
     {
         Collections.addAll(this.channels, channels);
@@ -44,7 +56,14 @@ public class Song implements Saveable
 
     @Override
     public JSONObject toJSON() throws JSONException {
-        return null;
+        JSONObject result = new JSONObject();
+        result.put("name", this.name);
+        result.put("channels", FileHandler.saveList(channels));
+        JSONArray putVolumes = new JSONArray();
+        putVolumes.addAll(this.volumes);
+        result.put("volumes", putVolumes);
+
+        return result;
     }
 
     public String toString()
@@ -52,9 +71,13 @@ public class Song implements Saveable
         return name;
     }
 
-    // TODO: do this
     @Override
-    public ArrayList<? extends Saveable> loadList(FileHandler fileHandler) throws JSONException, FileNotFoundException, ParseException {
-        return null;
+    public ArrayList<Song> loadList(FileHandler fileHandler) throws JSONException, FileNotFoundException, ParseException {
+        JSONArray array = fileHandler.readJSONDir(FileHandler.FileType.SONGS);
+        ArrayList<Song> result = new ArrayList<Song>();
+        for (Object anArray : array) {
+            result.add(new Song((JSONObject) anArray));
+        }
+        return result;
     }
 }

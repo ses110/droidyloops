@@ -1,7 +1,5 @@
 package io.github.ses110.dloops.models;
 
-import android.util.Log;
-
 import org.json.JSONException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -34,10 +32,8 @@ public class Channel implements Saveable
 
         for (int i = 0; i < getLoops.size(); i++) {
             JSONObject current = (JSONObject) getLoops.get(i);
-            Log.v("Loop loader", current.toJSONString());
             loops.add(new Loop(current));
         }
-
     }
 
     public void addLoop(int x, Loop loop)
@@ -67,7 +63,6 @@ public class Channel implements Saveable
         return result;
     }
 
-    // TODO: do this
     @Override
     public ArrayList<Channel> loadList(FileHandler fileHandler) throws JSONException, FileNotFoundException, ParseException {
         JSONArray array = fileHandler.readJSONDir(FileHandler.FileType.SAMPLES);
