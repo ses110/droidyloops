@@ -219,6 +219,8 @@ public class PickerFragment extends ListFragment {
             if (item != null) {
                 item.setVisible(true);
             }
+            else
+                Log.wtf(TAG, "Couldn't find actionbar");
         }
         else
         {
