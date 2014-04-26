@@ -28,6 +28,7 @@ import io.github.ses110.dloops.models.Sample;
 import io.github.ses110.dloops.models.Song;
 import io.github.ses110.dloops.utils.FileHandler;
 import io.github.ses110.dloops.utils.FileHandler.FileType;
+import io.github.ses110.dloops.utils.Saveable;
 
 /**
  * A fragment representing a list of Items.
@@ -50,12 +51,13 @@ public class PickerFragment extends ListFragment {
     private PickerFragmentListener mListener;
 
     private SoundPool mSP;
-    public boolean mSoundsLoaded;
-    private int[] mSounds;
 
     private ArrayList<Loop> loops;
     private ArrayList<Song> songs;
     private ArrayList<Sample> samples;
+
+    private View curSelection;
+    private Saveable curSaveable;
 
     /**
      * The fragment's ListView/GridView.
@@ -95,7 +97,22 @@ public class PickerFragment extends ListFragment {
                         samples = new Sample("", "").loadList(new FileHandler(getActivity()));
                         Log.v("Got list", Integer.toString(samples.size()));
                         mAdapter = new ArrayAdapter<Sample>(getActivity(),
-                                android.R.layout.simple_list_item_1, android.R.id.text1, samples);
+                                android.R.layout.simple_list_item_1, android.R.id.text1, samples)
+                        {
+                            // TODO: this turns recycling off, fix this.
+                            @Override
+                            public int getViewTypeCount() {
+
+                                return getCount();
+                            }
+
+                            @Override
+                            public int getItemViewType(int position) {
+
+                                return position;
+                            }
+
+                        };
                         break;
                     case LOOPS:
                         // TODO:
@@ -182,6 +199,18 @@ public class PickerFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
+        if(curSelection == null)
+        {
+            curSelection = v;
+            curSelection.setBackgroundColor(getResources().getColor(R.color.cell_on));
+        }
+        else
+        {
+            curSelection.setBackgroundColor(getResources().getColor(R.color.bg));
+            curSelection = v;
+            curSelection.setBackgroundColor(getResources().getColor(R.color.cell_on));
+        }
+        //TODO: move this to when the done button is clicked
         if (null != mListener) {
             // Notify the active callbacks interface (the activity, if the
             // fragment is attached to one) that an item has been selected.
