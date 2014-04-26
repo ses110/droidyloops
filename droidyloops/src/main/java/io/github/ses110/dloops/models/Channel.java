@@ -1,6 +1,9 @@
 package io.github.ses110.dloops.models;
 
+import android.util.Log;
+
 import org.json.JSONException;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
@@ -16,48 +19,62 @@ import io.github.ses110.dloops.utils.Saveable;
 public class Channel implements Saveable
 {
     public ArrayList<Loop> loops;
-    public ArrayList<Integer> startPoints;
-    public int length;
     public String name;
 
     public Channel(String name)
     {
         this.name = name;
         loops = new ArrayList<Loop>();
-        startPoints = new ArrayList<Integer>();
-        length = 64;
+    }
+
+    public Channel(JSONObject object) throws JSONException {
+        this.name = (String) object.get("name");
+
+        JSONArray getLoops = (JSONArray) object.get("loops");
+
+        for (int i = 0; i < getLoops.size(); i++) {
+            JSONObject current = (JSONObject) getLoops.get(i);
+            Log.v("Loop loader", current.toJSONString());
+            loops.add(new Loop(current));
+        }
+
     }
 
     public void addLoop(int x, Loop loop)
     {
-        if(x > length - 10)
-            length += Loop.maxBeats;
-        loops.add(loop);
-        startPoints.add(x);
+        loops.add(x, loop);
+    }
+    public void removeLoop(int x) {
+        loops.remove(x);
     }
 
-    public int[] curSamples(int x)
+    public int[] curSamples(int channelOffset, int loopOffset)
     {
-        int size = startPoints.size();
-        for (int i = 0; i < size; i++) {
-            int cur = startPoints.get(i);
-            if(cur < x && cur > (x - Loop.maxBeats))
-                return loops.get(i).curSamples(x - cur);
-            else if(cur > x)
-                break;
+        Loop curLoop = loops.get(channelOffset);
+        int[] result = null;
+        if(curLoop != null) {
+            result = curLoop.curSamples(loopOffset);
         }
-        return null;
+        return result;   
     }
 
-    // TODO: set up Channel.toJSON
     @Override
     public JSONObject toJSON() throws JSONException {
-        return null;
+        JSONObject result = new JSONObject();
+        result.put("name", this.name);
+        result.put("loops", FileHandler.saveList(loops));
+        
+        return result;
     }
 
     // TODO: do this
     @Override
-    public ArrayList<? extends Saveable> loadList(FileHandler fileHandler) throws JSONException, FileNotFoundException, ParseException {
-        return null;
+    public ArrayList<Channel> loadList(FileHandler fileHandler) throws JSONException, FileNotFoundException, ParseException {
+        JSONArray array = fileHandler.readJSONDir(FileHandler.FileType.SAMPLES);
+        ArrayList<Channel> result = new ArrayList<Channel>();
+        for (Object anArray : array) {
+            result.add(new Channel((JSONObject) anArray));
+        }
+        return result;
     }
 }

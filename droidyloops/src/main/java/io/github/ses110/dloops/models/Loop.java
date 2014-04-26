@@ -138,11 +138,15 @@ public class Loop implements Saveable
         return name;
     }
 
-    // TODO: do this
     @Override
-    public ArrayList<? extends Saveable> loadList(FileHandler fileHandler) throws JSONException, FileNotFoundException, ParseException
+    public ArrayList<Loop> loadList(FileHandler fileHandler) throws JSONException, FileNotFoundException, ParseException
     {
-        return null;
+        JSONArray array = fileHandler.readJSONDir(FileHandler.FileType.LOOPS);
+        ArrayList<Loop> result = new ArrayList<Loop>();
+        for (Object anArray : array) {
+            result.add(new Loop((JSONObject) anArray));
+        }
+        return result;
     }
 
 }
