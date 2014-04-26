@@ -68,6 +68,10 @@ public class MainActivity extends FragmentActivity implements LooperFragment.Loo
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if(mSndPool == null) {
+            mSndPool = new SoundPool(32, AudioManager.STREAM_MUSIC, 0);
+        }
+
         if(fm == null) {
             fm = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fm.beginTransaction();
@@ -161,9 +165,11 @@ public class MainActivity extends FragmentActivity implements LooperFragment.Loo
     public void addLoopRow(View view)
     {
         picker = PickerFragment.newInstance(FileHandler.FileType.SAMPLES);
+        picker.attachSoundPool(this.mSndPool);
         FragmentTransaction ft = fm.beginTransaction();
         ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
         ft.remove(fm.findFragmentByTag(LOOPER));
+
         ft.add(fm.findFragmentByTag(LOOPER).getId(), picker, PICKER);
         ft.addToBackStack(null);
         ft.commit();
@@ -187,6 +193,7 @@ public class MainActivity extends FragmentActivity implements LooperFragment.Loo
 
     @Override
     public void onPickerSelection(Sample sample) {
+//        ProgressDialog progress = new ProgressDialog();
         Log.v("PICKER", "Selected Sample: " + sample.toString());
 
     }
@@ -227,16 +234,13 @@ public class MainActivity extends FragmentActivity implements LooperFragment.Loo
 
     }
     public void arrangeClick(View view) {
-        if (appState != AppState.ARRANGER)
-        {
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            // TODO: initialise arranger with pre-existing data if any
-            looper = LooperFragment.newInstance("pl", "pl");
-            fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
-            fragmentTransaction.replace(R.id.mainContainer, arranger, "PLACEHOLDER");
-            fragmentTransaction.addToBackStack(null);
-            fragmentTransaction.commit();
-            appState = AppState.ARRANGER;
-        }
+        FragmentTransaction fragmentTransaction = fm.beginTransaction();
+        // TODO: initialise looper with pre-existing data if any
+        looper = LooperFragment.newInstance("pl", "pl");
+        fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
+        fragmentTransaction.remove(fm.findFragmentByTag(MAIN));
+        fragmentTransaction.add(fm.findFragmentByTag(MAIN).getId(), arranger, ARRANGER);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 }
