@@ -192,8 +192,8 @@ public class PickerFragment extends ListFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == R.id.pickerSelect)
         {
-            // TODO: return the sample to looper
-
+            // TODO: switch statement to handle the other types of saveables
+            ((MainActivity)getActivity()).addLoopRow((Sample) curSaveable);
             return true;
         }
         else
@@ -240,13 +240,13 @@ public class PickerFragment extends ListFragment {
             curSelection = v;
             curSelection.setBackgroundColor(getResources().getColor(R.color.cell_on));
         }
-        //TODO: move this to when the done button is clicked
         if (null != mListener) {
             // Notify the active callbacks interface (the activity, if the
             // fragment is attached to one) that an item has been selected.
             switch (fileType)
             {
                 case SAMPLES:
+                    curSaveable = samples.get(position);
                     mListener.onPickerSelection(samples.get(position));
                     break;
                 case LOOPS:

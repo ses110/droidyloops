@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 
 import org.json.JSONException;
 
@@ -22,6 +23,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import io.github.ses110.dloops.arranger.ArrangerFragment;
+import io.github.ses110.dloops.looper.LoopRowView;
 import io.github.ses110.dloops.looper.LooperFragment;
 import io.github.ses110.dloops.models.Loop;
 import io.github.ses110.dloops.models.Sample;
@@ -182,7 +184,7 @@ public class MainActivity extends FragmentActivity implements LooperFragment.Loo
 
     }
 
-    public void addLoopRow(View view)
+    public void newLoopRow(View view)
     {
         picker = PickerFragment.newInstance(FileHandler.FileType.SAMPLES);
         picker.attachSoundPool(this.mSndPool);
@@ -192,18 +194,20 @@ public class MainActivity extends FragmentActivity implements LooperFragment.Loo
         ft.add(R.id.mainContainer, picker);
         ft.addToBackStack(null);
         ft.commit();
-        // TODO: make this eventually go back to looper
-//        ViewGroup listView = (ViewGroup) looper.getView().findViewById(R.id.loopRowList);
-//        LoopRowView child = new LoopRowView(view.getContext());
-//        if(curLoop == null)
-//        {
-//            curLoop = new Loop();
-//        }
-//        // TODO: fix blank sample
-//        curLoop.addSample(new Sample("der", "der"));
-//        child.setDetails(rowCount, curLoop);
-//        listView.addView(child, 0);
-//        rowCount++;
+
+    }
+    public void addLoopRow(Sample s) {
+        fm.popBackStack();
+        ViewGroup listView = (ViewGroup) looper.getView().findViewById(R.id.loopRowList);
+        LoopRowView child = new LoopRowView(this);
+        if(curLoop == null)
+        {
+            curLoop = new Loop();
+        }
+        curLoop.addSample(s);
+        child.setDetails(rowCount, curLoop);
+        listView.addView(child, 0);
+        rowCount++;
     }
 
     /**
