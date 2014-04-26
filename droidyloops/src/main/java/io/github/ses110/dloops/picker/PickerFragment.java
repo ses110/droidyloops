@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -55,6 +58,8 @@ public class PickerFragment extends ListFragment {
     private ArrayList<Loop> loops;
     private ArrayList<Song> songs;
     private ArrayList<Sample> samples;
+
+    private Menu menu;
 
     private View curSelection;
     private Saveable curSaveable;
@@ -149,6 +154,7 @@ public class PickerFragment extends ListFragment {
                 }
             });
 
+            setHasOptionsMenu(true);
         }
     }
 
@@ -174,6 +180,12 @@ public class PickerFragment extends ListFragment {
         }
 
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        this.menu = menu;
+        inflater.inflate(R.menu.picker, menu);
     }
 
     @Override
@@ -203,6 +215,10 @@ public class PickerFragment extends ListFragment {
         {
             curSelection = v;
             curSelection.setBackgroundColor(getResources().getColor(R.color.cell_on));
+            MenuItem item = menu.findItem(R.id.pickerSelect);
+            if (item != null) {
+                item.setVisible(true);
+            }
         }
         else
         {

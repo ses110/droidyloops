@@ -8,5 +8,6 @@
     <string name="change_BPM">Change BPM</string>
     <string name="save">Save</string>
     <string name="noSamples">No Samples Found</string>
+    <string name="selectSample">Done</string>
 
 </resources>
