@@ -97,8 +97,7 @@ public class FileHandler
         file = new File(dir, name + ".json");
         in = new FileInputStream(file);
         JSONParser parser = new JSONParser();
-        String read = new Scanner(in).next();
-        read = read.substring(0, read.length() - 1);
+        String read = new Scanner(in).nextLine();
         return (JSONObject) parser.parse(read);
     }
 
@@ -129,7 +128,7 @@ public class FileHandler
         File dir = getDir(fileType);
         File file;
         FileOutputStream out;
-        file = new File(dir, (object.get("name")) + ".json");
+        file = new File(dir, object.get("name")+ ".json");
         out = new FileOutputStream(file);
         out.write(object.toString().getBytes());
         out.close();

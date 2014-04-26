@@ -70,7 +70,7 @@ public class Sample implements Saveable
     @Override
     public ArrayList<Sample> loadList(FileHandler fileHandler) throws JSONException, FileNotFoundException, ParseException
     {
-        JSONArray array = fileHandler.readJSON(FileHandler.FileType.SAMPLES);
+        JSONArray array = fileHandler.readJSONDir(FileHandler.FileType.SAMPLES);
         ArrayList<Sample> result = new ArrayList<Sample>();
         for (Object anArray : array) {
             result.add(new Sample((JSONObject) anArray));

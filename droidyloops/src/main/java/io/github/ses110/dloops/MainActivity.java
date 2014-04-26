@@ -13,9 +13,10 @@ import android.view.MenuItem;
 import android.view.View;
 
 import org.json.JSONException;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -120,21 +121,24 @@ public class MainActivity extends FragmentActivity implements LooperFragment.Loo
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
 
-        Loop testLoop = new Loop();
-
-        File dir = new File(this.getFilesDir(), "loops");
-        File file = new File(dir, "testloop.json");
         try {
-            FileOutputStream out = new FileOutputStream(file);
-            out.write(testLoop.toJSON().toString().getBytes());
-            out.close();
-        } catch(FileNotFoundException e) {
-            Log.e("MainActivity", "FIle not found exception.");
+            FileHandler fh = new FileHandler(this);
+            Loop testLoop = new Loop();
+            testLoop.setName("TESTLOOPPP");
+            fh.writeJSON(testLoop.toJSON(), FileHandler.FileType.LOOPS);
+
+            JSONObject testObject = fh.readJSON(FileHandler.FileType.LOOPS, "TESTLOOPPP");
+            Log.v("TestObject", testObject.toJSONString());
+
+            testLoop = new Loop(testObject);
+        } catch(IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
+
     }
 
     @Override

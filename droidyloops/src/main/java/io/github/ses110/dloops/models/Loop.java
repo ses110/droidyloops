@@ -42,11 +42,15 @@ public class Loop implements Saveable
     // TODO: implement loading
     public Loop(JSONObject savedLoop) throws JSONException
     {
+        samples = new ArrayList<Sample>();
+        cells = new ArrayList<boolean[]>();
+
         this.name = (String) savedLoop.get("name");
         JSONArray getSamples = (JSONArray) savedLoop.get("samples");
 
         for (int i = 0; i < getSamples.size(); i++) {
             JSONObject current = (JSONObject) getSamples.get(i);
+            Log.v("Loop loader", current.toJSONString());
             samples.add(new Sample(current));
         }
 
@@ -110,7 +114,6 @@ public class Loop implements Saveable
     @Override
     public JSONObject toJSON() throws JSONException {
         JSONObject result = new JSONObject();
-//        JSONArray list =
         result.put("name", this.name);
         result.put("samples", FileHandler.saveList(samples));
 
@@ -123,11 +126,13 @@ public class Loop implements Saveable
             jsonCellRows.add(cellRow);
         }
         result.put("cells", jsonCellRows);
-        Log.v("Loop", result.toString());
 
         return result;
     }
 
+    public void setName(String _name) {
+        this.name = _name;
+    }
     public String toString()
     {
         return name;
