@@ -189,6 +189,18 @@ public class PickerFragment extends ListFragment {
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.pickerSelect)
+        {
+            // TODO: return the sample to looper
+
+            return true;
+        }
+        else
+            return false;
+    }
+
+    @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
