@@ -52,13 +52,6 @@ public class MainActivity extends FragmentActivity implements LooperFragment.Loo
 
     private static MainMenuFragment menuFragment;
     private FragmentManager fragmentManager;
-
-    // Tells the activity what fragment to display
-    private enum AppState
-    {
-        MENU, ARRANGER, LOOPER, PICKER
-    }
-    private AppState appState;
     File dataDir;
 
     @Override
@@ -72,25 +65,6 @@ public class MainActivity extends FragmentActivity implements LooperFragment.Loo
             fragmentTransaction.add(R.id.mainContainer, menuFragment);
             fragmentTransaction.commit();
         }
-        appState = AppState.MENU;
-
-        // Set up backbutton handling of state
-        fragmentManager.addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
-            @Override
-            public void onBackStackChanged() {
-                // TODO: handle all cases
-                // TODO: Fix the bug, backstack also changes when you add a new fragment
-                switch(appState)
-                {
-                    case LOOPER:
-                        appState = AppState.MENU;
-                        break;
-                    case PICKER:
-                        appState = AppState.MENU;
-                        break;
-                }
-            }
-        });
 
         // Do first time setup
         dataDir = getFilesDir();
@@ -193,7 +167,6 @@ public class MainActivity extends FragmentActivity implements LooperFragment.Loo
         fragmentTransaction.replace(R.id.mainContainer, picker, "PLACEHOLDER");
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
-        appState = AppState.PICKER;
         // TODO: make this eventually go back to looper
 //        ViewGroup listView = (ViewGroup) looper.getView().findViewById(R.id.loopRowList);
 //        LoopRowView child = new LoopRowView(view.getContext());
@@ -239,17 +212,13 @@ public class MainActivity extends FragmentActivity implements LooperFragment.Loo
 
 
     public void startClick(View view) {
-        if (appState != AppState.LOOPER)
-        {
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            // TODO: initialise looper with pre-existing data if any
-            looper = LooperFragment.newInstance("pl", "pl");
-            fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
-            fragmentTransaction.replace(R.id.mainContainer, looper, "PLACEHOLDER");
-            fragmentTransaction.addToBackStack(null);
-            fragmentTransaction.commit();
-            appState = AppState.LOOPER;
-        }
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        // TODO: initialise looper with pre-existing data if any
+        looper = LooperFragment.newInstance("pl", "pl");
+        fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
+        fragmentTransaction.replace(R.id.mainContainer, looper, "PLACEHOLDER");
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 
     public void loadClick(View view)
