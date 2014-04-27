@@ -3,14 +3,14 @@
 
     <item android:state_checked="true">
         <shape>
-            <solid android:color="@color/cell_on" />
+            <solid android:color="@color/track_orange_selected" />
             <stroke android:width="1dip" android:color="#ffffff"/>
         </shape>
     </item>
 
     <item android:state_checked="false">
         <shape>
-            <solid android:color="@color/cell_off" />
+            <solid android:color="@color/background_tracks" />
             <stroke android:width="1dip" android:color="#ffffff"/>
         </shape>
     </item>

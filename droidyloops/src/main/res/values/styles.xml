@@ -2,7 +2,7 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="android:Theme.Holo">
-        <item name="android:background">@color/bg</item>
+        <item name="android:background">@color/background_dark</item>
         <item name="android:buttonStyle">@style/AppTheme.button</item>
     </style>
 

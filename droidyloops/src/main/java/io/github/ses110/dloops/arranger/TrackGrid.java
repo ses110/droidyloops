@@ -3,7 +3,6 @@ package io.github.ses110.dloops.arranger;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.AttributeSet;
-import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
@@ -57,25 +56,21 @@ public class TrackGrid extends RelativeLayout {
         super(context);
 
         this.mContext = context;
-        this.sampleItems = this.SampleItems(mContext);
-        this.initializeTables();
-        this.addToMainLayout();
-        this.generateRows();
+        this.init(this.mContext);
     }
     public TrackGrid(Context context, AttributeSet attrs) {
         super(context,attrs);
 
         this.mContext = context;
-        this.sampleItems = this.SampleItems(mContext);
-        this.initializeTables();
-        this.addToMainLayout();
-        this.generateRows();
-
+        this.init(this.mContext);
     }
     public TrackGrid(Context context, AttributeSet attrs, int defStyle) {
         super(context,attrs,defStyle);
 
         this.mContext = context;
+        this.init(this.mContext);
+    }
+    private final void init(Context context) {
         this.sampleItems = this.SampleItems(mContext);
         this.initializeTables();
         this.addToMainLayout();
@@ -85,60 +80,35 @@ public class TrackGrid extends RelativeLayout {
 
     private void initializeTables() {
         mTracks     = new TableLayout(this.mContext);
-        mTrackNames = new TableLayout(this.mContext);
         mScrollTracks = new ScrollView(this.mContext);
-        mScrollTrackNames = new ScrollView(this.mContext);
         mHorizontalScrollTracks = new HorizontalScrollView(this.mContext);
 
         mTracks.setId(1);
-        mTrackNames.setId(2);
-        mScrollTracks.setId(3);
-        mScrollTrackNames.setId(4);
-        mHorizontalScrollTracks.setId(5);
+        mScrollTracks.setId(2);
+        mHorizontalScrollTracks.setId(3);
 
         mScrollTracks.addView(mHorizontalScrollTracks);
-        mScrollTrackNames.addView(mTrackNames);
-
         mHorizontalScrollTracks.addView(mTracks);
     }
 
     private void addToMainLayout() {
-        RelativeLayout.LayoutParams TrackNameParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         RelativeLayout.LayoutParams TrackParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        TrackNameParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-        TrackParams.addRule(RelativeLayout.RIGHT_OF, this.mScrollTrackNames.getId());
-
-        this.addView(this.mScrollTrackNames, TrackNameParams);
         this.addView(this.mScrollTracks, TrackParams);
     }
 
     private void generateRows() {
         for(TrackView b: this.sampleItems) {
-            TableRow row_trackname = this.addRowToTrackName(b);
             TableRow row_track = this.addRowToTracks(b);
-            this.mTrackNames.addView(row_trackname);
             this.mTracks.addView(row_track);
         }
     }
 
-    private TableRow addRowToTrackName(TrackView b) {
-        TableRow.LayoutParams params = new TableRow.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-        params.setMargins(0,2,0,0);
-        TableRow rowForTable = new TableRow(this.mContext);
-
-        TextView trackLabel = new TextView(this.mContext);
-        trackLabel.setText("Channel " + b.getChannel());
-        trackLabel.setBackgroundColor(Color.WHITE);
-        trackLabel.setGravity(Gravity.CENTER);
-        trackLabel.setPadding(5,5,5,5);
-
-        rowForTable.addView(trackLabel, params);
-        return rowForTable;
-    }
-
     private TableRow addRowToTracks(TrackView b) {
         TableRow rowForTracks = new TableRow(this.mContext);
-        for (int i = 0; i < mMaxColumns; i++) {
+
+        TextView label_track = new TextView(mContext);
+        label_track.setText();
+        for (int i = 0; i < mMaxColumns-1; i++) {
             TableRow.LayoutParams params = new TableRow.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
             params.setMargins(2,2,0,0);
             Button btn = new Button(this.mContext);
