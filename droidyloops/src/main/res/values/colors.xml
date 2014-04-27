@@ -5,4 +5,42 @@
     <color name="white">#ffffff</color>
     <color name="bg">#58CEF5</color>
     <color name="buttonDefault">#0867A3</color>
+
+    <!--The dark (flat UI) color scheme-->
+    <color name="background_dark">#2D3134</color>
+    <color name="button_blue">#418594</color>
+    <color name="button_blue_down">#2E626F</color>
+
+    <color name="button_orange">#A37300</color>
+    <color name="button_orange_down">#896100</color>
+
+    <color name="button_red">#B23743</color>
+    <color name="button_red_down">#77252E</color>
+
+    <color name="background_track_labels">#CC9000</color>
+    <color name="background_tracks">#3A4D59</color>
+
+    <color name="track_blue">#428A99</color>
+    <color name="track_blue_border">#336E7A</color>
+
+    <color name="track_blue_selected">#5BC3D9</color>
+    <color name="track_blue_selected_border">#428A99</color>
+
+    <color name="track_green">#419473</color>
+    <color name="track_green_border">#3E7166</color>
+
+    <color name="track_green_selected">#5CD5A8</color>
+    <color name="track_green_selected_border">#419473</color>
+
+    <color name="track_orange">#997642</color>
+    <color name="track_orange_border">#7A5E35</color>
+
+    <color name="track_orange_selected">#E1AD60</color>
+    <color name="track_orange_selected_border">#997642</color>
+
+    <color name="track_red">#994257</color>
+    <color name="track_red_border">#6A2F3E</color>
+
+    <color name="track_red_selected">#DE5F7E</color>
+    <color name="track_red_selected_border">#994257</color>
 </resources>

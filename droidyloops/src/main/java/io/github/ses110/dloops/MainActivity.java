@@ -33,7 +33,7 @@ import io.github.ses110.dloops.utils.CircularArrayList;
 import io.github.ses110.dloops.utils.FileHandler;
 
 
-public class MainActivity extends FragmentActivity implements LooperFragment.LooperFragmentListener,
+public class MainActivity extends FragmentActivity implements ArrangerFragment.ArrangerFragmentListener, LooperFragment.LooperFragmentListener,
         MainMenuFragment.OnFragmentInteractionListener,
         PickerFragment.PickerFragmentListener
 {
@@ -281,7 +281,7 @@ public class MainActivity extends FragmentActivity implements LooperFragment.Loo
     public void arrangeClick(View view) {
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
         // TODO: initialise arranger with pre-existing data if any
-        arranger = ArrangerFragment.newInstance("", "");
+        arranger = ArrangerFragment.newInstance("ar", "ar");
         fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
         fragmentTransaction.remove(fm.findFragmentById(R.id.mainContainer));
         fragmentTransaction.add(R.id.mainContainer, arranger);
