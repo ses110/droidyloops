@@ -5,11 +5,18 @@
 
 
     <TextView
-        android:layout_width="40dp"
-        android:layout_height="fill_parent"
-        android:id="@+id/editText"
+        android:layout_width="60dp"
+        android:layout_height="match_parent"
+        android:id="@+id/sampleName"
         android:layout_weight="0.11"
-        style="@style/AppTheme" />
+        style="@style/AppTheme"
+        android:layout_gravity="center_vertical"
+        android:singleLine="true"
+        android:text="BLANK"
+        android:textAlignment="gravity"
+        android:gravity="center_vertical|center_horizontal"
+        android:textStyle="bold"
+        android:background="@drawable/cell_style" />
 
     <ToggleButton
         android:layout_width="wrap_content"

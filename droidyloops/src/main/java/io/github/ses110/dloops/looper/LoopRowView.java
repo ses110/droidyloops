@@ -10,6 +10,7 @@ import android.widget.ToggleButton;
 
 import io.github.ses110.dloops.R;
 import io.github.ses110.dloops.models.Loop;
+import io.github.ses110.dloops.models.Sample;
 
 /**
  * Created by sid9102 on 4/14/2014.
@@ -42,6 +43,7 @@ public class LoopRowView extends LinearLayout
     public void initView()
     {
         inflate(getContext(), R.layout.loop_row_view, this);
+        sampleName = (TextView) findViewById(R.id.sampleName);
         cells = new ToggleButton[Loop.maxBeats];
         for(int i = 0; i < Loop.maxBeats; i++) {
             switch (i) {
@@ -86,10 +88,16 @@ public class LoopRowView extends LinearLayout
         }
     }
 
-    public void setDetails(int number, Loop loop)
+    public void setDetails(int number, Loop loop, Sample sample)
     {
         this.number = number;
         this.loop = loop;
+        String name = sample.toString();
+        if(name.length() > 7)
+        {
+            name = name.substring(0, 5) + "...";
+        }
+        sampleName.setText(name);
     }
 
     public void handleTouch(int cell)
