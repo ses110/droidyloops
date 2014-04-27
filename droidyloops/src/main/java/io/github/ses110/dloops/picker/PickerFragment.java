@@ -216,6 +216,7 @@ public class PickerFragment extends ListFragment {
         super.onDetach();
         mListener = null;
     }
+
     public void attachSoundPool(SoundPool _sp) {
         this.mSP = _sp;
     }
@@ -236,7 +237,7 @@ public class PickerFragment extends ListFragment {
         }
         else
         {
-            curSelection.setBackgroundColor(getResources().getColor(R.color.bg));
+            curSelection.setBackgroundColor(getResources().getColor(R.color.background_dark));
             curSelection = v;
             curSelection.setBackgroundColor(getResources().getColor(R.color.cell_on));
         }

@@ -21,6 +21,7 @@ import org.json.JSONException;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import io.github.ses110.dloops.arranger.ArrangerFragment;
 import io.github.ses110.dloops.looper.LoopRowView;
@@ -29,6 +30,7 @@ import io.github.ses110.dloops.models.Loop;
 import io.github.ses110.dloops.models.Sample;
 import io.github.ses110.dloops.models.Song;
 import io.github.ses110.dloops.picker.PickerFragment;
+import io.github.ses110.dloops.utils.BpmDialog;
 import io.github.ses110.dloops.utils.CircularArrayList;
 import io.github.ses110.dloops.utils.FileHandler;
 
@@ -45,7 +47,13 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
     private static LooperFragment looper;
     private static PickerFragment picker;
     private static ArrangerFragment arranger;
+
+    private int mBeatTime = fromBpmToBeat(120);
     private Loop curLoop;
+    private ArrayList<LoopRowView> loopRows;
+    private Runnable mRunnable;
+    private boolean mPlaying = false;
+
 
     private CircularArrayList<Sample> mSpBuffer;
     private AudioManager mAudioManager;
@@ -78,17 +86,26 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
             mSndPool = new SoundPool(32, AudioManager.STREAM_MUSIC, 0);
             mAudioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
         }
+        mSpBuffer = new CircularArrayList<Sample>(10);
 
         /**
          * Set up ProgressDialog
          * */
         mProgDialog = new ProgressDialog(this);
 
-
         mFH = new FileHandler(this);
 
-        mSpBuffer = new CircularArrayList<Sample>(10);
 
+        /*
+        *   Set up Loop
+        * */
+        loopRows = new ArrayList<LoopRowView>();
+
+
+        /*
+        *   Set up Fragments and anything related
+        *
+        * */
         if(fm == null) {
             fm = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fm.beginTransaction();
@@ -135,22 +152,21 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
 
     }
 
+    private float getVolume() {
+        float maxVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        float streamVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        return streamVolume/maxVolume;
+    }
+
+    /**
+     *  ACTIVITY FUNCTIONS
+     */
     @Override
     protected void onResume() {
         super.onResume();
         Log.v("MainActivity", "In onResume");
     }
 
-
-    /**
-     *  ACTIVITY FUNCTIONS
-     */
-
-    private float getVolume() {
-        float maxVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-        float streamVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-        return streamVolume/maxVolume;
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -176,11 +192,26 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
     /**
      *  LOOPER FUNCTIONS
      */
+    public int fromBeatToBPM(int beat) {
+        return (int) ((1000.0/beat) * 60.0);
+    }
+    public int fromBpmToBeat(int bpm) {
+        return  (int) (1000.0 / (bpm / 60.0));
+    }
+    public void setBPM(int newBPM) {
+        this.mBeatTime = fromBpmToBeat(newBPM);
+    }
 
+    public void changeBpmDialog(View view) {
+        FragmentManager fm = getSupportFragmentManager();
+        Log.v("BPM Dialog", "this.mBeatTime: " + this.mBeatTime);
+        BpmDialog changeBpm = new BpmDialog(this, fromBeatToBPM(this.mBeatTime));
+        changeBpm.show(fm, "Dialog");
+        Log.v("BPM Dialog", "changeBpm.NewBPM:" + changeBpm.newBPM());
+    }
 
     @Override
-    public void getLoop(Loop loop)
-    {
+    public void getLoop(Loop loop) {
 
     }
 
@@ -208,8 +239,22 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
         }
         curLoop.addSample(s);
         child.setDetails(rowCount, curLoop, s);
+        this.loopRows.add(child);
+
+
         listView.addView(child, 0);
         rowCount++;
+    }
+
+    public void play() {
+        mRunnable = new Runnable()
+        {
+            public void run() {
+                while(mPlaying) {
+
+                }
+            }
+        };
     }
 
     /**

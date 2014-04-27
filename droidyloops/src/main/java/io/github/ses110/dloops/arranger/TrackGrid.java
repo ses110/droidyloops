@@ -105,11 +105,13 @@ public class TrackGrid extends RelativeLayout {
 
     private TableRow addRowToTracks(TrackView b) {
         TableRow rowForTracks = new TableRow(this.mContext);
+        TableRow.LayoutParams params = new TableRow.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 
         TextView label_track = new TextView(mContext);
-        label_track.setText();
+        label_track.setText("Channel " + b.getChannel());
+        rowForTracks.addView(label_track, params);
+
         for (int i = 0; i < mMaxColumns-1; i++) {
-            TableRow.LayoutParams params = new TableRow.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
             params.setMargins(2,2,0,0);
             Button btn = new Button(this.mContext);
             btn.setBackgroundColor(Color.WHITE);

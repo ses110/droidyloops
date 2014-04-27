@@ -37,7 +37,8 @@
         android:text="@string/change_BPM"
         android:layout_toRightOf="@+id/addButton"
         android:layout_marginLeft="30dp"
-        android:layout_below="@+id/scrollview" />
+        android:layout_below="@+id/scrollview"
+        android:onClick="changeBpmDialog" />
     <Button
         android:id="@+id/save_button"
         android:layout_width="wrap_content"
