@@ -207,7 +207,7 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
             curLoop = new Loop();
         }
         curLoop.addSample(s);
-        child.setDetails(rowCount, curLoop);
+        child.setDetails(rowCount, curLoop, s);
         listView.addView(child, 0);
         rowCount++;
     }
