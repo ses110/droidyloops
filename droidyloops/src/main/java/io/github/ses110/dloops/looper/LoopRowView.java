@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import io.github.ses110.dloops.MainActivity;
 import io.github.ses110.dloops.R;
 import io.github.ses110.dloops.models.Loop;
 import io.github.ses110.dloops.models.Sample;
@@ -20,9 +21,10 @@ public class LoopRowView extends LinearLayout
 {
     public TextView sampleName;
     public ToggleButton[] cells;
+    private MainActivity mActivity;
 
     private Loop loop;
-    int number;
+    int row;
 
     public LoopRowView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -37,6 +39,7 @@ public class LoopRowView extends LinearLayout
     public LoopRowView(Context context)
     {
         super(context);
+        mActivity = ((MainActivity) context);
         initView();
     }
 
@@ -90,7 +93,7 @@ public class LoopRowView extends LinearLayout
 
     public void setDetails(int number, Loop loop, Sample sample)
     {
-        this.number = number;
+        this.row = number;
         this.loop = loop;
         String name = sample.toString();
         if(name.length() > 7)
@@ -100,9 +103,26 @@ public class LoopRowView extends LinearLayout
         sampleName.setText(name);
     }
 
+    public void highlight(int index) {
+        for (ToggleButton button : cells)
+        {
+            button.setEnabled(true);
+        }
+        cells[index].setEnabled(false);
+    }
+
+    public void reset()
+    {
+        for (ToggleButton button : cells)
+        {
+            button.setEnabled(true);
+        }
+    }
+
     public void handleTouch(int cell)
     {
-        loop.touch(cell, number);
-        Log.v("found touch", Integer.toString(number) + ", " + Integer.toString(cell));
+        loop.touch(cell, row);
+        mActivity.previewSound(loop.getSPID(row));
+        Log.v("found touch", Integer.toString(row) + ", " + Integer.toString(cell));
     }
 }

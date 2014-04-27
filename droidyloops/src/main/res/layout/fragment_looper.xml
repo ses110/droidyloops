@@ -21,14 +21,15 @@
     </ScrollView>
     <ImageButton
         android:id="@+id/addButton"
-        android:layout_width="wrap_content"
+        android:layout_width="40dp"
         android:layout_height="40dp"
         android:background="@drawable/ic_action_new"
         android:layout_gravity="bottom"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:onClick="newLoopRow"/>
+        android:onClick="newLoopRow"
+        android:layout_marginLeft="20dp" />
 
     <Button
         android:id="@+id/bpm_button"
@@ -52,7 +53,10 @@
         android:id="@+id/imageButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/save_button"
-        android:layout_centerHorizontal="true"
-        android:background="@drawable/ic_action_play" />
+        android:layout_below="@+id/scrollview"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/ic_action_play"
+        android:onClick="onPlay" />
 </RelativeLayout>

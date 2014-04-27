@@ -100,6 +100,11 @@ public class Loop implements Saveable
         return result;
     }
 
+    public int getSPID(int row)
+    {
+        return samples.get(row).getSpID();
+    }
+
     @Override
     public JSONObject toJSON() throws JSONException {
         JSONObject result = new JSONObject();

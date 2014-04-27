@@ -167,6 +167,17 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
         Log.v("MainActivity", "In onResume");
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mPlaying = false;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mPlaying = false;
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -217,6 +228,7 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
 
     public void newLoopRow(View view)
     {
+        mPlaying = false;
         picker = PickerFragment.newInstance(FileHandler.FileType.SAMPLES);
         picker.attachSoundPool(this.mSndPool);
         FragmentTransaction ft = fm.beginTransaction();
@@ -241,20 +253,67 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
         child.setDetails(rowCount, curLoop, s);
         this.loopRows.add(child);
 
-
         listView.addView(child, 0);
         rowCount++;
     }
 
+    /*
+    * Looper : Play the samples according to beats
+    * */
     public void play() {
         mRunnable = new Runnable()
         {
+            int mIndex = 0;
             public void run() {
                 while(mPlaying) {
+                    long millis = System.currentTimeMillis();
 
+                    for (int id : curLoop.curSamples(mIndex)) {
+                        playSound(id);
+                    }
+
+                    MainActivity.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run()
+                        {
+                            for(LoopRowView row : loopRows)
+                            {
+                                row.highlight(mIndex);
+                            }
+                        }
+                    });
+                    mIndex = (mIndex + 1) % Loop.maxBeats;
+                    try {
+                        Thread.sleep(mBeatTime - (System.currentTimeMillis()-millis));
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
+
+                MainActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run()
+                    {
+                        for(LoopRowView row : loopRows)
+                        {
+                            row.reset();
+                        }
+                    }
+                });
             }
+
         };
+        Thread thandler = new Thread(mRunnable);
+        thandler.start();
+    }
+    public void onPlay(View view) {
+        Log.v("Looper", "onPlay called");
+        if(mPlaying)
+            mPlaying = false;
+        else {
+            mPlaying = true;
+            this.play();
+        }
     }
 
     /**
@@ -263,6 +322,12 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
     public void closeDialog(int spID) {
         mProgDialog.dismiss();
         playSound(spID);
+    }
+
+    public void previewSound(int spID) {
+        if(!mPlaying) {
+            playSound(spID);
+        }
     }
 
     private void playSound(int spID) {
