@@ -5,18 +5,10 @@
     tools:context="io.github.ses110.dloops.arranger.ArrangerFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="horizontal|vertical">
 
-        <HorizontalScrollView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scrollbars="horizontal|vertical">
-
-        </HorizontalScrollView>
-    </ScrollView>
+            <io.github.ses110.dloops.arranger.TrackGrid
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
 
 
