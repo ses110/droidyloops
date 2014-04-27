@@ -3,6 +3,7 @@ package io.github.ses110.dloops.looper;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,8 @@ public class LooperFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
+    private final String tag = "LOOPER";
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -61,6 +64,19 @@ public class LooperFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        Log.v(tag, "onCreate");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.v(tag, "onPause");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.v(tag, "onResume");
     }
 
     @Override

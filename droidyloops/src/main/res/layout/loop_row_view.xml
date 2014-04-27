@@ -4,12 +4,12 @@
     android:layout_height="wrap_content">
 
 
-    <EditText
+    <TextView
         android:layout_width="40dp"
         android:layout_height="fill_parent"
         android:id="@+id/editText"
         android:layout_weight="0.11"
-        android:editable="true" />
+        style="@style/AppTheme" />
 
     <ToggleButton
         android:layout_width="wrap_content"

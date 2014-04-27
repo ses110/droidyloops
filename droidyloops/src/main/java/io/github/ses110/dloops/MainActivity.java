@@ -190,7 +190,7 @@ public class MainActivity extends FragmentActivity implements LooperFragment.Loo
         picker.attachSoundPool(this.mSndPool);
         FragmentTransaction ft = fm.beginTransaction();
         ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
-        ft.remove(fm.findFragmentById(R.id.mainContainer));
+        ft.hide(fm.findFragmentById(R.id.mainContainer));
         ft.add(R.id.mainContainer, picker);
         ft.addToBackStack(null);
         ft.commit();
