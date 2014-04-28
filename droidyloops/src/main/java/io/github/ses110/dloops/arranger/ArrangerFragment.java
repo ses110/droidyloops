@@ -30,6 +30,7 @@ public class ArrangerFragment extends Fragment {
     private String mParam2;
 
     private ArrangerFragmentListener mListener;
+    private TrackGrid mTrackGrid;
 
     /**
      * Use this factory method to create a new instance of
@@ -65,7 +66,10 @@ public class ArrangerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_arranger, container, false);
+        View v = inflater.inflate(R.layout.fragment_arranger, container, false);
+        mTrackGrid = (TrackGrid) v.findViewById(R.id.track_grid);
+
+        return v;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -93,6 +97,13 @@ public class ArrangerFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        mTrackGrid= null;
+    }
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mTrackGrid.destroyDrawingCache();
+        mTrackGrid= null;
     }
 
     /**

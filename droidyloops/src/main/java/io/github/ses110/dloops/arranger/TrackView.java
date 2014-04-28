@@ -6,7 +6,6 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 import io.github.ses110.dloops.R;
@@ -19,14 +18,11 @@ public class TrackView extends View {
 
     private Context mContext;
 
-    // Length of a track, in cells
-    private int mLength;
-
     // Channel it belongs to
     private int mChannel;
 
     //The length of the border radius in pixels
-    private int mBorder = 1;
+    private int mBorder = 0;
 
     private int width = 0 ,
                 height = 0;
@@ -35,7 +31,6 @@ public class TrackView extends View {
     private Rect mRectBorder;
     private Paint mPaintFill;
     private Paint mPaintStroke;
-    private int length;
 
 
     public TrackView(Context context) {
@@ -46,7 +41,6 @@ public class TrackView extends View {
     public TrackView(Context context, TrackView tk) {
         super(context);
         this.setChannel(tk.getChannel());
-        this.setLength(tk.getLength());
     }
 
     public TrackView(Context context, AttributeSet attrs) {
@@ -69,7 +63,6 @@ public class TrackView extends View {
     private final void setFromXML(Context context, AttributeSet attrs) {
         TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.TrackView, 0, 0);
         try {
-            mLength = a.getInteger(R.styleable.TrackView_length, 1);
             mChannel = a.getInteger(R.styleable.TrackView_channel, 1);
             mBorder = a.getInteger(R.styleable.TrackView_border, 2);
         } finally {
@@ -77,6 +70,9 @@ public class TrackView extends View {
         }
     }
     private final void init(Context context) {
+        if(mChannel==0) mChannel = 1;
+        if(mBorder==0) mBorder = 1;
+
         this.mContext = context;
         mRect = new Rect();
         mRectBorder = new Rect();
@@ -88,7 +84,10 @@ public class TrackView extends View {
         mPaintFill = new Paint();
         mPaintStroke = new Paint();
         mPaintStroke.setAntiAlias(true);
+        this.setColors();
+    }
 
+    private void setColors() {
         //TODO: Refactor this. Decouple code dependency (the switch statements)
         switch(mChannel) {
             case 1:
@@ -109,20 +108,10 @@ public class TrackView extends View {
                 break;
         }
     }
-
-    public void setLength(int _length) {
-        this.mLength = _length;
-        invalidate();
-        requestLayout();
-    }
-    public int getLength() {
-        return this.mLength;
-    }
-
     public void setChannel(int _channel) {
         this.mChannel = _channel;
-        invalidate();
-        requestLayout();
+        this.setColors();
+        this.invalidate();
     }
     public int getChannel() {
         return this.mChannel;
@@ -132,8 +121,8 @@ public class TrackView extends View {
     protected void onSizeChanged(int xNew, int yNew, int xOld, int yOld){
         super.onSizeChanged(xNew, yNew, xOld, yOld);
 
-        width = xNew;
-        height = yNew;
+        width = xNew-1;
+        height = yNew-1;
     }
 
     @Override
@@ -142,15 +131,10 @@ public class TrackView extends View {
 
         if(width != 0 && height != 0) {
             mRect.set(0,0,width,height);
-            mRectBorder.set(mBorder,mBorder, (width-mBorder), height-mBorder);
-            Log.d(TAG, "canvas.getWidth:" + Integer.toString(width));
-            Log.d(TAG, "canvas.getHeight:" + Integer.toString(height));
+            mRectBorder.set(0,0, (width-mBorder), height-mBorder);
             canvas.drawRect(mRect, mPaintStroke);
             canvas.drawRect(mRectBorder, mPaintFill);
+
         }
-//        getDrawingRect(mRectBorder);
-//        mRectBorder.set(mRect.left+mBorder,mRect.top+mBorder, mRect.right-mBorder, mRect.bottom-mBorder);
-
-
     }
 }
