@@ -26,7 +26,7 @@ public class TrackView extends View {
     private int mChannel;
 
     //The length of the border radius in pixels
-    private int mBorder;
+    private int mBorder = 1;
 
     private int width = 0 ,
                 height = 0;
@@ -52,13 +52,13 @@ public class TrackView extends View {
     public TrackView(Context context, AttributeSet attrs) {
         super(context, attrs);
         //Get the attributes from XML
-        this.setFromXML(context, attrs);
+        setFromXML(context, attrs);
         init(context);
     }
 
     public TrackView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        this.setFromXML(context, attrs);
+        setFromXML(context, attrs);
         init(context);
     }
     /**
@@ -71,7 +71,7 @@ public class TrackView extends View {
         try {
             mLength = a.getInteger(R.styleable.TrackView_length, 1);
             mChannel = a.getInteger(R.styleable.TrackView_channel, 1);
-            mBorder = a.getInteger(R.styleable.TrackView_border, 3);
+            mBorder = a.getInteger(R.styleable.TrackView_border, 2);
         } finally {
             a.recycle();
         }
@@ -128,13 +128,13 @@ public class TrackView extends View {
         return this.mChannel;
     }
 
-//    @Override
-//    protected void onSizeChanged(int xNew, int yNew, int xOld, int yOld){
-//        super.onSizeChanged(xNew, yNew, xOld, yOld);
-//
-//        width = xNew;
-//        height = yNew;
-//    }
+    @Override
+    protected void onSizeChanged(int xNew, int yNew, int xOld, int yOld){
+        super.onSizeChanged(xNew, yNew, xOld, yOld);
+
+        width = xNew;
+        height = yNew;
+    }
 //    @Override
 //    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec){
 //        int parentWidth = MeasureSpec.getSize(widthMeasureSpec);
@@ -146,21 +146,17 @@ public class TrackView extends View {
 
     @Override
     public void onDraw(Canvas canvas) {
-        if(width == 0 || height == 0) {
-            width = this.getWidth();
-            width--;
-            height = this.getHeight();
-            height--;
-            mRect.set(0,0,this.getWidth(),this.getHeight());
-            mRectBorder.set(10+mBorder,10+mBorder, (this.getWidth()-mBorder), this.getHeight()-mBorder);
+        if(width != 0 && height != 0) {
+            mRect.set(0,0,width,height);
+            mRectBorder.set(mBorder,mBorder, (width-mBorder), height-mBorder);
             Log.d(TAG, "canvas.getWidth:" + Integer.toString(width));
             Log.d(TAG, "canvas.getHeight:" + Integer.toString(height));
+            canvas.drawRect(mRect, mPaintStroke);
+            canvas.drawRect(mRectBorder, mPaintFill);
         }
 //        getDrawingRect(mRectBorder);
 //        mRectBorder.set(mRect.left+mBorder,mRect.top+mBorder, mRect.right-mBorder, mRect.bottom-mBorder);
 
-        canvas.drawRect(mRect, mPaintStroke);
-        canvas.drawRect(mRectBorder, mPaintFill);
 
     }
 }

@@ -269,7 +269,8 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
                     long millis = System.currentTimeMillis();
 
                     for (int id : curLoop.curSamples(mIndex)) {
-                        playSound(id);
+                        if(id != - 1)
+                            playSound(id);
                     }
 
                     MainActivity.this.runOnUiThread(new Runnable() {

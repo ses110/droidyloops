@@ -6,10 +6,8 @@
 
     <!-- TODO: Update blank fragment layout -->
 
-            <io.github.ses110.dloops.arranger.TrackGrid
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-
+    <io.github.ses110.dloops.arranger.TrackGrid
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </FrameLayout>
