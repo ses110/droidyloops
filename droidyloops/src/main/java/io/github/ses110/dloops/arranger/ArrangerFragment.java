@@ -85,7 +85,10 @@ public class ArrangerFragment extends Fragment {
                     + " must implement ArrangerFragmentListener");
         }
     }
-
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
     @Override
     public void onDetach() {
         super.onDetach();

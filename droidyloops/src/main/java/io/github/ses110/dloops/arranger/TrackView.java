@@ -135,17 +135,11 @@ public class TrackView extends View {
         width = xNew;
         height = yNew;
     }
-//    @Override
-//    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec){
-//        int parentWidth = MeasureSpec.getSize(widthMeasureSpec);
-//        int parentHeight = MeasureSpec.getSize(heightMeasureSpec);
-//        this.setMeasuredDimension(parentWidth/2, parentHeight);
-//        this.setLayoutParams(new TableRow.LayoutParams(parentWidth/2,parentHeight));
-//        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-//    }
 
     @Override
     public void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+
         if(width != 0 && height != 0) {
             mRect.set(0,0,width,height);
             mRectBorder.set(mBorder,mBorder, (width-mBorder), height-mBorder);

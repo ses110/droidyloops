@@ -8,145 +8,134 @@
 
 
     <TableLayout
-        android:layout_width="fill_parent"
-        android:layout_height="50dp"
-        android:stretchColumns="1">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:stretchColumns="1"
+        android:layout_marginTop="50dp">
 
         <TableRow
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Channel 1"
+                android:gravity="center"
+                android:background="@drawable/track_label"
+                android:padding="5dp" />
 
-            <view
-                android:layout_width="0dip"
-                android:layout_height="fill_parent"
-                android:layout_marginLeft="1dip"
-                class="io.github.ses110.dloops.arranger.TrackView"
-                android:layout_weight="1" />
-
-            <view
-                android:layout_width="0dip"
-                android:layout_height="fill_parent"
-                android:layout_marginLeft="1dip"
-                class="io.github.ses110.dloops.arranger.TrackView"
-                android:layout_weight="1" />
-            <view
-                android:layout_width="0dip"
-                android:layout_height="fill_parent"
-                android:layout_marginLeft="1dip"
-                class="io.github.ses110.dloops.arranger.TrackView"
-                android:layout_weight="1" />
-            <view
-                android:layout_width="0dip"
-                android:layout_height="fill_parent"
-                android:layout_marginLeft="1dip"
-                class="io.github.ses110.dloops.arranger.TrackView"
-                android:layout_weight="1" />
-        </TableRow>
-
-        <TableRow
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1">
-
-            <view
-                android:layout_width="0dip"
-                android:layout_height="fill_parent"
-                android:layout_marginLeft="1dip"
-                app:channel="2"
-                class="io.github.ses110.dloops.arranger.TrackView"
-                android:layout_weight="1" />
-
-            <view
-                android:layout_width="0dip"
-                android:layout_height="fill_parent"
-                android:layout_marginLeft="1dip"
-                app:channel="2"
-                class="io.github.ses110.dloops.arranger.TrackView"
-                android:layout_weight="1" />
-            <view
-                android:layout_width="0dip"
-                android:layout_height="fill_parent"
-                android:layout_marginLeft="1dip"
-                app:channel="2"
-                class="io.github.ses110.dloops.arranger.TrackView"
-                android:layout_weight="1" />
-            <view
-                android:layout_width="0dip"
-                android:layout_height="fill_parent"
-                android:layout_marginLeft="1dip"
-                app:channel="2"
-                class="io.github.ses110.dloops.arranger.TrackView"
-                android:layout_weight="1" />
-        </TableRow>
-        <TableRow
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1">
-
-            <view
-                android:layout_width="0dip"
-                android:layout_height="fill_parent"
-                android:layout_marginLeft="1dip"
-                app:channel="3"
-                class="io.github.ses110.dloops.arranger.TrackView"
-                android:layout_weight="1" />
-
-            <view
-                android:layout_width="0dip"
-                android:layout_height="fill_parent"
-                android:layout_marginLeft="1dip"
-                app:channel="3"
-                class="io.github.ses110.dloops.arranger.TrackView"
-                android:layout_weight="1" />
-            <view
-                android:layout_width="0dip"
-                android:layout_height="fill_parent"
-                android:layout_marginLeft="1dip"
-                app:channel="3"
-                class="io.github.ses110.dloops.arranger.TrackView"
-                android:layout_weight="1" />
-            <view
-                android:layout_width="0dip"
-                android:layout_height="fill_parent"
-                android:layout_marginLeft="1dip"
-                app:channel="3"
-                class="io.github.ses110.dloops.arranger.TrackView"
-                android:layout_weight="1" />
-        </TableRow>
-        <TableRow
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1">
-
-            <view
-                android:layout_width="0dip"
-                android:layout_height="fill_parent"
-                android:layout_marginLeft="1dip"
-                app:channel="4"
-                class="io.github.ses110.dloops.arranger.TrackView"
-                android:layout_weight="1" />
-
-            <view
-                android:layout_width="0dip"
-                android:layout_height="fill_parent"
-                android:layout_marginLeft="1dip"
-                app:channel="4"
-                class="io.github.ses110.dloops.arranger.TrackView"
-                android:layout_weight="1" />
-            <view
-                android:layout_width="0dip"
-                android:layout_height="fill_parent"
-                android:layout_marginLeft="1dip"
-                app:channel="4"
-                class="io.github.ses110.dloops.arranger.TrackView"
-                android:layout_weight="1" />
-            <ToggleButton
-                android:layout_width="0dip"
-                android:layout_height="fill_parent"
+            <ImageView
+                android:background="@drawable/empty_cell"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+            />
+            <ImageView
+                android:background="@drawable/empty_cell"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 />
+            <ImageView
+                android:background="@drawable/empty_cell"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                />
+            <ImageView
+                android:background="@drawable/empty_cell"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                />
+            <ImageView
+                android:background="@drawable/empty_cell"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                />
+            <ImageView
+                android:background="@drawable/empty_cell"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                />
+            <ImageView
+                android:background="@drawable/empty_cell"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                />
+            <ImageView
+                android:background="@drawable/empty_cell"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                />
+        </TableRow>
 
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Channel 1"
+                android:gravity="center"
+                android:background="@drawable/track_label" />
+
+            <ImageView
+                android:background="@drawable/empty_cell"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                />
+            <ImageView
+                android:background="@drawable/empty_cell"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                />
+            <ImageView
+                android:background="@drawable/empty_cell"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                />
+            <ImageView
+                android:background="@drawable/empty_cell"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                />
+            <ImageView
+                android:background="@drawable/empty_cell"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                />
+            <ImageView
+                android:background="@drawable/empty_cell"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                />
+            <ImageView
+                android:background="@drawable/empty_cell"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                />
+            <ImageView
+                android:background="@drawable/empty_cell"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                />
         </TableRow>
 
     </TableLayout>
