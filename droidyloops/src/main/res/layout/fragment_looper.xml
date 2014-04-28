@@ -10,7 +10,7 @@
         android:id="@+id/scrollview"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_above="@+id/addButton">
+        android:layout_above="@+id/add_button">
         <LinearLayout
             android:id="@+id/loopRowList"
             android:layout_width="match_parent"
@@ -20,7 +20,7 @@
         </LinearLayout>
     </ScrollView>
     <ImageButton
-        android:id="@+id/addButton"
+        android:id="@+id/add_button"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:background="@drawable/ic_action_new"
@@ -28,18 +28,20 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:onClick="newLoopRow"
         android:layout_marginLeft="20dp" />
+        <!--android:onClick="newLoopRow" />-->
+
 
     <Button
         android:id="@+id/bpm_button"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
         android:text="@string/change_BPM"
-        android:layout_toRightOf="@+id/addButton"
+        android:layout_toRightOf="@+id/add_button"
         android:layout_marginLeft="30dp"
-        android:layout_below="@+id/scrollview"
-        android:onClick="changeBpmDialog" />
+        android:layout_below="@+id/scrollview" />
+        <!--android:onClick="changeBpmDialog" -->
+
     <Button
         android:id="@+id/save_button"
         android:layout_width="wrap_content"
@@ -50,13 +52,13 @@
         android:layout_marginLeft="30dp" />
 
     <ImageButton
-        android:id="@+id/imageButton"
+        android:id="@+id/play_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/scrollview"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_marginRight="20dp"
-        android:background="@drawable/ic_action_play"
-        android:onClick="onPlay" />
+        android:background="@drawable/ic_action_play" />
+        <!--android:onClick="startPlay" -->
 </RelativeLayout>

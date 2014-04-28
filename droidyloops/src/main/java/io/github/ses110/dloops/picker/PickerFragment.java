@@ -62,7 +62,7 @@ public class PickerFragment extends ListFragment {
     private Menu menu;
 
     private View curSelection;
-    private Saveable curSaveable;
+    private Saveable mCurSaveable;
 
     /**
      * The fragment's ListView/GridView.
@@ -193,7 +193,7 @@ public class PickerFragment extends ListFragment {
         if(item.getItemId() == R.id.pickerSelect)
         {
             // TODO: switch statement to handle the other types of saveables
-            ((MainActivity)getActivity()).addLoopRow((Sample) curSaveable);
+            ((MainActivity)getActivity()).addLoopRow( (Sample) mCurSaveable);
             return true;
         }
         else
@@ -247,7 +247,7 @@ public class PickerFragment extends ListFragment {
             switch (fileType)
             {
                 case SAMPLES:
-                    curSaveable = samples.get(position);
+                    mCurSaveable = samples.get(position);
                     mListener.onPickerSelection(samples.get(position));
                     break;
                 case LOOPS:

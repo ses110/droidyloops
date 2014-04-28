@@ -50,7 +50,7 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
 
     private int mBeatTime = fromBpmToBeat(120);
     private Loop curLoop;
-    private ArrayList<LoopRowView> loopRows;
+    private ArrayList<LoopRowView> mLoopRows;
     private Runnable mRunnable;
     private boolean mPlaying = false;
 
@@ -99,7 +99,7 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
         /*
         *   Set up Loop
         * */
-        loopRows = new ArrayList<LoopRowView>();
+        mLoopRows = new ArrayList<LoopRowView>();
 
 
         /*
@@ -199,16 +199,23 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
         return super.onOptionsItemSelected(item);
     }
 
-
     /**
      *  LOOPER FUNCTIONS
      */
+
+    @Override
+    public void getLoop(Loop loop) {
+
+    }
+
+
     public int fromBeatToBPM(int beat) {
         return (int) ((1000.0/beat) * 60.0);
     }
     public int fromBpmToBeat(int bpm) {
         return  (int) (1000.0 / (bpm / 60.0));
     }
+
     public void setBPM(int newBPM) {
         this.mBeatTime = fromBpmToBeat(newBPM);
     }
@@ -219,11 +226,6 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
         BpmDialog changeBpm = new BpmDialog(this, fromBeatToBPM(this.mBeatTime));
         changeBpm.show(fm, "Dialog");
         Log.v("BPM Dialog", "changeBpm.NewBPM:" + changeBpm.newBPM());
-    }
-
-    @Override
-    public void getLoop(Loop loop) {
-
     }
 
     public void newLoopRow(View view)
@@ -251,14 +253,18 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
         }
         curLoop.addSample(s);
         child.setDetails(rowCount, curLoop, s);
-        this.loopRows.add(child);
+        this.mLoopRows.add(child);
 
         listView.addView(child, 0);
         rowCount++;
     }
 
+    public void saveLoop(View view) {
+        
+    }
+
     /*
-    * Looper : Play the samples according to beats
+    *  Start playing sounds
     * */
     public void play() {
         mRunnable = new Runnable()
@@ -277,7 +283,7 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
                         @Override
                         public void run()
                         {
-                            for(LoopRowView row : loopRows)
+                            for(LoopRowView row : mLoopRows)
                             {
                                 row.highlight(mIndex);
                             }
@@ -295,7 +301,7 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
                     @Override
                     public void run()
                     {
-                        for(LoopRowView row : loopRows)
+                        for(LoopRowView row : mLoopRows)
                         {
                             row.reset();
                         }
@@ -304,15 +310,15 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
             }
 
         };
+        mPlaying = true;
         Thread thandler = new Thread(mRunnable);
         thandler.start();
     }
-    public void onPlay(View view) {
-        Log.v("Looper", "onPlay called");
+    public void startPlay(View view) {
+        Log.v("Looper", "startPlay called");
         if(mPlaying)
             mPlaying = false;
         else {
-            mPlaying = true;
             this.play();
         }
     }
@@ -372,7 +378,6 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
     /**
      *  MAIN MENU FUNCTIONS
      */
-
 
     public void startClick(View view) {
         FragmentTransaction fragmentTransaction = fm.beginTransaction();

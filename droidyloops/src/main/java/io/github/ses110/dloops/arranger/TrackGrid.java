@@ -33,8 +33,8 @@ import io.github.ses110.dloops.R;
 public class TrackGrid extends RelativeLayout implements OnTouchListener, OnLongClickListener, OnDragListener {
     private static final String TAG = "TrackGrid";
 
-    private int mMaxColumns = 26;
-    private int mMaxRows = 6;
+    private int mMaxColumns = 12;
+    private int mMaxRows = 5;
 
     private static final int mColLimit = 100;
     TableLayout mTableTracks;
@@ -99,14 +99,7 @@ public class TrackGrid extends RelativeLayout implements OnTouchListener, OnLong
 
         List<String> cellList = new ArrayList<String>();
         for (int i = 1; i <= rows; i++) {
-
-            String emptyCell;
-
-            int channel = (((i-1) % maxRowColors) +1);
-
-            emptyCell = "Track " + channel;
-
-            cellList.add(emptyCell);
+            cellList.add(new String("Track " + i));
         }
         return cellList;
     }
