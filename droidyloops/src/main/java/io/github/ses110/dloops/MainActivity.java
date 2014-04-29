@@ -319,7 +319,7 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
     /*
     *  Start playing sounds
     * */
-    public void play() {
+    public void playLoop() {
         mRunnable = new Runnable()
         {
             int mIndex = 0;
@@ -385,7 +385,7 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
             view.setBackground(getResources().getDrawable(R.drawable.ic_action_play));
         }
         else {
-            this.play();
+            this.playLoop();
             view.setBackground(getResources().getDrawable(R.drawable.ic_action_stop));
         }
     }
