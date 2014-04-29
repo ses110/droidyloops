@@ -122,6 +122,8 @@ public class ArrangerFragment extends Fragment implements OnLongClickListener, T
             case R.id.addChannel:
                 createNewChannel(mTrackGridView.createNewRow());
                 return true;
+            case R.id.playSong:
+                // TODO: play the song
             default:
                 return super.onOptionsItemSelected(item);
         }
