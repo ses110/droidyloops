@@ -6,10 +6,8 @@ import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.View;
-import android.view.View.OnDragListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
@@ -29,7 +27,7 @@ import io.github.ses110.dloops.R;
 /**
  * Created by sergioescoto on 4/26/14.
  */
-public class TrackGrid extends RelativeLayout implements OnDragListener {
+public class TrackGrid extends RelativeLayout {
     private static final String TAG = "TrackGrid";
 
     private int mColSpan = 0;
@@ -242,6 +240,8 @@ public class TrackGrid extends RelativeLayout implements OnDragListener {
         c.invalidate();
         c.setLayoutParams(saveParams);
 
+        c.setOnDragListener(((MainActivity) this.mContext).arranger);
+
         parent.addView(c, index);
     }
 
@@ -277,22 +277,4 @@ public class TrackGrid extends RelativeLayout implements OnDragListener {
 //        return false;
 //    }
 
-    @Override
-    public boolean onDrag(View view, DragEvent Event) {
-        switch (Event.getAction()) {
-            case DragEvent.ACTION_DRAG_STARTED:
-                Log.v("DragDrop","Drag Started");
-                break;
-            case DragEvent.ACTION_DRAG_ENTERED:
-                Log.v("DragDrop","Drag ENTERED");
-                break;
-            case DragEvent.ACTION_DRAG_EXITED:
-                Log.v("DragDrop","Drag EXITED");
-                break;
-            case DragEvent.ACTION_DROP:
-                Log.v("DragDrop","Drag ACTION DROP");
-                break;
-        }
-        return true;
-    }
 }

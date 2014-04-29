@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
+import org.json.JSONException;
+
 import io.github.ses110.dloops.MainActivity;
 import io.github.ses110.dloops.R;
 import io.github.ses110.dloops.models.Loop;
@@ -90,6 +92,9 @@ public class LooperFragment extends Fragment implements OnClickListener{
         v.findViewById(R.id.bpm_button).setOnClickListener(this);
         v.findViewById(R.id.save_button).setOnClickListener(this);
         v.findViewById(R.id.play_button).setOnClickListener(this);
+
+//        container.addView(((MainActivity)getActivity()).mProgressBar);
+
         return v;
     }
 
@@ -127,7 +132,11 @@ public class LooperFragment extends Fragment implements OnClickListener{
                 ((MainActivity)getActivity()).changeBpmDialog(view);
                 break;
             case R.id.save_button:
-                ((MainActivity)getActivity()).saveLoop(view);
+                try {
+                    ((MainActivity)getActivity()).saveLoop(view);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 break;
             case R.id.play_button:
                 ((MainActivity)getActivity()).startPlay(view);

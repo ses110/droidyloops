@@ -11,10 +11,12 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 
 import org.json.JSONException;
 
@@ -33,6 +35,7 @@ import io.github.ses110.dloops.picker.PickerFragment;
 import io.github.ses110.dloops.utils.BpmDialog;
 import io.github.ses110.dloops.utils.CircularArrayList;
 import io.github.ses110.dloops.utils.FileHandler;
+import io.github.ses110.dloops.utils.ProgressBarView;
 
 
 public class MainActivity extends FragmentActivity implements ArrangerFragment.ArrangerFragmentListener, LooperFragment.LooperFragmentListener,
@@ -60,7 +63,8 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
     private AudioManager mAudioManager;
     private SoundPool mSndPool;
 
-    private ProgressDialog mProgDialog;
+    public ProgressDialog mProgDialog;
+
     FileHandler mFH;
     /**
      * ARRANGER VARIABLES
@@ -74,22 +78,46 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
     private FragmentManager mFragMan;
     File mDataDir;
 
+    /*
+    *   BPM Listeners for the progress bar
+    * */
+
+    private OnBPMListener mOnBPMListener;
+
+    public ProgressBarView mProgressBar;
+
+    public interface OnBPMListener {
+
+        public void onBPM(int beatCount);
+    }
+
+    public void setOnBPMListener(OnBPMListener l) {
+        this.mOnBPMListener = l;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        /************
-         *
-         *  Set up soundPool stuff
-         * *************/
+
+        Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+        int width = display.getWidth();
+        int height = display.getHeight();
+
+        mProgressBar = new ProgressBarView(this, width, height, (width / 8),fromBeatToBPM(mBeatTime));
+        this.setOnBPMListener(mProgressBar);
+
+        /***************************
+         *      Set up soundPool
+         * ************************/
         if(mSndPool == null || mAudioManager == null) {
-            mSndPool = new SoundPool(32, AudioManager.STREAM_MUSIC, 0);
+            mSndPool = new SoundPool(16, AudioManager.STREAM_MUSIC, 0);
             mAudioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
         }
         mSpBuffer = new CircularArrayList<Sample>(10);
 
-        /**
+        /*************************
          * Set up ProgressDialog
          * */
         mProgDialog = new ProgressDialog(this);
@@ -165,12 +193,15 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
     protected void onResume() {
         super.onResume();
         Log.v("MainActivity", "In onResume");
+        if(mSndPool == null)
+            mSndPool = new SoundPool(16, AudioManager.STREAM_MUSIC, 0);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         mPlaying = false;
+        mSndPool.release();
     }
 
     @Override
@@ -197,8 +228,26 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
         }
         return super.onOptionsItemSelected(item);
     }
+    /*
+    *   Arranger Functions
+    * */
 
-    /**
+
+    //Handle transition between arranger to looper. Saves arranger view
+    public void newLoopClick(View view) {
+        FragmentTransaction fragmentTransaction = mFragMan.beginTransaction();
+        // TODO: initialise looper with pre-existing data if any
+        looper = LooperFragment.newInstance("pl", "pl");
+        fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
+        fragmentTransaction.hide(arranger);
+//        (mFragMan.findFragmentById(R.id.mainContainer));
+        fragmentTransaction.add(R.id.mainContainer, looper);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
+
+     /**
      *  LOOPER FUNCTIONS
      */
 
@@ -257,9 +306,26 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
         listView.addView(child, 0);
         rowCount++;
     }
+    /*
+    *       TODO: Looper: press save, save the current loop and send it back.
+    * */
+    public void saveLoop(View view) throws JSONException {
+        Log.v("LOOPER", "Save loop");
+        if(curLoop != null) {
+            Log.v("LOOPER", curLoop.toJSON().toString());
+            android.support.v4.app.Fragment target = (android.support.v4.app.Fragment)arranger;
+            android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+            if(target.isAdded()) {
+                transaction.show(target);
+            } else
+            {
+                Log.v("LOOPER", "Can't find original arranger fragment");
+            }
 
-    public void saveLoop(View view) {
-        
+
+
+        }
     }
 
     /*
@@ -269,14 +335,25 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
         mRunnable = new Runnable()
         {
             int mIndex = 0;
+
+            int tempId = -1;
             public void run() {
                 while(mPlaying) {
+                    if(tempId != -1)
+                        playMute(tempId);
+
+                    if(mOnBPMListener != null) {
+                        mOnBPMListener.onBPM(mIndex);
+                    }
                     long millis = System.currentTimeMillis();
 
                     for (int id : curLoop.curSamples(mIndex)) {
+                        if(tempId == -1)
+                            tempId = id;
                         if(id != - 1)
                             playSound(id);
                     }
+
 
                     MainActivity.this.runOnUiThread(new Runnable() {
                         @Override
@@ -338,6 +415,10 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
 
     private void playSound(int spID) {
         mSndPool.play(spID, getVolume(), getVolume(), 1,0,1);
+        Log.v("Playsound", "Playing SOUND id: " + Integer.toString(spID));
+    }
+    private void playMute(int spID) {
+        mSndPool.play(spID, 0, 0, 1, -1, 1f);
         Log.v("Playsound", "Playing SOUND id: " + Integer.toString(spID));
     }
 

@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.DragEvent;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -22,6 +23,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import io.github.ses110.dloops.MainActivity;
 import io.github.ses110.dloops.R;
 import io.github.ses110.dloops.models.Channel;
 import io.github.ses110.dloops.models.Loop;
@@ -35,7 +37,8 @@ import io.github.ses110.dloops.models.Loop;
  * create an instance of this fragment.
  *
  */
-public class ArrangerFragment extends Fragment implements OnLongClickListener, TextView.OnEditorActionListener {
+public class ArrangerFragment extends Fragment implements OnLongClickListener, TextView.OnEditorActionListener, View.OnDragListener {
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private final String TAG = "ARRANGER";
@@ -152,6 +155,13 @@ public class ArrangerFragment extends Fragment implements OnLongClickListener, T
                     + " must implement ArrangerFragmentListener");
         }
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+
     @Override
     public void onPause() {
         super.onPause();
@@ -159,12 +169,14 @@ public class ArrangerFragment extends Fragment implements OnLongClickListener, T
     @Override
     public void onDetach() {
         super.onDetach();
+        Log.v(TAG, "onDetach");
         mListener = null;
         mTrackGridView = null;
     }
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        Log.v(TAG, "onDestroyView");
         mTrackGridView.destroyDrawingCache();
         mTrackGridView = null;
     }
@@ -183,6 +195,8 @@ public class ArrangerFragment extends Fragment implements OnLongClickListener, T
 
             Log.v(TAG, "Channel's name is  " + getChannel.name);
             getChannel.addLoop(index, dummyloop);
+
+            ((MainActivity)this.getActivity()).newLoopClick(view);
 
             //Get the view's parent, get the row and find the channel to which it belongs
             mTrackGridView.createLoopCell(view);
@@ -217,6 +231,28 @@ public class ArrangerFragment extends Fragment implements OnLongClickListener, T
             return false;
         }
         return false;
+    }
+
+    /***
+     *   Handle onDrag changes for TrackViews
+     */
+    @Override
+    public boolean onDrag(View view, DragEvent event) {
+        switch (event.getAction()) {
+            case DragEvent.ACTION_DRAG_STARTED:
+                Log.v("DragDrop","Drag Started");
+                break;
+            case DragEvent.ACTION_DRAG_ENTERED:
+                Log.v("DragDrop","Drag ENTERED");
+                break;
+            case DragEvent.ACTION_DRAG_EXITED:
+                Log.v("DragDrop","Drag EXITED");
+                break;
+            case DragEvent.ACTION_DROP:
+                Log.v("DragDrop","Drag ACTION DROP");
+                break;
+        }
+        return true;
     }
 
     /**

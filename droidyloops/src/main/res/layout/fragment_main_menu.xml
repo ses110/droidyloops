@@ -15,8 +15,8 @@
         android:layout_gravity="center_horizontal"
         android:typeface="normal"
         android:textSize="30dp"
-        android:paddingBottom="30dp"
-        android:paddingTop="30dp" />
+        android:paddingBottom="20dp"
+        android:paddingTop="20dp" />
 
     <Button
         android:id="@+id/createButton"
