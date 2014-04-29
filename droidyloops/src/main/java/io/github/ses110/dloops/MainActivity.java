@@ -193,15 +193,12 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
     protected void onResume() {
         super.onResume();
         Log.v("MainActivity", "In onResume");
-        if(mSndPool == null)
-            mSndPool = new SoundPool(16, AudioManager.STREAM_MUSIC, 0);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         mPlaying = false;
-        mSndPool.release();
     }
 
     @Override
