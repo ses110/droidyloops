@@ -52,7 +52,7 @@ public class ProgressBarView extends View implements MainActivity.OnBPMListener 
         progressHandler = new Handler();
 
         barHeight = height;
-        totalWidth = width;
+        totalWidth = width - 40;
         currentBarXPos = 0;
 
         // How long it takes to go through a beat
@@ -71,7 +71,8 @@ public class ProgressBarView extends View implements MainActivity.OnBPMListener 
     private void moveBar() {
         synchronized (progressBar) {
             currentBarXPos = (currentBarXPos + PROGRESS_SIZE) % totalWidth;
-            progressBar.setBounds(currentBarXPos - BAR_WIDTH, 0, currentBarXPos, barHeight);
+            int correctedX = currentBarXPos + 60;
+            progressBar.setBounds(correctedX, 0, correctedX + BAR_WIDTH, barHeight);
         }
     }
 

@@ -105,7 +105,7 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
         int width = display.getWidth();
         int height = display.getHeight();
 
-        mProgressBar = new ProgressBarView(this, width, height, (width / 8),fromBeatToBPM(mBeatTime));
+        mProgressBar = new ProgressBarView(this, width, height, (width / 9),fromBeatToBPM(mBeatTime));
         this.setOnBPMListener(mProgressBar);
 
         /***************************
