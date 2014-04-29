@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="app_name">Droidyloops</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
@@ -9,5 +8,5 @@
     <string name="save">Save</string>
     <string name="noSamples">No Samples Found</string>
     <string name="selectSample">Done</string>
-
+    <string name="newSaveable">New</string>
 </resources>

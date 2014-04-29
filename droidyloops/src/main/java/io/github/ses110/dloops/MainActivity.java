@@ -317,6 +317,7 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
             mFragMan.popBackStack();
         }
         curLoop = null;
+        rowCount = 0;
     }
 
     /*
