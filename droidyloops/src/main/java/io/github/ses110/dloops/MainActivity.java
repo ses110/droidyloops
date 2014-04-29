@@ -17,6 +17,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.ImageButton;
 
 import org.json.JSONException;
 
@@ -235,6 +237,7 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
         FragmentTransaction fragmentTransaction = mFragMan.beginTransaction();
         // TODO: initialise looper with pre-existing data if any
         looper = LooperFragment.newInstance("pl", "pl");
+        curLoop = new Loop();
         fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
         fragmentTransaction.hide(arranger);
 //        (mFragMan.findFragmentById(R.id.mainContainer));
@@ -275,7 +278,7 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
 
     public void newLoopRow(View view)
     {
-        mPlaying = false;
+        startPlay(null);
         picker = PickerFragment.newInstance(FileHandler.FileType.SAMPLES);
         picker.attachSoundPool(this.mSndPool);
         FragmentTransaction ft = mFragMan.beginTransaction();
@@ -380,15 +383,22 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
     }
     public void startPlay(View view) {
         Log.v("Looper", "startPlay called");
-        if(mPlaying) {
+        if(view == null) {
+            if(mPlaying)
+                ((ViewGroup) mProgressBar.getParent()).removeView(mProgressBar);
+            findViewById(R.id.play_button).setBackground(getResources().getDrawable(R.drawable.ic_action_play));
             mPlaying = false;
-            view.setBackground(getResources().getDrawable(R.drawable.ic_action_play));
-            ((ViewGroup) view.getParent()).removeView(mProgressBar);
         }
-        else {
-            this.playLoop();
-            ((ViewGroup) view.getParent()).addView(mProgressBar);
-            view.setBackground(getResources().getDrawable(R.drawable.ic_action_stop));
+        else if(curLoop.curSamples(0) != null){
+            if (mPlaying) {
+                mPlaying = false;
+                view.setBackground(getResources().getDrawable(R.drawable.ic_action_play));
+                ((ViewGroup) view.getParent()).removeView(mProgressBar);
+            } else {
+                this.playLoop();
+                ((ViewGroup) view.getParent()).addView(mProgressBar);
+                view.setBackground(getResources().getDrawable(R.drawable.ic_action_stop));
+            }
         }
     }
 
