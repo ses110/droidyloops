@@ -19,10 +19,12 @@ public class Channel implements Saveable
     public ArrayList<Loop> loops;
     public String name;
 
-    public Channel(String name)
+    public Channel(String name, int colSpan)
     {
         this.name = name;
-        loops = new ArrayList<Loop>();
+        loops = new ArrayList<Loop>(colSpan);
+        for (int i = 0; i < colSpan; i++)
+            loops.add(null);
     }
 
     public Channel(JSONObject object) throws JSONException {
@@ -52,6 +54,10 @@ public class Channel implements Saveable
             result = curLoop.curSamples(loopOffset);
         }
         return result;   
+    }
+    @Override
+    public String toString() {
+        return name;
     }
 
     @Override

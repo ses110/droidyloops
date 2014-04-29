@@ -79,6 +79,9 @@ public class TrackGrid extends RelativeLayout implements OnDragListener {
             a.recycle();
         }
     }
+    public int getColSpan() {
+        return mColSpan;
+    }
 
 
     private final void init(Context context) {
@@ -199,6 +202,18 @@ public class TrackGrid extends RelativeLayout implements OnDragListener {
 
         return emptyCell;
     }
+
+    public TableRow getParentRow(View view) {
+        TableRow parentRow = (TableRow)view.getParent();
+        return parentRow;
+    }
+
+    // Table's cells are numbered differently, normalize them to use with a Channel
+    public int getCellIdForChannel(View view) {
+        int id = ((view.getId()-2) % mColSpan);
+        return id;
+    }
+
     public TableRow createNewRow() {
         // Get the last row's id
         TableRow lastRow = (TableRow) mTableTracks.getChildAt(mTableTracks.getChildCount()-1);
@@ -212,11 +227,11 @@ public class TrackGrid extends RelativeLayout implements OnDragListener {
         return newRow;
     }
 
-    public void addNewLoop(View view) {
+    public void createLoopCell(View view) {
         Log.d("CELL","Pressed on cell " + view.getId());
         ViewGroup parent = (ViewGroup) view.getParent();
-        Log.d("CELL parent", "Cell parent id: " + parent.getId());
         int index = parent.indexOfChild(view);
+
         ViewGroup.LayoutParams saveParams = view.getLayoutParams();
         parent.removeView(view);
 

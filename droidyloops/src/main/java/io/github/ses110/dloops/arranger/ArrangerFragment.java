@@ -15,6 +15,7 @@ import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TableRow;
 import android.widget.TextView;
 
@@ -23,6 +24,7 @@ import java.util.HashMap;
 
 import io.github.ses110.dloops.R;
 import io.github.ses110.dloops.models.Channel;
+import io.github.ses110.dloops.models.Loop;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
@@ -125,7 +127,7 @@ public class ArrangerFragment extends Fragment implements OnLongClickListener, T
 
         String label = labelCell.getText().toString();
 
-        Channel chan = new Channel(label);
+        Channel chan = new Channel(label, mTrackGridView.getColSpan());
         Log.v(TAG, "Creating new channel with name  \"" + chan.name + "\" linked to row id: " + row.getId());
 
         mChannels.add(chan);
@@ -169,13 +171,32 @@ public class ArrangerFragment extends Fragment implements OnLongClickListener, T
 
     @Override
     public boolean onLongClick(View view) {
-        mTrackGridView.addNewLoop(view);
+        if(view instanceof ImageView) {
+            //Clicked on an empty cell
+            TableRow parentRow = (TableRow)view.getParent();
+            Channel getChannel = mRowToChannel.get(parentRow);
+            int index = mTrackGridView.getCellIdForChannel(view);
+
+            //TODO: call Looper fragment. On return, get a loop and assign it to the channel
+            Log.v(TAG, "ID normalized: " + index);
+            Loop dummyloop = null;
+
+            Log.v(TAG, "Channel's name is  " + getChannel.name);
+            getChannel.addLoop(index, dummyloop);
+
+            //Get the view's parent, get the row and find the channel to which it belongs
+            mTrackGridView.createLoopCell(view);
+        }
+        else
+        if (view instanceof TrackView) {
+            //Clicked on a loop
+
+        }
         return true;
     }
 
     /*
-    *       Handle Channel label edittext changes
-    *
+    *       Handle Channel label EditText changes
     * */
 
     @Override
