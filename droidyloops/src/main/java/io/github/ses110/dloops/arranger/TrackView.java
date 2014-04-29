@@ -108,11 +108,13 @@ public class TrackView extends View {
                 break;
         }
     }
+
     public void setChannel(int _channel) {
         this.mChannel = _channel;
         this.setColors();
         this.invalidate();
     }
+
     public int getChannel() {
         return this.mChannel;
     }
@@ -123,6 +125,8 @@ public class TrackView extends View {
 
         width = xNew-1;
         height = yNew-1;
+        mRect.set(0,0,width,height);
+        mRectBorder.set(0,0, (width-mBorder), height-mBorder);
     }
 
     @Override
@@ -130,8 +134,7 @@ public class TrackView extends View {
         super.onDraw(canvas);
 
         if(width != 0 && height != 0) {
-            mRect.set(0,0,width,height);
-            mRectBorder.set(0,0, (width-mBorder), height-mBorder);
+
             canvas.drawRect(mRect, mPaintStroke);
             canvas.drawRect(mRectBorder, mPaintFill);
 

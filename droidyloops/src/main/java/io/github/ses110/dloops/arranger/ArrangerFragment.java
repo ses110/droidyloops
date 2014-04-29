@@ -7,6 +7,9 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
@@ -74,6 +77,9 @@ public class ArrangerFragment extends Fragment implements OnLongClickListener, T
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setHasOptionsMenu(true);
+
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -91,19 +97,40 @@ public class ArrangerFragment extends Fragment implements OnLongClickListener, T
         mChannels = new ArrayList<Channel>();
         mRowToChannel = new HashMap<TableRow, Channel>();
 
+        //      Associate row(s) with channels
         for(TableRow row : rows) {
-            EditText labelCell = (EditText) row.getChildAt(0);
-
-            String label = labelCell.getText().toString();
-
-            Channel chan = new Channel(label);
-            Log.v(TAG, "Creating new channel with name  \"" + chan.name + "\" linked to row id: " + row.getId());
-
-            mChannels.add(chan);
-            mRowToChannel.put(row, chan);
+            createNewChannel(row);
         }
 
         return v;
+    }
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.arranger, menu);
+
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.addChannel:
+                createNewChannel(mTrackGridView.createNewRow());
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void createNewChannel(TableRow row) {
+        EditText labelCell = (EditText) row.getChildAt(0);
+
+        String label = labelCell.getText().toString();
+
+        Channel chan = new Channel(label);
+        Log.v(TAG, "Creating new channel with name  \"" + chan.name + "\" linked to row id: " + row.getId());
+
+        mChannels.add(chan);
+        mRowToChannel.put(row, chan);
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -142,7 +169,7 @@ public class ArrangerFragment extends Fragment implements OnLongClickListener, T
 
     @Override
     public boolean onLongClick(View view) {
-        mTrackGridView.addNewLoopCell(view);
+        mTrackGridView.addNewLoop(view);
         return true;
     }
 

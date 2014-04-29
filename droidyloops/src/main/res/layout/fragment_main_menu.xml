@@ -20,9 +20,9 @@
 
     <Button
         android:id="@+id/createButton"
+        android:text="New Song"
         android:layout_width="127dp"
         android:layout_height="wrap_content"
-        android:text="Looper"
         android:layout_gravity="center_horizontal"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
@@ -31,9 +31,9 @@
 
     <Button
         android:id="@+id/loadButton"
+        android:text="Load"
         android:layout_width="127dp"
         android:layout_height="wrap_content"
-        android:text="Load"
         android:layout_gravity="center_horizontal"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
@@ -42,9 +42,9 @@
 
     <Button
         android:id="@+id/collaborateButton"
+        android:text="Collaborate"
         android:layout_width="127dp"
         android:layout_height="wrap_content"
-        android:text="Arranger"
         android:layout_gravity="center_horizontal"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"

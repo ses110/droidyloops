@@ -2,6 +2,7 @@ package io.github.ses110.dloops.arranger;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -9,7 +10,6 @@ import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnDragListener;
-import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
@@ -29,11 +29,11 @@ import io.github.ses110.dloops.R;
 /**
  * Created by sergioescoto on 4/26/14.
  */
-public class TrackGrid extends RelativeLayout implements OnLongClickListener, OnDragListener {
+public class TrackGrid extends RelativeLayout implements OnDragListener {
     private static final String TAG = "TrackGrid";
 
-    private int mMaxColumns = 12;
-    private int mMaxRows = 5;
+    private int mColSpan = 0;
+    private int mRowSpan = 0;
 
     private static final int mColLimit = 100;
     TableLayout mTableTracks;
@@ -60,21 +60,37 @@ public class TrackGrid extends RelativeLayout implements OnLongClickListener, On
 
     public TrackGrid(Context context, AttributeSet attrs) {
         super(context,attrs);
+        this.setFromXML(context, attrs);
         this.init(context);
     }
     public TrackGrid(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        this.setFromXML(context, attrs);
         this.init(context);
+    }
+
+    // Obtain row/col information from XML attributes
+    private final void setFromXML(Context context, AttributeSet attrs) {
+        TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.TrackGrid, 0, 0);
+        try {
+            mColSpan = a.getInteger(R.styleable.TrackGrid_columns, 10);
+            mRowSpan = a.getInteger(R.styleable.TrackGrid_rows, 1);
+        } finally {
+            a.recycle();
+        }
     }
 
 
     private final void init(Context context) {
+        if(mColSpan == 0) mColSpan = 10;
+        if(mRowSpan == 0) mRowSpan = 1;
+
         this.mContext = context;
 
         //Change this to views, emptyCells
 //        this.setOnDragListener(this);
 
-        List<String> rowItems = this.createCellList(mContext, mMaxRows);
+        List<String> rowItems = this.createCellList(mContext, mRowSpan);
 
         // Get the screen's width. We want to make sure at least 8 columns show up on screen. Add +1 to compensate for track labels
         DisplayMetrics dm = new DisplayMetrics();
@@ -129,7 +145,7 @@ public class TrackGrid extends RelativeLayout implements OnLongClickListener, On
             // Make sure row IDs are multiples of 100. So 1st row will be 100, row 2 will be 200, and so on.
             // mColLimit default is set to 100, an upper bound on the number of columns.
             // The issue is when setting IDs of the elements inside a row, if we go over mColLimit we lose those clean ids for each row
-            int rowId = (mColLimit - mMaxColumns % mColLimit) + mMaxColumns;
+            int rowId = (mColLimit - mColSpan % mColLimit) + mColSpan;
 
             rowId = rowId * (i+1);
 
@@ -145,7 +161,7 @@ public class TrackGrid extends RelativeLayout implements OnLongClickListener, On
 
         rowForTracks.addView(addLabel(channelName, id + 1));
 
-        for (int i = 0; i < mMaxColumns-1; i++) {
+        for (int i = 0; i < mColSpan -1; i++) {
             rowForTracks.addView(addEmptyCell(id+i+2));
         }
         return rowForTracks;
@@ -183,8 +199,20 @@ public class TrackGrid extends RelativeLayout implements OnLongClickListener, On
 
         return emptyCell;
     }
+    public TableRow createNewRow() {
+        // Get the last row's id
+        TableRow lastRow = (TableRow) mTableTracks.getChildAt(mTableTracks.getChildCount()-1);
+        Log.v(TAG, "Last row ID is: " + lastRow.getId());
 
-    public void addNewLoopCell(View view) {
+        int rowId = (mColLimit - mColSpan % mColLimit) + mColSpan;
+
+        rowId = lastRow.getId() + rowId;
+        TableRow newRow = this.addNewRow("New Track", rowId);
+        this.mTableTracks.addView(newRow, mRowParams);
+        return newRow;
+    }
+
+    public void addNewLoop(View view) {
         Log.d("CELL","Pressed on cell " + view.getId());
         ViewGroup parent = (ViewGroup) view.getParent();
         Log.d("CELL parent", "Cell parent id: " + parent.getId());
@@ -203,7 +231,7 @@ public class TrackGrid extends RelativeLayout implements OnLongClickListener, On
     }
 
     /*
-    *  Return a 2D array of the ids
+    *  Return a list of all the TableRow
     * */
     public ArrayList<TableRow> returnRows() {
         ArrayList<TableRow> listRows = new ArrayList<TableRow>();
@@ -216,26 +244,6 @@ public class TrackGrid extends RelativeLayout implements OnLongClickListener, On
         return listRows;
     }
 
-
-    @Override
-    public boolean onLongClick(View view) {
-        Log.d("CELL","Pressed on cell " + view.getId());
-        ViewGroup parent = (ViewGroup) view.getParent();
-        Log.d("CELL parent", "Cell parent id: " + parent.getId());
-        int index = parent.indexOfChild(view);
-        ViewGroup.LayoutParams saveParams = view.getLayoutParams();
-        parent.removeView(view);
-
-        TrackView c = new TrackView(getContext());
-        c.setId(view.getId());
-        c.setChannel((1+(((parent.getId() / 100)-1) % 4)));
-        Log.d("SetChannel", " to " + (1+(((parent.getId() / 100)-1) % 4)));
-        c.invalidate();
-        c.setLayoutParams(saveParams);
-
-        parent.addView(c, index);
-        return true;
-    }
 //
 //    @Override
 //    public boolean onTouch(View view, MotionEvent event) {
