@@ -14,6 +14,7 @@ import org.json.JSONException;
 import io.github.ses110.dloops.MainActivity;
 import io.github.ses110.dloops.R;
 import io.github.ses110.dloops.models.Loop;
+import io.github.ses110.dloops.models.Sample;
 
 
 /**
@@ -150,6 +151,27 @@ public class LooperFragment extends Fragment implements OnClickListener{
                 ((MainActivity)getActivity()).startPlay(view);
                 break;
         }
+    }
+
+    public void setup(Loop loop)
+    {
+        java.util.ArrayList<Sample> samples = loop.samples;
+        for (int i = 0; i < samples.size(); i++) {
+            Sample s = samples.get(i);
+            ViewGroup listView = (ViewGroup) this.getView().findViewById(R.id.loopRowList);
+            LoopRowView child = new LoopRowView(this.getActivity());
+
+            boolean[] get = loop.cells.get(i);
+            for (int j = 0; j < get.length; j++) {
+                boolean cell = get[j];
+                if(cell)
+                    child.cells[j].toggle();
+            }
+            child.setDetails(i, loop, s);
+            ((MainActivity) this.getActivity()).mLoopRows.add(child);
+            listView.addView(child, 0);
+        }
+
     }
 
 

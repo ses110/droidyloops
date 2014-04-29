@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import io.github.ses110.dloops.arranger.ArrangerFragment;
 import io.github.ses110.dloops.looper.LoopRowView;
@@ -55,7 +56,7 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
 
     private int mBeatTime = fromBpmToBeat(120);
     private Loop curLoop;
-    private ArrayList<LoopRowView> mLoopRows;
+    public ArrayList<LoopRowView> mLoopRows;
     private Runnable mRunnable;
     private boolean mPlaying = false;
 
@@ -245,6 +246,27 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
         fragmentTransaction.commit();
     }
 
+    //Handle transition between arranger to looper. Saves arranger view
+    public void loadLoopClick(Loop init) {
+        FragmentTransaction fragmentTransaction = mFragMan.beginTransaction();
+        // TODO: initialise looper with pre-existing data if any
+        looper = LooperFragment.newInstance("pl", "pl");
+        boolean setup = false;
+        if(init == null)
+            init = new Loop();
+        else
+            setup = true;
+        fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
+        fragmentTransaction.hide(arranger);
+//        (mFragMan.findFragmentById(R.id.mainContainer));
+        fragmentTransaction.add(R.id.mainContainer, looper);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+        if(setup)
+            looper.setup(init);
+        curLoop = init;
+    }
+
 
      /**
      *  LOOPER FUNCTIONS
@@ -286,7 +308,6 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
         ft.add(R.id.mainContainer, picker);
         ft.addToBackStack(null);
         ft.commit();
-
     }
     public void addLoopRow(Sample s) {
         mFragMan.popBackStack();
@@ -301,7 +322,6 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
         curLoop.addSample(s);
         child.setDetails(rowCount, curLoop, s);
         this.mLoopRows.add(child);
-
         listView.addView(child, 0);
         rowCount++;
     }
@@ -316,6 +336,7 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
             mFragMan.popBackStack();
         }
         curLoop = null;
+        rowCount = 0;
     }
 
     /*
@@ -344,17 +365,6 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
                             playSound(id);
                     }
 
-
-                    MainActivity.this.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run()
-                        {
-                            for(LoopRowView row : mLoopRows)
-                            {
-                                row.highlight(mIndex);
-                            }
-                        }
-                    });
                     mIndex = (mIndex + 1) % Loop.maxBeats;
                     try {
                         Thread.sleep(mBeatTime - (System.currentTimeMillis()-millis));
