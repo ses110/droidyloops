@@ -389,10 +389,13 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
     }
     public void startPlay(View view) {
         Log.v("Looper", "startPlay called");
-        if(mPlaying)
+        if(mPlaying) {
             mPlaying = false;
+            view.setBackground(getResources().getDrawable(R.drawable.ic_action_play));
+        }
         else {
             this.play();
+            view.setBackground(getResources().getDrawable(R.drawable.ic_action_stop));
         }
     }
 
