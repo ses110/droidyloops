@@ -193,15 +193,12 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
     protected void onResume() {
         super.onResume();
         Log.v("MainActivity", "In onResume");
-        if(mSndPool == null)
-            mSndPool = new SoundPool(16, AudioManager.STREAM_MUSIC, 0);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         mPlaying = false;
-        mSndPool.release();
     }
 
     @Override
@@ -309,29 +306,20 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
     /*
     *       TODO: Looper: press save, save the current loop and send it back.
     * */
-    public void saveLoop(View view) throws JSONException {
+    public void saveLoop(int channel, int cell) throws JSONException {
         Log.v("LOOPER", "Save loop");
         if(curLoop != null) {
             Log.v("LOOPER", curLoop.toJSON().toString());
-            android.support.v4.app.Fragment target = (android.support.v4.app.Fragment)arranger;
-            android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-            if(target.isAdded()) {
-                transaction.show(target);
-            } else
-            {
-                Log.v("LOOPER", "Can't find original arranger fragment");
-            }
-
-
-
+            arranger.addLoop(channel, cell, curLoop);
+            mFragMan.popBackStack();
         }
+        curLoop = null;
     }
 
     /*
     *  Start playing sounds
     * */
-    public void play() {
+    public void playLoop() {
         mRunnable = new Runnable()
         {
             int mIndex = 0;
@@ -392,10 +380,15 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
     }
     public void startPlay(View view) {
         Log.v("Looper", "startPlay called");
-        if(mPlaying)
+        if(mPlaying) {
             mPlaying = false;
+            view.setBackground(getResources().getDrawable(R.drawable.ic_action_play));
+            ((ViewGroup) view.getParent()).removeView(mProgressBar);
+        }
         else {
-            this.play();
+            this.playLoop();
+            ((ViewGroup) view.getParent()).addView(mProgressBar);
+            view.setBackground(getResources().getDrawable(R.drawable.ic_action_stop));
         }
     }
 

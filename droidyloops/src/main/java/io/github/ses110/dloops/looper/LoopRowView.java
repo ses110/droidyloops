@@ -85,7 +85,8 @@ public class LoopRowView extends LinearLayout
                 @Override
                 public void onClick(View v) {
                     LoopRowView parent = (LoopRowView) v.getParent().getParent();
-                    parent.handleTouch(j);
+                    boolean on = ((ToggleButton) v).isChecked();
+                    parent.handleTouch(j, on);
                 }
             });
         }
@@ -119,10 +120,11 @@ public class LoopRowView extends LinearLayout
         }
     }
 
-    public void handleTouch(int cell)
+    public void handleTouch(int cell, boolean on)
     {
         loop.touch(cell, row);
-        mActivity.previewSound(loop.getSPID(row));
+        if(on)
+            mActivity.previewSound(loop.getSPID(row));
         Log.v("found touch", Integer.toString(row) + ", " + Integer.toString(cell));
     }
 }
