@@ -1,6 +1,7 @@
 package io.github.ses110.dloops.arranger;
 
 import android.app.Activity;
+import android.content.ClipData;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -197,17 +198,49 @@ public class ArrangerFragment extends Fragment implements OnLongClickListener, T
             getChannel.addLoop(index, dummyloop);
 
             ((MainActivity)this.getActivity()).newLoopClick(view);
+//            view.setOnDragListener(this);
 
-            //Get the view's parent, get the row and find the channel to which it belongs
             mTrackGridView.createLoopCell(view);
+            return true;
         }
         else
         if (view instanceof TrackView) {
             //Clicked on a loop
+            Log.v("Arranger", "Clicked on a trackview");
+            final ClipData data = ClipData.newPlainText("cellID", view.getId() + "");
+            View.DragShadowBuilder pieceDragShadowBuilder = new View.DragShadowBuilder(view);
+            view.startDrag(data, pieceDragShadowBuilder, view, 0);
+            return true;
+        }
+        return false;
+    }
 
+    /***
+     *   Handle onDrag changes for TrackViews
+     */
+    @Override
+    public boolean onDrag(View view, DragEvent event) {
+        //TODO: Finish handling drag-drop
+        switch (event.getAction()) {
+            case DragEvent.ACTION_DRAG_STARTED:
+                Log.v("DragDrop","Drag Started");
+                break;
+            case DragEvent.ACTION_DRAG_ENTERED:
+                Log.v("DragDrop","Drag ENTERED");
+                break;
+            case DragEvent.ACTION_DRAG_EXITED:
+                Log.v("DragDrop","Drag EXITED");
+                break;
+            case DragEvent.ACTION_DROP:
+                //TODO: Check where it was dropped, whether it was valid, and if so, replace it with the new view
+                Log.v("DragDrop","Drag ACTION DROP");
+                View v = (View)event.getLocalState();
+                ViewGroup owner = (ViewGroup) v.getParent();
+                break;
         }
         return true;
     }
+
 
     /*
     *       Handle Channel label EditText changes
@@ -233,27 +266,6 @@ public class ArrangerFragment extends Fragment implements OnLongClickListener, T
         return false;
     }
 
-    /***
-     *   Handle onDrag changes for TrackViews
-     */
-    @Override
-    public boolean onDrag(View view, DragEvent event) {
-        switch (event.getAction()) {
-            case DragEvent.ACTION_DRAG_STARTED:
-                Log.v("DragDrop","Drag Started");
-                break;
-            case DragEvent.ACTION_DRAG_ENTERED:
-                Log.v("DragDrop","Drag ENTERED");
-                break;
-            case DragEvent.ACTION_DRAG_EXITED:
-                Log.v("DragDrop","Drag EXITED");
-                break;
-            case DragEvent.ACTION_DROP:
-                Log.v("DragDrop","Drag ACTION DROP");
-                break;
-        }
-        return true;
-    }
 
     /**
      * This interface must be implemented by activities that contain this

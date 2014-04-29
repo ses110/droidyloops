@@ -238,9 +238,10 @@ public class TrackGrid extends RelativeLayout {
         c.setChannel((1+(((parent.getId() / 100)-1) % 4)));
         Log.d("SetChannel", " to " + (1+(((parent.getId() / 100)-1) % 4)));
         c.invalidate();
+        c.setOnDragListener(((MainActivity) this.mContext).arranger);
+        c.setOnLongClickListener(((MainActivity) this.mContext).arranger);
         c.setLayoutParams(saveParams);
 
-        c.setOnDragListener(((MainActivity) this.mContext).arranger);
 
         parent.addView(c, index);
     }
