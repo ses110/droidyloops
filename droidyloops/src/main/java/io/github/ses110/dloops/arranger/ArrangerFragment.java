@@ -124,9 +124,24 @@ public class ArrangerFragment extends Fragment implements OnLongClickListener, T
                 return true;
             case R.id.playSong:
                 // TODO: play the song
+                ((MainActivity)getActivity()).playArranger(mChannels);
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public int[] curSamples(int channelIndex, int LoopIndex, int sampleIndex) {
+        int[] result = null;
+
+        Channel curChannel = mChannels.get(channelIndex);
+
+        //Go through channel's loops
+        for (int i = 0; i < curChannel.loops.size(); i++) {
+                //Loop curLoop = curChannel.curSamples(LoopIndex, sampleIndex);
+
+        }
+
+        return result;
     }
 
     private void createNewChannel(TableRow row) {
@@ -252,6 +267,7 @@ public class ArrangerFragment extends Fragment implements OnLongClickListener, T
                 Log.v("DragDrop","Drag ACTION DROP");
                 View v = (View)event.getLocalState();
                 ViewGroup owner = (ViewGroup) v.getParent();
+                Log.v("DragDrop", "Dropped on top of: " + v.getId());
                 break;
         }
         return true;

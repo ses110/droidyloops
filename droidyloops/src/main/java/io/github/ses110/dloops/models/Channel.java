@@ -53,7 +53,7 @@ public class Channel implements Saveable
         if(curLoop != null) {
             result = curLoop.curSamples(loopOffset);
         }
-        return result;   
+        return result;
     }
     @Override
     public String toString() {
