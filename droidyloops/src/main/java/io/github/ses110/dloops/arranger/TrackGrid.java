@@ -7,11 +7,9 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.Gravity;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnLongClickListener;
-import android.view.View.OnTouchListener;
 import android.view.View.OnDragListener;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
@@ -25,12 +23,13 @@ import android.widget.TableRow;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.github.ses110.dloops.MainActivity;
 import io.github.ses110.dloops.R;
 
 /**
  * Created by sergioescoto on 4/26/14.
  */
-public class TrackGrid extends RelativeLayout implements OnTouchListener, OnLongClickListener, OnDragListener {
+public class TrackGrid extends RelativeLayout implements OnLongClickListener, OnDragListener {
     private static final String TAG = "TrackGrid";
 
     private int mMaxColumns = 12;
@@ -45,6 +44,7 @@ public class TrackGrid extends RelativeLayout implements OnTouchListener, OnLong
 
     Context mContext;
 
+
     private final int mColsOnScreen = 8;
 
     private TableRow.LayoutParams mCellParams;
@@ -52,8 +52,6 @@ public class TrackGrid extends RelativeLayout implements OnTouchListener, OnLong
     private TableRow.LayoutParams mLabelParams;
 
     private TableRow.LayoutParams mRowParams;
-
-
 
     public TrackGrid(Context context) {
         super(context);
@@ -65,19 +63,20 @@ public class TrackGrid extends RelativeLayout implements OnTouchListener, OnLong
         this.init(context);
     }
     public TrackGrid(Context context, AttributeSet attrs, int defStyle) {
-        super(context,attrs,defStyle);
+        super(context, attrs, defStyle);
         this.init(context);
     }
+
 
     private final void init(Context context) {
         this.mContext = context;
 
-        this.setOnDragListener(this);
+        //Change this to views, emptyCells
+//        this.setOnDragListener(this);
 
-        List<String> mRowItems = this.createCellList(mContext, mMaxRows);
+        List<String> rowItems = this.createCellList(mContext, mMaxRows);
 
-
-        // Get the screen's width. We want to make sure at least 8 columns show up on screen. Add +1 to compensate for labels
+        // Get the screen's width. We want to make sure at least 8 columns show up on screen. Add +1 to compensate for track labels
         DisplayMetrics dm = new DisplayMetrics();
         ((Activity) mContext).getWindowManager().getDefaultDisplay().getMetrics(dm);
         int cellSize = dm.widthPixels;
@@ -88,9 +87,9 @@ public class TrackGrid extends RelativeLayout implements OnTouchListener, OnLong
         mLabelParams = new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
         mRowParams = new TableRow.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, 1f);
 
-        this.initializeTables();
+        this.setupTables();
 
-        this.generateRows(mRowItems);
+        this.generateRows(rowItems);
 
     }
     private List<String> createCellList(Context context, int rows) {
@@ -105,7 +104,7 @@ public class TrackGrid extends RelativeLayout implements OnTouchListener, OnLong
     }
 
 
-    private void initializeTables() {
+    private void setupTables() {
         TableLayout.LayoutParams tableParams = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         mTableTracks = new TableLayout(this.mContext);
         mTableTracks.setLayoutParams(tableParams);
@@ -126,8 +125,12 @@ public class TrackGrid extends RelativeLayout implements OnTouchListener, OnLong
 
     private void generateRows(List<String> rowItems) {
         for (int i = 0; i < rowItems.size(); i++) {
+
+            // Make sure row IDs are multiples of 100. So 1st row will be 100, row 2 will be 200, and so on.
+            // mColLimit default is set to 100, an upper bound on the number of columns.
+            // The issue is when setting IDs of the elements inside a row, if we go over mColLimit we lose those clean ids for each row
             int rowId = (mColLimit - mMaxColumns % mColLimit) + mMaxColumns;
-            Log.v("GenerateID", "From mMaxColumns: " + mMaxColumns + " to rowId: " + rowId);
+
             rowId = rowId * (i+1);
 
             TableRow row_track = this.addNewRow(rowItems.get(i), rowId);
@@ -158,6 +161,8 @@ public class TrackGrid extends RelativeLayout implements OnTouchListener, OnLong
         trackLabel.setBackground(getResources().getDrawable(R.drawable.track_label));
         trackLabel.setGravity(Gravity.CENTER);
         trackLabel.setText(label);
+        trackLabel.setOnEditorActionListener(((MainActivity) this.mContext).arranger);
+
         return trackLabel;
     }
 
@@ -167,11 +172,50 @@ public class TrackGrid extends RelativeLayout implements OnTouchListener, OnLong
         emptyCell.setLayoutParams(mCellParams);
         emptyCell.setBackground(getResources().getDrawable(R.drawable.empty_cell));
 
-        emptyCell.setOnTouchListener(this);
-        emptyCell.setOnLongClickListener(this);
+        /*
+        *   Setup cell event listeners
+        *
+        * */
+
+//        emptyCell.setOnTouchListener((OnTouchListener) mContext);
+
+        emptyCell.setOnLongClickListener(((MainActivity) this.mContext).arranger);
 
         return emptyCell;
     }
+
+    public void addNewLoopCell(View view) {
+        Log.d("CELL","Pressed on cell " + view.getId());
+        ViewGroup parent = (ViewGroup) view.getParent();
+        Log.d("CELL parent", "Cell parent id: " + parent.getId());
+        int index = parent.indexOfChild(view);
+        ViewGroup.LayoutParams saveParams = view.getLayoutParams();
+        parent.removeView(view);
+
+        TrackView c = new TrackView(view.getContext());
+        c.setId(view.getId());
+        c.setChannel((1+(((parent.getId() / 100)-1) % 4)));
+        Log.d("SetChannel", " to " + (1+(((parent.getId() / 100)-1) % 4)));
+        c.invalidate();
+        c.setLayoutParams(saveParams);
+
+        parent.addView(c, index);
+    }
+
+    /*
+    *  Return a 2D array of the ids
+    * */
+    public ArrayList<TableRow> returnRows() {
+        ArrayList<TableRow> listRows = new ArrayList<TableRow>();
+
+        int numRows = mTableTracks.getChildCount();
+
+        for (int i = 0; i < numRows; i++) {
+            listRows.add((TableRow) mTableTracks.getChildAt(i));
+        }
+        return listRows;
+    }
+
 
     @Override
     public boolean onLongClick(View view) {
@@ -192,24 +236,23 @@ public class TrackGrid extends RelativeLayout implements OnTouchListener, OnLong
         parent.addView(c, index);
         return true;
     }
-
-
-    @Override
-    public boolean onTouch(View view, MotionEvent event) {
-        int action = event.getAction();
-        switch (action & MotionEvent.ACTION_MASK) {
-            case MotionEvent.ACTION_MOVE:
-                Log.v("View Press", "MOVED");
-                break;
-            case MotionEvent.ACTION_DOWN:
-                Log.v("View Press", "DOWN");
-                break;
-            case MotionEvent.ACTION_UP:
-                Log.v("View Press", "UP!");
-                break;
-        }
-        return false;
-    }
+//
+//    @Override
+//    public boolean onTouch(View view, MotionEvent event) {
+//        int action = event.getAction();
+//        switch (action & MotionEvent.ACTION_MASK) {
+//            case MotionEvent.ACTION_MOVE:
+//                Log.v("View Press", "MOVED");
+//                break;
+//            case MotionEvent.ACTION_DOWN:
+//                Log.v("View Press", "DOWN");
+//                break;
+//            case MotionEvent.ACTION_UP:
+//                Log.v("View Press", "UP!");
+//                break;
+//        }
+//        return false;
+//    }
 
     @Override
     public boolean onDrag(View view, DragEvent Event) {

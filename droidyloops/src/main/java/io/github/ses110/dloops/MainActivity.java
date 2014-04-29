@@ -36,17 +36,18 @@ import io.github.ses110.dloops.utils.FileHandler;
 
 
 public class MainActivity extends FragmentActivity implements ArrangerFragment.ArrangerFragmentListener, LooperFragment.LooperFragmentListener,
-        MainMenuFragment.OnFragmentInteractionListener,
+        MainMenuFragment.onMainMenuFragmentListener,
         PickerFragment.PickerFragmentListener
 {
+
     /**
      * LOOPER VARIABLES
      */
     // TODO: move these to LooperFragment
     private int rowCount;
-    private static LooperFragment looper;
-    private static PickerFragment picker;
-    private static ArrangerFragment arranger;
+    public static LooperFragment looper;
+    public static PickerFragment picker;
+    public static ArrangerFragment arranger;
 
     private int mBeatTime = fromBpmToBeat(120);
     private Loop curLoop;
@@ -70,8 +71,8 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
      * ACTIVITY VARIABLES
      */
 
-    private FragmentManager fm;
-    File dataDir;
+    private FragmentManager mFragMan;
+    File mDataDir;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,35 +97,35 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
         mFH = new FileHandler(this);
 
 
-        /*
-        *   Set up Loop
-        * */
+        // Set up Loop
+
         mLoopRows = new ArrayList<LoopRowView>();
 
-
-        /*
-        *   Set up Fragments and anything related
-        *
-        * */
-        if(fm == null) {
-            fm = getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fm.beginTransaction();
+        // Fragment setup: start MainMenuFragment
+        if(mFragMan == null) {
+            mFragMan = getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = mFragMan.beginTransaction();
             MainMenuFragment menuFragment = MainMenuFragment.newInstance("", "");
             fragmentTransaction.add(R.id.mainContainer, menuFragment);
             fragmentTransaction.commit();
         }
 
-        fm.addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+        mFragMan.addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
             @Override
             public void onBackStackChanged() {
-                Log.v("BACKSTACK", "Changed");
-
+                Log.v("BACKSTACK", "FragmentManager backstack changed.");
             }
         });
 
         // Do first time setup
-        dataDir = getFilesDir();
-        File setupFile = new File(dataDir, "setup.txt");
+        this.doSetupFile();
+
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+    }
+    private void doSetupFile() {
+        mDataDir = getFilesDir();
+        File setupFile = new File(mDataDir, "setup.txt");
         if(!setupFile.exists())
         {
             Log.v("SETUP", "First time run detected, copying files");
@@ -145,12 +146,11 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
         else
         {
             Log.v("SETUP", "Setup file found");
-            if(!new File(new File(dataDir, "samples"), "vocals_male2.wav").exists())
+            if(!new File(new File(mDataDir, "samples"), "vocals_male2.wav").exists())
                 Log.e("SETUP", "Default sample not found");
         }
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-
     }
+
 
     private float getVolume() {
         float maxVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
@@ -181,7 +181,6 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
@@ -233,18 +232,18 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
         mPlaying = false;
         picker = PickerFragment.newInstance(FileHandler.FileType.SAMPLES);
         picker.attachSoundPool(this.mSndPool);
-        FragmentTransaction ft = fm.beginTransaction();
+        FragmentTransaction ft = mFragMan.beginTransaction();
         ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
-        ft.hide(fm.findFragmentById(R.id.mainContainer));
+        ft.hide(mFragMan.findFragmentById(R.id.mainContainer));
         ft.add(R.id.mainContainer, picker);
         ft.addToBackStack(null);
         ft.commit();
 
     }
     public void addLoopRow(Sample s) {
-        fm.popBackStack();
-        fm.executePendingTransactions();
-        looper = (LooperFragment) fm.findFragmentById(R.id.mainContainer);
+        mFragMan.popBackStack();
+        mFragMan.executePendingTransactions();
+        looper = (LooperFragment) mFragMan.findFragmentById(R.id.mainContainer);
         ViewGroup listView = (ViewGroup) looper.getView().findViewById(R.id.loopRowList);
         LoopRowView child = new LoopRowView(this);
         if(curLoop == null)
@@ -371,7 +370,11 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
     }
 
     @Override
-    public void onFragmentInteraction(Uri uri) {
+    public void createNewLoop(Uri uri) {
+
+    }
+    @Override
+    public void onMainMenuInteraction(Uri uri) {
 
     }
 
@@ -380,28 +383,29 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
      */
 
     public void startClick(View view) {
-        FragmentTransaction fragmentTransaction = fm.beginTransaction();
+        FragmentTransaction fragmentTransaction = mFragMan.beginTransaction();
         // TODO: initialise looper with pre-existing data if any
         looper = LooperFragment.newInstance("pl", "pl");
         fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
-        fragmentTransaction.remove(fm.findFragmentById(R.id.mainContainer));
+        fragmentTransaction.remove(mFragMan.findFragmentById(R.id.mainContainer));
         fragmentTransaction.add(R.id.mainContainer, looper);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
 
-    public void loadClick(View view)
-    {
+    public void loadClick(View view) {
 
     }
     public void arrangeClick(View view) {
-        FragmentTransaction fragmentTransaction = fm.beginTransaction();
+        FragmentTransaction fragmentTransaction = mFragMan.beginTransaction();
         // TODO: initialise arranger with pre-existing data if any
         arranger = ArrangerFragment.newInstance("ar", "ar");
         fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
-        fragmentTransaction.remove(fm.findFragmentById(R.id.mainContainer));
+        fragmentTransaction.remove(mFragMan.findFragmentById(R.id.mainContainer));
         fragmentTransaction.add(R.id.mainContainer, arranger);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
+
+
 }

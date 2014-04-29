@@ -7,19 +7,18 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link MainMenuFragment.OnFragmentInteractionListener} interface
+ * {@link io.github.ses110.dloops.MainMenuFragment.onMainMenuFragmentListener} interface
  * to handle interaction events.
  * Use the {@link MainMenuFragment#newInstance} factory method to
  * create an instance of this fragment.
  *
  */
-public class MainMenuFragment extends Fragment {
+public class MainMenuFragment extends Fragment  implements View.OnClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -29,7 +28,7 @@ public class MainMenuFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private OnFragmentInteractionListener mListener;
+    private onMainMenuFragmentListener mListener;
 
     /**
      * Use this factory method to create a new instance of
@@ -59,20 +58,26 @@ public class MainMenuFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_main_menu, container, false);
+        View v = inflater.inflate(R.layout.fragment_main_menu, container, false);
+
+        //      Set the button onClick listeners. Method is implemented at the bottom.
+        (v.findViewById(R.id.createButton)).setOnClickListener(this);
+        (v.findViewById(R.id.loadButton)).setOnClickListener(this);
+        (v.findViewById(R.id.collaborateButton)).setOnClickListener(this);
+
+        return v;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+            mListener.onMainMenuInteraction(uri);
         }
     }
 
@@ -80,7 +85,7 @@ public class MainMenuFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mListener = (OnFragmentInteractionListener) activity;
+            mListener = (onMainMenuFragmentListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement ArrangerFragmentListener");
@@ -93,6 +98,22 @@ public class MainMenuFragment extends Fragment {
         mListener = null;
     }
 
+    @Override
+    public void onClick(View view) {
+        switch(view.getId()) {
+            case R.id.createButton:
+                ((MainActivity)getActivity()).arrangeClick(view);
+                break;
+            case R.id.loadButton:
+                ((MainActivity)getActivity()).loadClick(view);
+                break;
+            case R.id.collaborateButton:
+                //((MainActivity)getActivity()).arrangeClick(view);
+                break;
+
+        }
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -103,9 +124,9 @@ public class MainMenuFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
+    public interface onMainMenuFragmentListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
+        public void onMainMenuInteraction(Uri uri);
     }
 
 }

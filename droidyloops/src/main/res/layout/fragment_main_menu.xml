@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="io.github.ses110.dloops.MainMenuFragment"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/background_dark">
 
     <TextView
         android:layout_width="wrap_content"
@@ -18,37 +19,37 @@
         android:paddingTop="30dp" />
 
     <Button
+        android:id="@+id/createButton"
         android:layout_width="127dp"
         android:layout_height="wrap_content"
         android:text="Looper"
-        android:id="@+id/startButton"
         android:layout_gravity="center_horizontal"
-        android:onClick="startClick"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
-        android:layout_marginBottom="10dp" />
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/button_blue" />
 
     <Button
+        android:id="@+id/loadButton"
         android:layout_width="127dp"
         android:layout_height="wrap_content"
         android:text="Load"
-        android:id="@+id/loadButton"
         android:layout_gravity="center_horizontal"
-        android:onClick="loadClick"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
-        android:layout_marginBottom="10dp" />
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/button_orange" />
 
     <Button
+        android:id="@+id/collaborateButton"
         android:layout_width="127dp"
         android:layout_height="wrap_content"
         android:text="Arranger"
-        android:id="@+id/button"
         android:layout_gravity="center_horizontal"
-        android:onClick="arrangeClick"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
-        android:layout_marginBottom="10dp" />
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/button_red" />
 
 
 </LinearLayout>

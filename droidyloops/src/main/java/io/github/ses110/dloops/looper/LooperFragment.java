@@ -132,7 +132,6 @@ public class LooperFragment extends Fragment implements OnClickListener{
             case R.id.play_button:
                 ((MainActivity)getActivity()).startPlay(view);
                 break;
-
         }
     }
 
