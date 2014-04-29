@@ -39,6 +39,8 @@ public class LooperFragment extends Fragment implements OnClickListener{
 
     //TODO: make this thing restore everything on resume
     private LooperFragmentListener mListener;
+    private int channel;
+    private int cell;
 
     /**
      * Use this factory method to create a new instance of
@@ -69,6 +71,12 @@ public class LooperFragment extends Fragment implements OnClickListener{
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
         Log.v(tag, "onCreate");
+    }
+
+    public void setChannel(int channel, int cell)
+    {
+        this.channel = channel;
+        this.cell = cell;
     }
 
     @Override
@@ -133,7 +141,7 @@ public class LooperFragment extends Fragment implements OnClickListener{
                 break;
             case R.id.save_button:
                 try {
-                    ((MainActivity)getActivity()).saveLoop(view);
+                    ((MainActivity)getActivity()).saveLoop(channel, cell);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

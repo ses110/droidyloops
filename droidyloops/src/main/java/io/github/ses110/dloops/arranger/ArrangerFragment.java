@@ -58,6 +58,7 @@ public class ArrangerFragment extends Fragment implements OnLongClickListener, T
     private ArrayList<Channel> mChannels;
 
     private HashMap<TableRow, Channel> mRowToChannel;
+    View curView;
 
     /**
      * Use this factory method to create a new instance of
@@ -186,21 +187,18 @@ public class ArrangerFragment extends Fragment implements OnLongClickListener, T
     public boolean onLongClick(View view) {
         if(view instanceof ImageView) {
             //Clicked on an empty cell
+            curView = view;
             TableRow parentRow = (TableRow)view.getParent();
             Channel getChannel = mRowToChannel.get(parentRow);
             int index = mTrackGridView.getCellIdForChannel(view);
 
             //TODO: call Looper fragment. On return, get a loop and assign it to the channel
             Log.v(TAG, "ID normalized: " + index);
-            Loop dummyloop = null;
 
             Log.v(TAG, "Channel's name is  " + getChannel.name);
-            getChannel.addLoop(index, dummyloop);
 
             ((MainActivity)this.getActivity()).newLoopClick(view);
 //            view.setOnDragListener(this);
-
-            mTrackGridView.createLoopCell(view);
             return true;
         }
         else
@@ -213,6 +211,14 @@ public class ArrangerFragment extends Fragment implements OnLongClickListener, T
             return true;
         }
         return false;
+    }
+
+    public void addLoop(int channel, int cell, Loop loop)
+    {
+        Channel curChannel = mChannels.get(channel);
+        curChannel.addLoop(cell, loop);
+        mTrackGridView.createLoopCell(curView);
+        curView = null;
     }
 
     /***
