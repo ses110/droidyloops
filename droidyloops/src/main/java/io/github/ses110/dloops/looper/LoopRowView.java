@@ -104,14 +104,6 @@ public class LoopRowView extends LinearLayout
         sampleName.setText(name);
     }
 
-    public void highlight(int index) {
-        for (ToggleButton button : cells)
-        {
-            button.setEnabled(true);
-        }
-        cells[index].setEnabled(false);
-    }
-
     public void reset()
     {
         for (ToggleButton button : cells)

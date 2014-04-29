@@ -346,17 +346,6 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
                             playSound(id);
                     }
 
-
-                    MainActivity.this.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run()
-                        {
-                            for(LoopRowView row : mLoopRows)
-                            {
-                                row.highlight(mIndex);
-                            }
-                        }
-                    });
                     mIndex = (mIndex + 1) % Loop.maxBeats;
                     try {
                         Thread.sleep(mBeatTime - (System.currentTimeMillis()-millis));
