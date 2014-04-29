@@ -383,9 +383,11 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
         if(mPlaying) {
             mPlaying = false;
             view.setBackground(getResources().getDrawable(R.drawable.ic_action_play));
+            ((ViewGroup) view.getParent()).removeView(mProgressBar);
         }
         else {
             this.playLoop();
+            ((ViewGroup) view.getParent()).addView(mProgressBar);
             view.setBackground(getResources().getDrawable(R.drawable.ic_action_stop));
         }
     }
