@@ -247,10 +247,9 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
         fragmentTransaction.commit();
     }
 
-    //Handle transition between arranger to looper. Saves arranger view
+    //Handle transition between arranger to looper, but with a preset loop
     public void loadLoopClick(Loop init) {
         FragmentTransaction fragmentTransaction = mFragMan.beginTransaction();
-        // TODO: initialise looper with pre-existing data if any
         looper = LooperFragment.newInstance("pl", "pl");
         boolean setup = false;
         if(init == null)
