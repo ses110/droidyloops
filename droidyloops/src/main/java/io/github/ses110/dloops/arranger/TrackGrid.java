@@ -179,6 +179,7 @@ public class TrackGrid extends RelativeLayout {
         trackLabel.setGravity(Gravity.CENTER);
         trackLabel.setText(label);
         trackLabel.setOnEditorActionListener(((MainActivity) this.mContext).arranger);
+        trackLabel.setOnLongClickListener(((MainActivity) this.mContext).arranger);
 
         return trackLabel;
     }

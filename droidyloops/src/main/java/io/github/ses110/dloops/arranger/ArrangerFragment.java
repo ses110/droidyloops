@@ -212,6 +212,11 @@ public class ArrangerFragment extends Fragment implements OnLongClickListener, T
             view.startDrag(data, pieceDragShadowBuilder, view, 0);
             return true;
         }
+        else
+        if (view instanceof TableRow) {
+            Log.v("Arranger", "Long clicked a whole row. Drag a channel functionality?");
+            return true;
+        }
         return false;
     }
 
@@ -232,7 +237,10 @@ public class ArrangerFragment extends Fragment implements OnLongClickListener, T
                 Log.v("DragDrop","Drag EXITED");
                 break;
             case DragEvent.ACTION_DROP:
-                //TODO: Check where it was dropped, whether it was valid, and if so, replace it with the new view
+                //TODO: Handle three cases:
+                //              It was dropped on itself, do nothing.
+                //              It was dropped on another TrackView: do nothing? or replace?
+                //              It was dropped on an empty cell: replace empty cell with new TrackView, and delete the old trackView and replace with empty cell
                 Log.v("DragDrop","Drag ACTION DROP");
                 View v = (View)event.getLocalState();
                 ViewGroup owner = (ViewGroup) v.getParent();
