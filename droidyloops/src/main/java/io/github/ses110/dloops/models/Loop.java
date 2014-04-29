@@ -19,7 +19,7 @@ import io.github.ses110.dloops.utils.Saveable;
  */
 public class Loop implements Saveable
 {
-    private ArrayList<Sample> samples;
+    public ArrayList<Sample> samples;
     private String name;
     public ArrayList<boolean[]> cells;
     public final static int maxBeats = 8;
