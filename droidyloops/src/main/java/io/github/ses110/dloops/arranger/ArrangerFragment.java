@@ -130,20 +130,6 @@ public class ArrangerFragment extends Fragment implements View.OnClickListener, 
         }
     }
 
-    public int[] curSamples(int channelIndex, int LoopIndex, int sampleIndex) {
-        int[] result = null;
-
-        Channel curChannel = mChannels.get(channelIndex);
-
-        //Go through channel's loops
-        for (int i = 0; i < curChannel.loops.size(); i++) {
-                //Loop curLoop = curChannel.curSamples(LoopIndex, sampleIndex);
-
-        }
-
-        return result;
-    }
-
     private void createNewChannel(TableRow row) {
         EditText labelCell = (EditText) row.getChildAt(0);
 
@@ -215,7 +201,7 @@ public class ArrangerFragment extends Fragment implements View.OnClickListener, 
 
             Log.v(TAG, "Channel's name is  " + getChannel.name);
 
-            ((MainActivity)this.getActivity()).newLoopClick(view);
+            ((MainActivity)this.getActivity()).newLoopClick(mChannels.indexOf(getChannel), index);
             return true;
         }
         else

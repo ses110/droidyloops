@@ -29,6 +29,7 @@ import io.github.ses110.dloops.arranger.ArrangerFragment;
 import io.github.ses110.dloops.looper.LoopRowView;
 import io.github.ses110.dloops.looper.LooperFragment;
 import io.github.ses110.dloops.looper.RecordFragment;
+import io.github.ses110.dloops.models.Channel;
 import io.github.ses110.dloops.models.Loop;
 import io.github.ses110.dloops.models.Sample;
 import io.github.ses110.dloops.models.Song;
@@ -234,10 +235,11 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
 
 
     //Handle transition between arranger to looper. Saves arranger view
-    public void newLoopClick(View view) {
+    public void newLoopClick(int channel, int cell) {
         FragmentTransaction fragmentTransaction = mFragMan.beginTransaction();
         // TODO: initialise looper with pre-existing data if any
         looper = LooperFragment.newInstance("pl", "pl");
+        looper.setChannel(channel, cell);
         curLoop = new Loop();
         fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
         fragmentTransaction.hide(arranger);
@@ -330,6 +332,7 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
     * */
     public void saveLoop(int channel, int cell) throws JSONException {
         Log.v("LOOPER", "Save loop");
+        startPlay(null);
         if(curLoop != null) {
             Log.v("LOOPER", curLoop.toJSON().toString());
             arranger.addLoop(channel, cell, curLoop);

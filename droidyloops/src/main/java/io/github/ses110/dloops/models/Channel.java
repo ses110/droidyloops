@@ -1,5 +1,7 @@
 package io.github.ses110.dloops.models;
 
+import android.util.Log;
+
 import org.json.JSONException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -40,7 +42,8 @@ public class Channel implements Saveable
 
     public void addLoop(int x, Loop loop)
     {
-        loops.add(x, loop);
+        Log.v("addLoop", Integer.toString(x));
+        loops.set(x, loop);
     }
     public void removeLoop(int x) {
         loops.remove(x);
