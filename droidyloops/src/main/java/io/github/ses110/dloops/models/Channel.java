@@ -1,5 +1,7 @@
 package io.github.ses110.dloops.models;
 
+import android.util.Log;
+
 import org.json.JSONException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -40,7 +42,8 @@ public class Channel implements Saveable
 
     public void addLoop(int x, Loop loop)
     {
-        loops.add(x, loop);
+        Log.v("addLoop", Integer.toString(x));
+        loops.set(x, loop);
     }
 
     public Loop getLoop(int x) {
@@ -64,6 +67,18 @@ public class Channel implements Saveable
             result = curLoop.curSamples(loopOffset);
         }
         return result;
+    }
+
+    // Get the index of the furthest loop plus 1
+    public int length()
+    {
+        int max = 0;
+        for (int i = 0; i < loops.size(); i++)
+        {
+            if(loops.get(i) != null)
+                max = i;
+        }
+        return max + 1;
     }
     @Override
     public String toString() {
