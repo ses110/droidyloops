@@ -314,8 +314,11 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
     }
     public void addLoopRow(Sample s) {
         mFragMan.popBackStack("loop", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        FragmentTransaction ft = mFragMan.beginTransaction();
+        ft.remove(picker);
+        ft.commit();
         mFragMan.executePendingTransactions();
-        looper = (LooperFragment) mFragMan.findFragmentById(R.id.mainContainer);
+        //looper = (LooperFragment) mFragMan.findFragmentById(R.id.mainContainer);
         ViewGroup listView = (ViewGroup) looper.getView().findViewById(R.id.loopRowList);
         LoopRowView child = new LoopRowView(this);
         if(curLoop == null)
