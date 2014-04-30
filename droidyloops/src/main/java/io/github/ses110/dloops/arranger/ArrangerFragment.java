@@ -244,6 +244,13 @@ public class ArrangerFragment extends Fragment implements View.OnClickListener, 
         curView = null;
     }
 
+
+    @Override
+    public void onClick(View view) {
+        Log.v("Arranger", "Detected a click");
+    }
+
+
     /***
      *   Handle onDrag changes for TrackViews
      */
@@ -274,7 +281,6 @@ public class ArrangerFragment extends Fragment implements View.OnClickListener, 
         return true;
     }
 
-
     /*
     *       Handle Channel label EditText changes
     * */
@@ -297,11 +303,6 @@ public class ArrangerFragment extends Fragment implements View.OnClickListener, 
             return false;
         }
         return false;
-    }
-
-    @Override
-    public void onClick(View view) {
-        
     }
 
 
