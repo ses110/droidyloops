@@ -478,6 +478,13 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
                         }
                     }
                 }
+                MainActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run()
+                    {
+                        MainActivity.this.onPlayArranger();
+                    }
+                });
             }
 
         };
