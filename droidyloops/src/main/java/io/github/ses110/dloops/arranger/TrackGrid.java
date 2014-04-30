@@ -53,18 +53,21 @@ public class TrackGrid extends RelativeLayout {
 
     public TrackGrid(Context context) {
         super(context);
-        this.init(context);
+        if(!this.isInEditMode())
+            this.init(context);
     }
 
     public TrackGrid(Context context, AttributeSet attrs) {
         super(context,attrs);
         this.setFromXML(context, attrs);
-        this.init(context);
+        if(!this.isInEditMode())
+            this.init(context);
     }
     public TrackGrid(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         this.setFromXML(context, attrs);
-        this.init(context);
+        if(!this.isInEditMode())
+            this.init(context);
     }
 
     // Obtain row/col information from XML attributes
@@ -90,7 +93,6 @@ public class TrackGrid extends RelativeLayout {
 
         //Change this to views, emptyCells
 //        this.setOnDragListener(this);
-
         List<String> rowItems = this.createCellList(mContext, mRowSpan);
 
         // Get the screen's width. We want to make sure at least 8 columns show up on screen. Add +1 to compensate for track labels

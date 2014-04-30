@@ -84,6 +84,7 @@ public class FileHandler
         FileOutputStream out;
 
         file = new File(dir, "dir.json");
+        file.delete();
         out = new FileOutputStream(file);
         out.write(array.toString().getBytes());
         Log.v("Writing " + fileType.toString(), "Got the JSON" + array.toString());

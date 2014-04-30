@@ -196,6 +196,11 @@ public class PickerFragment extends ListFragment {
             ((MainActivity)getActivity()).addLoopRow( (Sample) mCurSaveable);
             return true;
         }
+        else if (item.getItemId() == R.id.addSaveable)
+        {
+            ((MainActivity) getActivity()).startRecorder();
+            return true;
+        }
         else
             return false;
     }

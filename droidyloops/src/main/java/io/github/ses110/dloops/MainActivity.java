@@ -31,6 +31,7 @@ import java.util.Arrays;
 import io.github.ses110.dloops.arranger.ArrangerFragment;
 import io.github.ses110.dloops.looper.LoopRowView;
 import io.github.ses110.dloops.looper.LooperFragment;
+import io.github.ses110.dloops.looper.RecordFragment;
 import io.github.ses110.dloops.models.Loop;
 import io.github.ses110.dloops.models.Sample;
 import io.github.ses110.dloops.models.Song;
@@ -88,6 +89,8 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
     private OnBPMListener mOnBPMListener;
 
     public ProgressBarView mProgressBar;
+
+
 
     public interface OnBPMListener {
 
@@ -414,6 +417,18 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
     /**
      *  PICKER FUNCTIONS
      */
+
+    public void startRecorder()
+    {
+        RecordFragment record = new RecordFragment();
+        FragmentTransaction ft = mFragMan.beginTransaction();
+        ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
+        ft.hide(mFragMan.findFragmentById(R.id.mainContainer));
+        ft.add(R.id.mainContainer, record);
+        ft.addToBackStack(null);
+        ft.commit();
+    }
+
     public void closeDialog(int spID) {
         mProgDialog.dismiss();
         playSound(spID);
