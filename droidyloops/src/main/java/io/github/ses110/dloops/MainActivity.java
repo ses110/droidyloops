@@ -448,6 +448,12 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
             playArranger();
         }
     }
+
+    public void stopSong()
+    {
+        arrangerPlay = false;
+        arranger.mMenu.findItem(R.id.playSong).setIcon(R.drawable.ic_action_play);
+    }
     public void playArranger() {
         final int length = arranger.length();
         Log.v("playArranger got length", Integer.toString(length));
@@ -485,13 +491,12 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
                     @Override
                     public void run()
                     {
-                        MainActivity.this.onPlayArranger();
+                        MainActivity.this.stopSong();
                     }
                 });
             }
 
         };
-        mPlaying = true;
         Thread thandler = new Thread(mRunnable);
         thandler.start();
     }
