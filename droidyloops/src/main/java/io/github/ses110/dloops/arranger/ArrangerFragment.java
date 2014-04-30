@@ -113,8 +113,8 @@ public class ArrangerFragment extends Fragment implements View.OnClickListener, 
     }
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
         inflater.inflate(R.menu.arranger, menu);
-
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

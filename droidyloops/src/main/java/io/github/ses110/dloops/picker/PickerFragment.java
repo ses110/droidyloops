@@ -185,6 +185,7 @@ public class PickerFragment extends ListFragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         this.menu = menu;
+        menu.clear();
         inflater.inflate(R.menu.picker, menu);
     }
 
