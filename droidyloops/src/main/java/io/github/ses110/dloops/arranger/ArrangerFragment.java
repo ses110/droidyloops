@@ -38,7 +38,7 @@ import io.github.ses110.dloops.models.Loop;
  * create an instance of this fragment.
  *
  */
-public class ArrangerFragment extends Fragment implements OnLongClickListener, TextView.OnEditorActionListener, View.OnDragListener {
+public class ArrangerFragment extends Fragment implements View.OnClickListener, OnLongClickListener, TextView.OnEditorActionListener, View.OnDragListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -200,6 +200,7 @@ public class ArrangerFragment extends Fragment implements OnLongClickListener, T
         mTrackGridView = null;
     }
 
+
     @Override
     public boolean onLongClick(View view) {
         if(view instanceof ImageView) {
@@ -296,6 +297,11 @@ public class ArrangerFragment extends Fragment implements OnLongClickListener, T
             return false;
         }
         return false;
+    }
+
+    @Override
+    public void onClick(View view) {
+        
     }
 
 
