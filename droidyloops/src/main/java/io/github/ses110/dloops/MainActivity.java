@@ -313,8 +313,11 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
     }
     public void addLoopRow(Sample s) {
         mFragMan.popBackStack("loop", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        FragmentTransaction ft = mFragMan.beginTransaction();
+        ft.remove(picker);
+        ft.commit();
         mFragMan.executePendingTransactions();
-        looper = (LooperFragment) mFragMan.findFragmentById(R.id.mainContainer);
+        //looper = (LooperFragment) mFragMan.findFragmentById(R.id.mainContainer);
         ViewGroup listView = (ViewGroup) looper.getView().findViewById(R.id.loopRowList);
         LoopRowView child = new LoopRowView(this);
         if(curLoop == null)
@@ -444,6 +447,12 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
             playArranger();
         }
     }
+
+    public void stopSong()
+    {
+        arrangerPlay = false;
+        arranger.mMenu.findItem(R.id.playSong).setIcon(R.drawable.ic_action_play);
+    }
     public void playArranger() {
         final int length = arranger.length();
         Log.v("playArranger got length", Integer.toString(length));
@@ -473,7 +482,9 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
                         }
                         long millis = System.currentTimeMillis();
 
-                        for (int id : arranger.curSamples(colIndex, loopIndex)) {
+                        ArrayList<Integer> curSamples = arranger.curSamples(colIndex, loopIndex);
+                        for (int i = 0; i < curSamples.size() && arrangerPlay; i++) {
+                            int id = curSamples.get(i);
                             if (tempId == -1)
                                 tempId = id;
                             if (id != -1)
@@ -494,10 +505,16 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
                         
                     }
                 }
+                MainActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run()
+                    {
+                        MainActivity.this.stopSong();
+                    }
+                });
             }
 
         };
-        mPlaying = true;
         Thread thandler = new Thread(mRunnable);
         thandler.start();
     }
