@@ -42,6 +42,16 @@ public class Channel implements Saveable
     {
         loops.add(x, loop);
     }
+
+    public Loop getLoop(int x) {
+        return loops.get(x);
+    }
+
+    public void setLoop(int x, Loop loop)
+    {
+        loops.set(x, loop);
+    }
+
     public void removeLoop(int x) {
         loops.remove(x);
     }
@@ -78,4 +88,5 @@ public class Channel implements Saveable
         }
         return result;
     }
+
 }

@@ -227,12 +227,6 @@ public class ArrangerFragment extends Fragment implements View.OnClickListener, 
             view.startDrag(data, pieceDragShadowBuilder, view, 0);
             return true;
         }
-        else
-        if (view instanceof TableRow) {
-            //TODO: This is not working, EditText's default behavior for onTouch overrides this.
-            Log.v("Arranger", "Long clicked a whole row. Drag a channel functionality?");
-            return true;
-        }
         return false;
     }
 
@@ -247,7 +241,7 @@ public class ArrangerFragment extends Fragment implements View.OnClickListener, 
 
     @Override
     public void onClick(View view) {
-        Log.v("Arranger", "Detected a click");
+        Log.v("Arranger", "Detected a click on view ID " + view.getId());
     }
 
 
@@ -255,7 +249,7 @@ public class ArrangerFragment extends Fragment implements View.OnClickListener, 
      *   Handle onDrag changes for TrackViews
      */
     @Override
-    public boolean onDrag(View view, DragEvent event) {
+    public boolean onDrag(View dropOnCell, DragEvent event) {
         //TODO: Finish handling drag-drop
         switch (event.getAction()) {
             case DragEvent.ACTION_DRAG_STARTED:
@@ -273,9 +267,33 @@ public class ArrangerFragment extends Fragment implements View.OnClickListener, 
                 //              It was dropped on another TrackView: do nothing? or replace?
                 //              It was dropped on an empty cell: replace empty cell with new TrackView, and delete the old trackView and replace with empty cell
                 Log.v("DragDrop","Drag ACTION DROP");
-                View v = (View)event.getLocalState();
-                ViewGroup owner = (ViewGroup) v.getParent();
-                Log.v("DragDrop", "Dropped on top of: " + v.getId());
+                View originalCell = (View)event.getLocalState();
+
+                TableRow originalRow = (TableRow) originalCell.getParent();
+                TableRow dropOnRow = (TableRow) dropOnCell.getParent();
+
+                //Update the view.
+                mTrackGridView.swapCells(originalCell, dropOnCell);
+
+                //Update the model (change their channels)
+                Channel originalChannel = mRowToChannel.get(originalRow);
+                Channel dropOnChannel = mRowToChannel.get(dropOnRow);
+
+                int IndexOriginal = mTrackGridView.getCellIdForChannel(originalCell);
+                int IndexDropCell = mTrackGridView.getCellIdForChannel(dropOnCell);
+
+                Log.v("Arranger DRAG", "Reference to original loop: " + originalChannel.getLoop(IndexOriginal));
+                Log.v("Arranger DRAG", "Reference to dropOn loop: " + dropOnChannel.getLoop(IndexDropCell));
+                Loop LoopOriginal = originalChannel.getLoop(IndexOriginal);
+                Loop LoopDropCell = dropOnChannel.getLoop(IndexDropCell);
+
+                originalChannel.setLoop(IndexOriginal, LoopDropCell);
+                dropOnChannel.setLoop(IndexDropCell, LoopOriginal);
+
+                Log.v("Arranger DRAG", "Reference to original loop: " + originalChannel.getLoop(IndexOriginal));
+                Log.v("Arranger DRAG", "Reference to dropOn loop: " + dropOnChannel.getLoop(IndexDropCell));
+
+
                 break;
         }
         return true;

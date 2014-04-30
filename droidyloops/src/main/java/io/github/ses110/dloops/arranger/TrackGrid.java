@@ -174,18 +174,20 @@ public class TrackGrid extends RelativeLayout {
         EditText trackLabel = new EditText(mContext);
         trackLabel.setId(id);
         trackLabel.setLayoutParams(mLabelParams);
-        trackLabel.setPadding(10,10,10,10);
+        trackLabel.setPadding(10, 10, 10, 10);
         trackLabel.setImeOptions(EditorInfo.IME_ACTION_DONE);
         trackLabel.setCursorVisible(false);
         trackLabel.setBackground(getResources().getDrawable(R.drawable.track_label));
         trackLabel.setGravity(Gravity.CENTER);
         trackLabel.setText(label);
-        //Disable long click for editing, instead it will be for dragging the row
-        trackLabel.setOnLongClickListener(((MainActivity) this.mContext).arranger);
         trackLabel.setOnEditorActionListener(((MainActivity) this.mContext).arranger);
 
         return trackLabel;
     }
+//
+//    public int getLabelsWidth() {
+//        (mTableTracks.getChildAt(0));
+//    }
 
     private ImageView addEmptyCell(final int id) {
         ImageView emptyCell = new ImageView(mContext);
@@ -199,7 +201,6 @@ public class TrackGrid extends RelativeLayout {
         * */
 
 //        emptyCell.setOnTouchListener((OnTouchListener) mContext);
-
         emptyCell.setOnLongClickListener(((MainActivity) this.mContext).arranger);
         emptyCell.setOnDragListener(((MainActivity) this.mContext).arranger);
 
@@ -240,11 +241,10 @@ public class TrackGrid extends RelativeLayout {
 
         TrackView c = new TrackView(view.getContext());
         c.setId(view.getId());
-        c.setChannel((1+(((parent.getId() / 100)-1) % 4)));
-        Log.d("SetChannel", " to " + (1+(((parent.getId() / 100)-1) % 4)));
+        c.setChannel((1 + (((parent.getId() / 100) - 1) % 4)));
+        Log.d("SetChannel", " to " + (1 + (((parent.getId() / 100) - 1) % 4)));
         c.invalidate();
         c.setOnClickListener(((MainActivity) this.mContext).arranger);
-        c.setOnDragListener(((MainActivity) this.mContext).arranger);
         c.setOnLongClickListener(((MainActivity) this.mContext).arranger);
         c.setLayoutParams(saveParams);
 
@@ -264,6 +264,39 @@ public class TrackGrid extends RelativeLayout {
             listRows.add((TableRow) mTableTracks.getChildAt(i));
         }
         return listRows;
+    }
+
+    public void swapCells(View originalCell, View dropOnCell) {
+        if(originalCell instanceof TrackView && dropOnCell instanceof ImageView) {
+            Log.v("TrackGrid", "Swapping cell id: " + originalCell.getId() + " with id: " + dropOnCell.getId());
+
+            ViewGroup.LayoutParams originalParams   = originalCell.getLayoutParams();
+            ViewGroup.LayoutParams dropOnParams       = dropOnCell.getLayoutParams();
+
+            TableRow originalRow    = (TableRow) originalCell.getParent();
+            TableRow dropRow        = (TableRow) dropOnCell.getParent();
+
+            int originalViewIndex = originalRow.indexOfChild(originalCell);
+            int dropViewIndex = dropRow.indexOfChild(dropOnCell);
+
+            Log.v("TrackGrid", "OriginalIndex: " + Integer.toString(originalViewIndex));
+            Log.v("TrackGrid", "dropViewIndex: " + Integer.toString(dropViewIndex));
+
+            int originalId = originalCell.getId();
+            int dropId = dropOnCell.getId();
+
+            originalCell.setLayoutParams(dropOnParams);
+            dropOnCell.setLayoutParams(originalParams);
+
+            originalCell.setId(dropId);
+            dropOnCell.setId(originalId);
+
+            originalRow.removeView(originalCell);
+            dropRow.removeView(dropOnCell);
+
+            originalRow.addView(dropOnCell, originalViewIndex);
+            dropRow.addView(originalCell, dropViewIndex);
+        }
     }
 
 //
