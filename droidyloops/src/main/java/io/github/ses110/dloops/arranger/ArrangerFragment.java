@@ -22,6 +22,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import io.github.ses110.dloops.MainActivity;
@@ -123,8 +124,7 @@ public class ArrangerFragment extends Fragment implements View.OnClickListener, 
                 createNewChannel(mTrackGridView.createNewRow());
                 return true;
             case R.id.playSong:
-                // TODO: play the song
-                //((MainActivity)getActivity()).playArranger(mChannels);
+                ((MainActivity)getActivity()).playArranger();
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -302,6 +302,30 @@ public class ArrangerFragment extends Fragment implements View.OnClickListener, 
     @Override
     public void onClick(View view) {
         
+    }
+
+    public int length()
+    {
+        int max = 0;
+        for (int i = 0; i < mChannels.size(); i++)
+        {
+            int cur = mChannels.get(i).length();
+            if (cur > max)
+                max = cur;
+        }
+        return max;
+    }
+
+    public ArrayList<Integer> curSamples(int colOffset, int loopOffset)
+    {
+        ArrayList<Integer> result = new ArrayList<Integer>();
+        for (Channel cur : mChannels)
+        {
+            int[] temp = cur.curSamples(colOffset, loopOffset);
+            for(int i : temp)
+                result.add(i);
+        }
+        return result;
     }
 
 

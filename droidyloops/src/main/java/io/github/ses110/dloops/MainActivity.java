@@ -306,11 +306,11 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
         ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
         ft.hide(mFragMan.findFragmentById(R.id.mainContainer));
         ft.add(R.id.mainContainer, picker);
-        ft.addToBackStack(null);
+        ft.addToBackStack("loop");
         ft.commit();
     }
     public void addLoopRow(Sample s) {
-        mFragMan.popBackStack();
+        mFragMan.popBackStack("loop", FragmentManager.POP_BACK_STACK_INCLUSIVE);
         mFragMan.executePendingTransactions();
         looper = (LooperFragment) mFragMan.findFragmentById(R.id.mainContainer);
         ViewGroup listView = (ViewGroup) looper.getView().findViewById(R.id.loopRowList);
@@ -396,8 +396,16 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
     public void startPlay(View view) {
         Log.v("Looper", "startPlay called");
         if(view == null) {
-            if(mPlaying)
-                ((ViewGroup) mProgressBar.getParent()).removeView(mProgressBar);
+            if(mPlaying) {
+                try {
+                    ((ViewGroup) mProgressBar.getParent()).removeView(mProgressBar);
+                }
+                catch (NullPointerException e)
+                {
+                    mPlaying = false;
+                    Log.e("startPlay", e.toString());
+                }
+            }
             findViewById(R.id.play_button).setBackground(getResources().getDrawable(R.drawable.ic_action_play));
             mPlaying = false;
         }
@@ -417,73 +425,45 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
     /**
     *       ARRANGER FUNCTIONS
      */
-    //TODO: Finish this
-//    public void playArranger(ArrayList<Channel> mChannels) {
-//        mRunnable = new Runnable()
-//        {
-//            int mIndex = 0;
-//
-//            int tempId = -1;
-//            public void run() {
-//                while(mPlaying) {
-//                    if(tempId != -1)
-//                        playMute(tempId);
-//
-//                    if(mOnBPMListener != null) {
-//                        mOnBPMListener.onBPM(mIndex);
-//                    }
-//                    long millis = System.currentTimeMillis();
-//
-//
-//                    for (int id : curLoop.curSamples(mIndex)) {
-//                        if(tempId == -1)
-//                            tempId = id;
-//                        if(id != - 1)
-//                            playSound(id);
-//                    }
-//
-//
-//                    /*
-//                    *       Update the graphics
-//                    * */
-//                    MainActivity.this.runOnUiThread(new Runnable() {
-//                        @Override
-//                        public void run()
-//                        {
-//                            for(LoopRowView row : mLoopRows)
-//                            {
-//                                row.highlight(mIndex);
-//                            }
-//                        }
-//                    });
-//
-//
-//
-//                    mIndex = (mIndex + 1) % Loop.maxBeats;
-//                    try {
-//                        Thread.sleep(mBeatTime - (System.currentTimeMillis()-millis));
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//
-//                MainActivity.this.runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run()
-//                    {
-//                        for(LoopRowView row : mLoopRows)
-//                        {
-//                            row.reset();
-//                        }
-//                    }
-//                });
-//            }
-//
-//        };
-//        mPlaying = true;
-//        Thread thandler = new Thread(mRunnable);
-//        thandler.start();
-//    }
+    public void playArranger() {
+        final int length = arranger.length();
+        Log.v("playArranger got length", Integer.toString(length));
+
+        mRunnable = new Runnable()
+        {
+            int loopIndex = 0;
+            int colIndex = 0;
+            int tempId = -1;
+            public void run() {
+                for(colIndex = 0; colIndex < length; colIndex++){
+                    if(tempId != -1)
+                        playMute(tempId);
+
+                    if(mOnBPMListener != null) {
+                        mOnBPMListener.onBPM(loopIndex);
+                    }
+                    long millis = System.currentTimeMillis();
+
+                    for (int id : arranger.curSamples(colIndex, loopIndex)) {
+                        if(tempId == -1)
+                            tempId = id;
+                        if(id != - 1)
+                            playSound(id);
+                    }
+                    loopIndex = (loopIndex + 1) % Loop.maxBeats;
+                    try {
+                        Thread.sleep(mBeatTime - (System.currentTimeMillis()-millis));
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+        };
+        mPlaying = true;
+        Thread thandler = new Thread(mRunnable);
+        thandler.start();
+    }
 
     /**
      *  PICKER FUNCTIONS

@@ -55,6 +55,18 @@ public class Channel implements Saveable
         }
         return result;
     }
+
+    // Get the index of the furthest loop plus 1
+    public int length()
+    {
+        int max = 0;
+        for (int i = 0; i < loops.size(); i++)
+        {
+            if(loops.get(i) != null)
+                max = i;
+        }
+        return max + 1;
+    }
     @Override
     public String toString() {
         return name;
