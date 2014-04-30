@@ -17,13 +17,14 @@ import org.json.JSONException;
 import org.json.simple.parser.ParseException;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import io.github.ses110.dloops.MainActivity;
 import io.github.ses110.dloops.R;
 import io.github.ses110.dloops.models.Sample;
 import io.github.ses110.dloops.utils.FileHandler;
+import io.github.ses110.dloops.utils.NameDialog;
 
 /**
  * Created by sid9102 on 4/29/2014.
@@ -46,6 +47,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener
 
     private File mFileName;
     private FileHandler handler;
+    private NameDialog mNameDialog;
 
     public RecordFragment()
     {
@@ -156,19 +158,31 @@ public class RecordFragment extends Fragment implements View.OnClickListener
                 playing = !playing;
                 break;
             case R.id.save_recording:
-
+                mNameDialog = new NameDialog(getActivity(), this);
+                mNameDialog.show(getActivity().getSupportFragmentManager(), null);
                 break;
         }
 
     }
 
-    private void saveSample(String name) throws IOException, ParseException, JSONException {
+    public void saveSample(String name){
+        mNameDialog.dismiss();
         mFileName.renameTo(new File(handler.getDir(FileHandler.FileType.SAMPLES), name + ".aac"));
         Sample s = new Sample(name, name + ".aac");
-        ArrayList<Sample> list = s.loadList(handler);
-        list.add(s);
-        handler.writeJSONDir(handler.saveList(list), FileHandler.FileType.SAMPLES);
+        try {
+            ArrayList<Sample> list = s.loadList(handler);
+            list.add(0, s);
+            handler.writeJSONDir(handler.saveList(list), FileHandler.FileType.SAMPLES);
+        }
+        catch (IOException e)
+        {
+            Log.e(LOG_TAG, e.toString());
+        } catch (ParseException e) {
+            Log.e(LOG_TAG, e.toString());
+        } catch (JSONException e) {
+            Log.e(LOG_TAG, e.toString());
+        }
         Log.v(LOG_TAG, "Added new sample!");
-
+        ((MainActivity) getActivity()).finishRecorder();
     }
 }
