@@ -465,7 +465,7 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
             int tempId = -1;
             public void run() {
                 for(colIndex = 0; colIndex < length && arrangerPlay; colIndex++){
-                    for(loopIndex = 0; loopIndex < 8; loopIndex++) {
+                    for(loopIndex = 0; loopIndex < 8 && arrangerPlay; loopIndex++) {
                         if (tempId != -1)
                             playMute(tempId);
 
@@ -474,7 +474,9 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
                         }
                         long millis = System.currentTimeMillis();
 
-                        for (int id : arranger.curSamples(colIndex, loopIndex)) {
+                        ArrayList<Integer> curSamples = arranger.curSamples(colIndex, loopIndex);
+                        for (int i = 0; i < curSamples.size() && arrangerPlay; i++) {
+                            int id = curSamples.get(i);
                             if (tempId == -1)
                                 tempId = id;
                             if (id != -1)
