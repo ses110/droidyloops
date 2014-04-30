@@ -59,6 +59,7 @@ public class ArrangerFragment extends Fragment implements View.OnClickListener, 
     private ArrayList<Channel> mChannels;
 
     private HashMap<TableRow, Channel> mRowToChannel;
+    public Menu mMenu;
     View curView;
 
     /**
@@ -116,6 +117,7 @@ public class ArrangerFragment extends Fragment implements View.OnClickListener, 
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
         inflater.inflate(R.menu.arranger, menu);
+        mMenu = menu;
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -124,7 +126,7 @@ public class ArrangerFragment extends Fragment implements View.OnClickListener, 
                 createNewChannel(mTrackGridView.createNewRow());
                 return true;
             case R.id.playSong:
-                ((MainActivity)getActivity()).playArranger();
+                ((MainActivity)getActivity()).onPlayArranger();
             default:
                 return super.onOptionsItemSelected(item);
         }

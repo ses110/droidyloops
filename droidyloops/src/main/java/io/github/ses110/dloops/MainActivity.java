@@ -429,6 +429,22 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
     /**
     *       ARRANGER FUNCTIONS
      */
+
+    private boolean arrangerPlay = false;
+    public void onPlayArranger()
+    {
+        if(arrangerPlay)
+        {
+            arrangerPlay = false;
+            arranger.mMenu.findItem(R.id.playSong).setIcon(R.drawable.ic_action_play);
+        }
+        else
+        {
+            arrangerPlay = true;
+            arranger.mMenu.findItem(R.id.playSong).setIcon(R.drawable.ic_action_stop);
+            playArranger();
+        }
+    }
     public void playArranger() {
         final int length = arranger.length();
         Log.v("playArranger got length", Integer.toString(length));
@@ -439,7 +455,7 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
             int colIndex = 0;
             int tempId = -1;
             public void run() {
-                for(colIndex = 0; colIndex < length; colIndex++){
+                for(colIndex = 0; colIndex < length && arrangerPlay; colIndex++){
                     for(loopIndex = 0; loopIndex < 8; loopIndex++) {
                         if (tempId != -1)
                             playMute(tempId);
