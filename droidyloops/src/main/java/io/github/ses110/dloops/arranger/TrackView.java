@@ -32,6 +32,8 @@ public class TrackView extends View {
     private Paint mPaintFill;
     private Paint mPaintStroke;
 
+    private boolean mHighlighted = false;
+
 
     public TrackView(Context context) {
         super(context);
@@ -89,23 +91,44 @@ public class TrackView extends View {
 
     private void setColors() {
         //TODO: Refactor this. Decouple code dependency (the switch statements)
-        switch(mChannel) {
-            case 1:
-                mPaintFill.setColor(getResources().getColor(R.color.track_blue));
-                mPaintStroke.setColor(getResources().getColor(R.color.track_blue_border));
-                break;
-            case 2:
-                mPaintFill.setColor(getResources().getColor(R.color.track_green));
-                mPaintStroke.setColor(getResources().getColor(R.color.track_green_border));
-                break;
-            case 3:
-                mPaintFill.setColor(getResources().getColor(R.color.track_orange));
-                mPaintStroke.setColor(getResources().getColor(R.color.track_orange_border));
-                break;
-            case 4:
-                mPaintFill.setColor(getResources().getColor(R.color.track_red));
-                mPaintStroke.setColor(getResources().getColor(R.color.track_red_border));
-                break;
+        if(mHighlighted) {
+            switch (mChannel) {
+                case 1:
+                    mPaintFill.setColor(getResources().getColor(R.color.track_blue_selected));
+                    mPaintStroke.setColor(getResources().getColor(R.color.track_blue_selected_border));
+                    break;
+                case 2:
+                    mPaintFill.setColor(getResources().getColor(R.color.track_green_selected));
+                    mPaintStroke.setColor(getResources().getColor(R.color.track_green_selected_border));
+                    break;
+                case 3:
+                    mPaintFill.setColor(getResources().getColor(R.color.track_orange_selected));
+                    mPaintStroke.setColor(getResources().getColor(R.color.track_orange_selected_border));
+                    break;
+                case 4:
+                    mPaintFill.setColor(getResources().getColor(R.color.track_red));
+                    mPaintStroke.setColor(getResources().getColor(R.color.track_red_selected_border));
+                    break;
+            }
+        } else {
+            switch (mChannel) {
+                case 1:
+                    mPaintFill.setColor(getResources().getColor(R.color.track_blue));
+                    mPaintStroke.setColor(getResources().getColor(R.color.track_blue_border));
+                    break;
+                case 2:
+                    mPaintFill.setColor(getResources().getColor(R.color.track_green));
+                    mPaintStroke.setColor(getResources().getColor(R.color.track_green_border));
+                    break;
+                case 3:
+                    mPaintFill.setColor(getResources().getColor(R.color.track_orange));
+                    mPaintStroke.setColor(getResources().getColor(R.color.track_orange_border));
+                    break;
+                case 4:
+                    mPaintFill.setColor(getResources().getColor(R.color.track_red));
+                    mPaintStroke.setColor(getResources().getColor(R.color.track_red_border));
+                    break;
+            }
         }
     }
 
@@ -137,7 +160,12 @@ public class TrackView extends View {
 
             canvas.drawRect(mRect, mPaintStroke);
             canvas.drawRect(mRectBorder, mPaintFill);
-
         }
+    }
+
+    public void setHighlight(boolean set) {
+        this.mHighlighted = set;
+        this.setColors();
+        invalidate();
     }
 }

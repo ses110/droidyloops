@@ -22,7 +22,6 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 import io.github.ses110.dloops.MainActivity;
@@ -54,7 +53,7 @@ public class ArrangerFragment extends Fragment implements View.OnClickListener, 
 
     private ArrangerFragmentListener mListener;
 
-    private TrackGrid mTrackGridView;
+    public TrackGrid mTrackGridView;
 
     private ArrayList<Channel> mChannels;
 
@@ -265,7 +264,7 @@ public class ArrangerFragment extends Fragment implements View.OnClickListener, 
                 TableRow dropOnRow = (TableRow) dropOnCell.getParent();
 
                 //Update the view.
-                mTrackGridView.swapCells(originalCell, dropOnCell);
+                mTrackGridView.copyCells(originalCell, dropOnCell);
 
                 //Update the model (change their channels)
                 Channel originalChannel = mRowToChannel.get(originalRow);

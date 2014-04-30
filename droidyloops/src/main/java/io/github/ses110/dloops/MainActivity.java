@@ -29,7 +29,6 @@ import io.github.ses110.dloops.arranger.ArrangerFragment;
 import io.github.ses110.dloops.looper.LoopRowView;
 import io.github.ses110.dloops.looper.LooperFragment;
 import io.github.ses110.dloops.looper.RecordFragment;
-import io.github.ses110.dloops.models.Channel;
 import io.github.ses110.dloops.models.Loop;
 import io.github.ses110.dloops.models.Sample;
 import io.github.ses110.dloops.models.Song;
@@ -354,8 +353,8 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
             int tempId = -1;
             public void run() {
                 while(mPlaying) {
-                    if(tempId != -1)
-                        playMute(tempId);
+//                    if(tempId != -1)
+//                        playMute(tempId);
 
                     if(mOnBPMListener != null) {
                         mOnBPMListener.onBPM(mIndex);
@@ -456,9 +455,18 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
             int tempId = -1;
             public void run() {
                 for(colIndex = 0; colIndex < length && arrangerPlay; colIndex++){
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            arranger.mTrackGridView.setHighlightColumn(colIndex);
+                        }
+                    });
+
+
                     for(loopIndex = 0; loopIndex < 8; loopIndex++) {
-                        if (tempId != -1)
-                            playMute(tempId);
+//                        if (tempId != -1)
+//                            playMute(tempId);
 
                         if (mOnBPMListener != null) {
                             mOnBPMListener.onBPM(loopIndex);
@@ -476,6 +484,14 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                arranger.mTrackGridView.removeHighlightColumn(colIndex);
+                            }
+                        });
+                        
                     }
                 }
             }
@@ -526,10 +542,10 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
         mSndPool.play(spID, getVolume(), getVolume(), 1,0,1);
         Log.v("Playsound", "Playing SOUND id: " + Integer.toString(spID));
     }
-    private void playMute(int spID) {
-        mSndPool.play(spID, 0, 0, 1, -1, 1f);
-        Log.v("Playsound", "Playing SOUND id: " + Integer.toString(spID));
-    }
+//    private void playMute(int spID) {
+//        mSndPool.play(spID, 0, 0, 1, -1, 1f);
+//        Log.v("Playsound", "Playing SOUND id: " + Integer.toString(spID));
+//    }
 
     @Override
     public void onPickerSelection(Sample sample) {

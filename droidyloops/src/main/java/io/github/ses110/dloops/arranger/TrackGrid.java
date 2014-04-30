@@ -184,10 +184,7 @@ public class TrackGrid extends RelativeLayout {
 
         return trackLabel;
     }
-//
-//    public int getLabelsWidth() {
-//        (mTableTracks.getChildAt(0));
-//    }
+
 
     private ImageView addEmptyCell(final int id) {
         ImageView emptyCell = new ImageView(mContext);
@@ -229,6 +226,35 @@ public class TrackGrid extends RelativeLayout {
         TableRow newRow = this.addNewRow("New Track", rowId);
         this.mTableTracks.addView(newRow, mRowParams);
         return newRow;
+    }
+
+    public void setHighlightColumn(int offset) {
+        if(offset >= 0 && offset < mColSpan) {
+            Log.v("TrackGrid", "In setHighlight given index " + offset);
+            int fixed_offset = offset + 2;
+            for (int i = 0; i < mTableTracks.getChildCount(); i++) {
+                TableRow iRow = (TableRow) mTableTracks.getChildAt(i);
+                fixed_offset = iRow.getId() + offset + 2;
+                View iCol = findViewById(fixed_offset);
+                if(iCol instanceof TrackView)
+                    ((TrackView)iCol).setHighlight(true);
+
+            }
+        }
+    }
+
+    public void removeHighlightColumn(int offset) {
+        if(offset >= 0 && offset < mColSpan) {
+            Log.v("TrackGrid", "In removeHighlight given index " + offset);
+            int fixed_offset = offset + 2;
+            for (int i = 0; i < mTableTracks.getChildCount(); i++) {
+                TableRow iRow = (TableRow) mTableTracks.getChildAt(i);
+                fixed_offset = iRow.getId() + offset + 2;
+                View iCol = findViewById(fixed_offset);
+                if(iCol instanceof TrackView)
+                    ((TrackView)iCol).setHighlight(false);
+            }
+        }
     }
 
     public void createLoopCell(View view) {
@@ -299,6 +325,35 @@ public class TrackGrid extends RelativeLayout {
 
             originalRow.addView(dropOnCell, originalViewIndex);
             dropRow.addView(originalCell, dropViewIndex);
+        }
+    }
+
+    public void copyCells(View originalCell, View dropOnCell) {
+        if(originalCell instanceof TrackView && dropOnCell instanceof ImageView) {
+            ViewGroup.LayoutParams originalParams   = originalCell.getLayoutParams();
+            ViewGroup.LayoutParams dropOnParams       = dropOnCell.getLayoutParams();
+
+            TableRow originalRow    = (TableRow) originalCell.getParent();
+            TableRow dropRow        = (TableRow) dropOnCell.getParent();
+
+            int originalViewIndex = originalRow.indexOfChild(originalCell);
+            int dropViewIndex = dropRow.indexOfChild(dropOnCell);
+
+            int originalId = originalCell.getId();
+            int dropId = dropOnCell.getId();
+
+//            originalCell.setLayoutParams(dropOnParams);
+            dropOnCell.setLayoutParams(originalParams);
+
+            originalCell.setId(dropId);
+            dropOnCell.setId(originalId);
+
+            originalRow.removeView(originalCell);
+            dropRow.removeView(dropOnCell);
+
+            originalRow.addView(dropOnCell, originalViewIndex);
+            dropRow.addView(originalCell, dropViewIndex);
+
         }
     }
 
