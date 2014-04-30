@@ -332,8 +332,10 @@ public class ArrangerFragment extends Fragment implements View.OnClickListener, 
         for (Channel cur : mChannels)
         {
             int[] temp = cur.curSamples(colOffset, loopOffset);
-            for(int i : temp)
-                result.add(i);
+            if(temp != null) {
+                for (int i : temp)
+                    result.add(i);
+            }
         }
         return result;
     }
