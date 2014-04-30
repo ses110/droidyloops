@@ -436,25 +436,26 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
             int tempId = -1;
             public void run() {
                 for(colIndex = 0; colIndex < length; colIndex++){
-                    if(tempId != -1)
-                        playMute(tempId);
+                    for(loopIndex = 0; loopIndex < 8; loopIndex++) {
+                        if (tempId != -1)
+                            playMute(tempId);
 
-                    if(mOnBPMListener != null) {
-                        mOnBPMListener.onBPM(loopIndex);
-                    }
-                    long millis = System.currentTimeMillis();
+                        if (mOnBPMListener != null) {
+                            mOnBPMListener.onBPM(loopIndex);
+                        }
+                        long millis = System.currentTimeMillis();
 
-                    for (int id : arranger.curSamples(colIndex, loopIndex)) {
-                        if(tempId == -1)
-                            tempId = id;
-                        if(id != - 1)
-                            playSound(id);
-                    }
-                    loopIndex = (loopIndex + 1) % Loop.maxBeats;
-                    try {
-                        Thread.sleep(mBeatTime - (System.currentTimeMillis()-millis));
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        for (int id : arranger.curSamples(colIndex, loopIndex)) {
+                            if (tempId == -1)
+                                tempId = id;
+                            if (id != -1)
+                                playSound(id);
+                        }
+                        try {
+                            Thread.sleep(mBeatTime - (System.currentTimeMillis() - millis));
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
