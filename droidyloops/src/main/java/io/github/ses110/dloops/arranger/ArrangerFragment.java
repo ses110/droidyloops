@@ -265,7 +265,7 @@ public class ArrangerFragment extends Fragment implements View.OnClickListener, 
                 TableRow dropOnRow = (TableRow) dropOnCell.getParent();
 
                 //Update the view.
-                mTrackGridView.swapCells(originalCell, dropOnCell);
+                mTrackGridView.createLoopCell(dropOnCell);
 
                 //Update the model (change their channels)
                 Channel originalChannel = mRowToChannel.get(originalRow);
@@ -279,7 +279,7 @@ public class ArrangerFragment extends Fragment implements View.OnClickListener, 
                 Loop LoopOriginal = originalChannel.getLoop(IndexOriginal);
                 Loop LoopDropCell = dropOnChannel.getLoop(IndexDropCell);
 
-                originalChannel.setLoop(IndexOriginal, LoopDropCell);
+                //originalChannel.setLoop(IndexOriginal, LoopDropCell);
                 dropOnChannel.setLoop(IndexDropCell, LoopOriginal);
 
                 Log.v("Arranger DRAG", "Reference to original loop: " + originalChannel.getLoop(IndexOriginal));
