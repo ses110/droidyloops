@@ -423,9 +423,19 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
         RecordFragment record = new RecordFragment();
         FragmentTransaction ft = mFragMan.beginTransaction();
         ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
-        ft.hide(mFragMan.findFragmentById(R.id.mainContainer));
+        ft.remove(mFragMan.findFragmentById(R.id.mainContainer));
         ft.add(R.id.mainContainer, record);
-        ft.addToBackStack(null);
+        ft.commit();
+    }
+
+    public void finishRecorder()
+    {
+        picker = PickerFragment.newInstance(FileHandler.FileType.SAMPLES);
+        picker.attachSoundPool(this.mSndPool);
+        FragmentTransaction ft = mFragMan.beginTransaction();
+        ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right, R.anim.slide_in_right, R.anim.slide_out_left);
+        ft.hide(mFragMan.findFragmentById(R.id.mainContainer));
+        ft.add(R.id.mainContainer, picker);
         ft.commit();
     }
 
