@@ -24,12 +24,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import io.github.ses110.dloops.arranger.ArrangerFragment;
 import io.github.ses110.dloops.looper.LoopRowView;
 import io.github.ses110.dloops.looper.LooperFragment;
-import io.github.ses110.dloops.models.Channel;
 import io.github.ses110.dloops.models.Loop;
 import io.github.ses110.dloops.models.Sample;
 import io.github.ses110.dloops.models.Song;
@@ -417,72 +415,73 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
     /**
     *       ARRANGER FUNCTIONS
      */
-    public void playArranger(ArrayList<Channel> mChannels) {
-        mRunnable = new Runnable()
-        {
-            int mIndex = 0;
-
-            int tempId = -1;
-            public void run() {
-                while(mPlaying) {
-                    if(tempId != -1)
-                        playMute(tempId);
-
-                    if(mOnBPMListener != null) {
-                        mOnBPMListener.onBPM(mIndex);
-                    }
-                    long millis = System.currentTimeMillis();
-
-
-                    for (int id : curLoop.curSamples(mIndex)) {
-                        if(tempId == -1)
-                            tempId = id;
-                        if(id != - 1)
-                            playSound(id);
-                    }
-
-
-                    /*
-                    *       Update the graphics
-                    * */
-                    MainActivity.this.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run()
-                        {
-                            for(LoopRowView row : mLoopRows)
-                            {
-                                row.highlight(mIndex);
-                            }
-                        }
-                    });
-
-
-
-                    mIndex = (mIndex + 1) % Loop.maxBeats;
-                    try {
-                        Thread.sleep(mBeatTime - (System.currentTimeMillis()-millis));
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                MainActivity.this.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run()
-                    {
-                        for(LoopRowView row : mLoopRows)
-                        {
-                            row.reset();
-                        }
-                    }
-                });
-            }
-
-        };
-        mPlaying = true;
-        Thread thandler = new Thread(mRunnable);
-        thandler.start();
-    }
+    //TODO: Finish this
+//    public void playArranger(ArrayList<Channel> mChannels) {
+//        mRunnable = new Runnable()
+//        {
+//            int mIndex = 0;
+//
+//            int tempId = -1;
+//            public void run() {
+//                while(mPlaying) {
+//                    if(tempId != -1)
+//                        playMute(tempId);
+//
+//                    if(mOnBPMListener != null) {
+//                        mOnBPMListener.onBPM(mIndex);
+//                    }
+//                    long millis = System.currentTimeMillis();
+//
+//
+//                    for (int id : curLoop.curSamples(mIndex)) {
+//                        if(tempId == -1)
+//                            tempId = id;
+//                        if(id != - 1)
+//                            playSound(id);
+//                    }
+//
+//
+//                    /*
+//                    *       Update the graphics
+//                    * */
+//                    MainActivity.this.runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run()
+//                        {
+//                            for(LoopRowView row : mLoopRows)
+//                            {
+//                                row.highlight(mIndex);
+//                            }
+//                        }
+//                    });
+//
+//
+//
+//                    mIndex = (mIndex + 1) % Loop.maxBeats;
+//                    try {
+//                        Thread.sleep(mBeatTime - (System.currentTimeMillis()-millis));
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//
+//                MainActivity.this.runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run()
+//                    {
+//                        for(LoopRowView row : mLoopRows)
+//                        {
+//                            row.reset();
+//                        }
+//                    }
+//                });
+//            }
+//
+//        };
+//        mPlaying = true;
+//        Thread thandler = new Thread(mRunnable);
+//        thandler.start();
+//    }
 
     /**
      *  PICKER FUNCTIONS

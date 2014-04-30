@@ -178,8 +178,9 @@ public class TrackGrid extends RelativeLayout {
         trackLabel.setBackground(getResources().getDrawable(R.drawable.track_label));
         trackLabel.setGravity(Gravity.CENTER);
         trackLabel.setText(label);
-        trackLabel.setOnEditorActionListener(((MainActivity) this.mContext).arranger);
+        //Disable long click for editing, instead it will be for dragging the row
         trackLabel.setOnLongClickListener(((MainActivity) this.mContext).arranger);
+        trackLabel.setOnEditorActionListener(((MainActivity) this.mContext).arranger);
 
         return trackLabel;
     }
@@ -198,6 +199,7 @@ public class TrackGrid extends RelativeLayout {
 //        emptyCell.setOnTouchListener((OnTouchListener) mContext);
 
         emptyCell.setOnLongClickListener(((MainActivity) this.mContext).arranger);
+        emptyCell.setOnDragListener(((MainActivity) this.mContext).arranger);
 
         return emptyCell;
     }

@@ -124,7 +124,7 @@ public class ArrangerFragment extends Fragment implements OnLongClickListener, T
                 return true;
             case R.id.playSong:
                 // TODO: play the song
-                ((MainActivity)getActivity()).playArranger(mChannels);
+                //((MainActivity)getActivity()).playArranger(mChannels);
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -215,7 +215,6 @@ public class ArrangerFragment extends Fragment implements OnLongClickListener, T
             Log.v(TAG, "Channel's name is  " + getChannel.name);
 
             ((MainActivity)this.getActivity()).newLoopClick(view);
-//            view.setOnDragListener(this);
             return true;
         }
         else
@@ -229,6 +228,7 @@ public class ArrangerFragment extends Fragment implements OnLongClickListener, T
         }
         else
         if (view instanceof TableRow) {
+            //TODO: This is not working, EditText's default behavior for onTouch overrides this.
             Log.v("Arranger", "Long clicked a whole row. Drag a channel functionality?");
             return true;
         }
