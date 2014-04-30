@@ -231,25 +231,27 @@ public class TrackGrid extends RelativeLayout {
     }
 
     public void createLoopCell(View view) {
-        Log.d("CELL","Pressed on cell " + view.getId());
-        ViewGroup parent = (ViewGroup) view.getParent();
-        int index = parent.indexOfChild(view);
+        if(view != null) {
+            Log.d("CELL", "Pressed on cell " + view.getId());
+            ViewGroup parent = (ViewGroup) view.getParent();
+            int index = parent.indexOfChild(view);
 
-        ViewGroup.LayoutParams saveParams = view.getLayoutParams();
-        parent.removeView(view);
+            ViewGroup.LayoutParams saveParams = view.getLayoutParams();
+            parent.removeView(view);
 
-        TrackView c = new TrackView(view.getContext());
-        c.setId(view.getId());
-        c.setChannel((1+(((parent.getId() / 100)-1) % 4)));
-        Log.d("SetChannel", " to " + (1+(((parent.getId() / 100)-1) % 4)));
-        c.invalidate();
-        c.setOnClickListener(((MainActivity) this.mContext).arranger);
-        c.setOnDragListener(((MainActivity) this.mContext).arranger);
-        c.setOnLongClickListener(((MainActivity) this.mContext).arranger);
-        c.setLayoutParams(saveParams);
+            TrackView c = new TrackView(view.getContext());
+            c.setId(view.getId());
+            c.setChannel((1 + (((parent.getId() / 100) - 1) % 4)));
+            Log.d("SetChannel", " to " + (1 + (((parent.getId() / 100) - 1) % 4)));
+            c.invalidate();
+            c.setOnClickListener(((MainActivity) this.mContext).arranger);
+            c.setOnDragListener(((MainActivity) this.mContext).arranger);
+            c.setOnLongClickListener(((MainActivity) this.mContext).arranger);
+            c.setLayoutParams(saveParams);
 
 
-        parent.addView(c, index);
+            parent.addView(c, index);
+        }
     }
 
     /*

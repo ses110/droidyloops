@@ -234,6 +234,10 @@ public class ArrangerFragment extends Fragment implements View.OnClickListener, 
     @Override
     public void onClick(View view) {
         Log.v("Arranger", "Detected a click");
+        TableRow parentRow = (TableRow)view.getParent();
+        Channel getChannel = mRowToChannel.get(parentRow);
+        int index = mTrackGridView.getCellIdForChannel(view);
+        ((MainActivity) getActivity()).loadLoopClick(getChannel.loops.get(index));
     }
 
 

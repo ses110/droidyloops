@@ -264,6 +264,7 @@ public class MainActivity extends FragmentActivity implements ArrangerFragment.A
         fragmentTransaction.add(R.id.mainContainer, looper);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
+        mFragMan.executePendingTransactions();
         if(setup)
             looper.setup(init);
         curLoop = init;
