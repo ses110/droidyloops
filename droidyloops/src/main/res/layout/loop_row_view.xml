@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <TextView
+        android:layout_width="60dp"
+        android:layout_height="match_parent"
+        android:id="@+id/sampleName"
+        android:layout_weight="0.11"
+        style="@style/AppTheme"
+        android:layout_gravity="center_vertical"
+        android:singleLine="true"
+        android:text="BLANK"
+        android:textAlignment="gravity"
+        android:gravity="center_vertical|center_horizontal"
+        android:textStyle="bold"
+        android:background="@drawable/cell_style" />
+
+    <ToggleButton
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:id="@+id/cell1"
+        android:layout_weight="0.11"
+        android:background="@drawable/cell_style"
+        android:checked="false"
+        android:enabled="true" />
+    <ToggleButton
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:text=""
+        android:id="@+id/cell2"
+        android:layout_weight="0.11"
+        android:background="@drawable/cell_style"
+        android:enabled="true" />
+    <ToggleButton
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:text=""
+        android:id="@+id/cell3"
+        android:layout_weight="0.11"
+        android:background="@drawable/cell_style"
+        android:enabled="true" />
+    <ToggleButton
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:text=""
+        android:id="@+id/cell4"
+        android:layout_weight="0.11"
+        android:background="@drawable/cell_style"
+        android:enabled="true" />
+    <ToggleButton
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:text=""
+        android:id="@+id/cell5"
+        android:layout_weight="0.11"
+        android:background="@drawable/cell_style"
+        android:enabled="true" />
+    <ToggleButton
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:text=""
+        android:id="@+id/cell6"
+        android:layout_weight="0.11"
+        android:background="@drawable/cell_style"
+        android:enabled="true" />
+    <ToggleButton
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:text=""
+        android:id="@+id/cell7"
+        android:layout_weight="0.11"
+        android:background="@drawable/cell_style"
+        android:enabled="true" />
+    <ToggleButton
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:text=""
+        android:id="@+id/cell8"
+        android:layout_weight="0.11"
+        android:background="@drawable/cell_style"
+        android:enabled="true" />
+
+</LinearLayout>

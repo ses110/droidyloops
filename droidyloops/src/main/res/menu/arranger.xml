@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/playSong"
+        android:title="play"
+        android:icon="@drawable/ic_action_play"
+        android:showAsAction="always" />
+    <item
+        android:id="@+id/addChannel"
+        android:title="add"
+        android:icon="@drawable/ic_action_new"
+        android:showAsAction="always" />
+</menu>
