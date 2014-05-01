@@ -17,8 +17,9 @@
     <color name="button_red">#B23743</color>
     <color name="button_red_down">#77252E</color>
 
-    <color name="background_track_labels">#CC9000</color>
+    <color name="background_track_labels">#ffb68400</color>
     <color name="background_tracks">#3A4D59</color>
+    <color name="background_track_gridlines">#2D3D49</color>
 
     <color name="track_blue">#428A99</color>
     <color name="track_blue_border">#336E7A</color>

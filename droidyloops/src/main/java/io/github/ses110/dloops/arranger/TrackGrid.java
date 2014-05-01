@@ -11,10 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
-import android.widget.HorizontalScrollView;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
@@ -36,9 +35,10 @@ public class TrackGrid extends RelativeLayout {
     private static final int mColLimit = 100;
     TableLayout mTableTracks;
 
-    ScrollView mScrollTracks;
+    TwoDScrollView m2DScrollView;
 
-    HorizontalScrollView mHorizontalScrollTracks;
+//    ScrollView mScrollTracks;
+//    HorizontalScrollView mHorizontalScrollTracks;
 
     Context mContext;
 
@@ -128,18 +128,23 @@ public class TrackGrid extends RelativeLayout {
         mTableTracks = new TableLayout(this.mContext);
         mTableTracks.setLayoutParams(tableParams);
 
-        mScrollTracks = new ScrollView(this.mContext);
-        mHorizontalScrollTracks = new HorizontalScrollView(this.mContext);
+        m2DScrollView = new TwoDScrollView(mContext);
+        m2DScrollView.setDrawingCacheQuality(DRAWING_CACHE_QUALITY_LOW);
+//        mScrollTracks = new ScrollView(this.mContext);
+//        mHorizontalScrollTracks = new HorizontalScrollView(this.mContext);
 
         mTableTracks.setId(1);
-        mScrollTracks.setId(2);
-        mHorizontalScrollTracks.setId(3);
+        m2DScrollView.setId(2);
+//        mScrollTracks.setId(2);
+//        mHorizontalScrollTracks.setId(3);
 
-        mScrollTracks.addView(mHorizontalScrollTracks);
-        mHorizontalScrollTracks.addView(mTableTracks);
+        m2DScrollView.addView(mTableTracks);
+//        mScrollTracks.addView(mHorizontalScrollTracks);
+//        mHorizontalScrollTracks.addView(mTableTracks);
 
-        RelativeLayout.LayoutParams TrackParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        this.addView(this.mScrollTracks, TrackParams);
+//        RelativeLayout.LayoutParams TrackParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        FrameLayout.LayoutParams TrackParams = new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        this.addView(this.m2DScrollView, TrackParams);
     }
 
     private void generateRows(List<String> rowItems) {
@@ -167,6 +172,7 @@ public class TrackGrid extends RelativeLayout {
         for (int i = 0; i < mColSpan -1; i++) {
             rowForTracks.addView(addEmptyCell(id+i+2));
         }
+        this.mRowSpan++;
         return rowForTracks;
     }
 
