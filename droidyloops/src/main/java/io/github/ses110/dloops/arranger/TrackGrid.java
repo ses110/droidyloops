@@ -91,6 +91,7 @@ public class TrackGrid extends RelativeLayout {
 
         this.mContext = context;
 
+
         //Change this to views, emptyCells
 //        this.setOnDragListener(this);
         List<String> rowItems = this.createCellList(mContext, mRowSpan);
@@ -109,8 +110,13 @@ public class TrackGrid extends RelativeLayout {
         this.setupTables();
 
         this.generateRows(rowItems);
+    }
+
+    public TableRow getRow(int id) {
+        return (TableRow) mTableTracks.findViewById(id);
 
     }
+
     private List<String> createCellList(Context context, int rows) {
         //There are only 4 color styles set up for channels 1 to 4
         int maxRowColors = 4;

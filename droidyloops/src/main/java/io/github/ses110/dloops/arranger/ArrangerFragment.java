@@ -2,8 +2,10 @@ package io.github.ses110.dloops.arranger;
 
 import android.app.Activity;
 import android.content.ClipData;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.DragEvent;
@@ -16,13 +18,17 @@ import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.espian.showcaseview.ShowcaseView;
+import com.espian.showcaseview.targets.ActionViewTarget;
+import com.espian.showcaseview.targets.ViewTarget;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 import io.github.ses110.dloops.MainActivity;
@@ -111,8 +117,38 @@ public class ArrangerFragment extends Fragment implements View.OnClickListener, 
             createNewChannel(row);
         }
 
+
         return v;
     }
+
+    @Override
+    public void onActivityCreated(Bundle savedStateInstance) {
+        super.onActivityCreated(savedStateInstance);
+
+        SharedPreferences wmbPreference = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        boolean isFirstRun = wmbPreference.getBoolean("FIRSTRUN", true);
+        isFirstRun = true;
+        if (isFirstRun)
+        {
+            // Code to run once
+            SharedPreferences.Editor editor = wmbPreference.edit();
+            editor.putBoolean("FIRSTRUN", false);
+            editor.commit();
+
+            ShowcaseView.ConfigOptions co = new ShowcaseView.ConfigOptions();
+            co.hideOnClickOutside = true;
+
+            Button getStarted = new Button(getActivity());
+            ActionViewTarget target = new ActionViewTarget(getActivity(), ActionViewTarget.Type.TITLE);
+            ShowcaseView.insertShowcaseView(target, getActivity(), "Welcome to DroidyLoops!", "Touch button to begin", co);
+
+            View someColumn = mTrackGridView.getRow(100).getChildAt(2);
+            ViewTarget colTarget = new ViewTarget(someColumn);
+            ShowcaseView.insertShowcaseView(colTarget, getActivity(), "Press and hold on a column", "Press and hold one of these cells to create loops.");
+
+        }
+    }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
